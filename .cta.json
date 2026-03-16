@@ -1,0 +1,29 @@
+{
+  "projectName": "indoor-nav",
+  "mode": "file-router",
+  "typescript": true,
+  "tailwind": true,
+  "packageManager": "npm",
+  "git": true,
+  "install": true,
+  "addOnOptions": {
+    "prisma": {
+      "database": "postgres"
+    }
+  },
+  "includeExamples": true,
+  "envVarValues": {},
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "tanstack-query",
+    "form",
+    "nitro",
+    "prisma",
+    "better-auth",
+    "eslint",
+    "compiler",
+    "t3env"
+  ]
+}
