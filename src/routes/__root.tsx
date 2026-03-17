@@ -5,8 +5,6 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { getContext } from '../router'
@@ -54,9 +52,7 @@ function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
       </head>
       <body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]">
         <QueryClientProvider client={getContext().queryClient}>
-          <Header />
           {children}
-          <Footer />
           <TanStackDevtools
             config={{
               position: 'bottom-right',
