@@ -38,18 +38,21 @@ export type TodoMinAggregateOutputType = {
   id: number | null
   title: string | null
   createdAt: Date | null
+  foo: string | null
 }
 
 export type TodoMaxAggregateOutputType = {
   id: number | null
   title: string | null
   createdAt: Date | null
+  foo: string | null
 }
 
 export type TodoCountAggregateOutputType = {
   id: number
   title: number
   createdAt: number
+  foo: number
   _all: number
 }
 
@@ -66,18 +69,21 @@ export type TodoMinAggregateInputType = {
   id?: true
   title?: true
   createdAt?: true
+  foo?: true
 }
 
 export type TodoMaxAggregateInputType = {
   id?: true
   title?: true
   createdAt?: true
+  foo?: true
 }
 
 export type TodoCountAggregateInputType = {
   id?: true
   title?: true
   createdAt?: true
+  foo?: true
   _all?: true
 }
 
@@ -171,6 +177,7 @@ export type TodoGroupByOutputType = {
   id: number
   title: string
   createdAt: Date
+  foo: string
   _count: TodoCountAggregateOutputType | null
   _avg: TodoAvgAggregateOutputType | null
   _sum: TodoSumAggregateOutputType | null
@@ -200,12 +207,14 @@ export type TodoWhereInput = {
   id?: Prisma.IntFilter<"Todo"> | number
   title?: Prisma.StringFilter<"Todo"> | string
   createdAt?: Prisma.DateTimeFilter<"Todo"> | Date | string
+  foo?: Prisma.StringFilter<"Todo"> | string
 }
 
 export type TodoOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  foo?: Prisma.SortOrder
 }
 
 export type TodoWhereUniqueInput = Prisma.AtLeast<{
@@ -215,12 +224,14 @@ export type TodoWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TodoWhereInput | Prisma.TodoWhereInput[]
   title?: Prisma.StringFilter<"Todo"> | string
   createdAt?: Prisma.DateTimeFilter<"Todo"> | Date | string
+  foo?: Prisma.StringFilter<"Todo"> | string
 }, "id">
 
 export type TodoOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  foo?: Prisma.SortOrder
   _count?: Prisma.TodoCountOrderByAggregateInput
   _avg?: Prisma.TodoAvgOrderByAggregateInput
   _max?: Prisma.TodoMaxOrderByAggregateInput
@@ -235,51 +246,60 @@ export type TodoScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Todo"> | number
   title?: Prisma.StringWithAggregatesFilter<"Todo"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Todo"> | Date | string
+  foo?: Prisma.StringWithAggregatesFilter<"Todo"> | string
 }
 
 export type TodoCreateInput = {
   title: string
   createdAt?: Date | string
+  foo: string
 }
 
 export type TodoUncheckedCreateInput = {
   id?: number
   title: string
   createdAt?: Date | string
+  foo: string
 }
 
 export type TodoUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  foo?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type TodoUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  foo?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type TodoCreateManyInput = {
   id?: number
   title: string
   createdAt?: Date | string
+  foo: string
 }
 
 export type TodoUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  foo?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type TodoUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  foo?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type TodoCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  foo?: Prisma.SortOrder
 }
 
 export type TodoAvgOrderByAggregateInput = {
@@ -290,12 +310,14 @@ export type TodoMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  foo?: Prisma.SortOrder
 }
 
 export type TodoMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  foo?: Prisma.SortOrder
 }
 
 export type TodoSumOrderByAggregateInput = {
@@ -324,27 +346,31 @@ export type TodoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   title?: boolean
   createdAt?: boolean
+  foo?: boolean
 }, ExtArgs["result"]["todo"]>
 
 export type TodoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   createdAt?: boolean
+  foo?: boolean
 }, ExtArgs["result"]["todo"]>
 
 export type TodoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   createdAt?: boolean
+  foo?: boolean
 }, ExtArgs["result"]["todo"]>
 
 export type TodoSelectScalar = {
   id?: boolean
   title?: boolean
   createdAt?: boolean
+  foo?: boolean
 }
 
-export type TodoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "createdAt", ExtArgs["result"]["todo"]>
+export type TodoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "createdAt" | "foo", ExtArgs["result"]["todo"]>
 
 export type $TodoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Todo"
@@ -353,6 +379,7 @@ export type $TodoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: number
     title: string
     createdAt: Date
+    foo: string
   }, ExtArgs["result"]["todo"]>
   composites: {}
 }
@@ -779,6 +806,7 @@ export interface TodoFieldRefs {
   readonly id: Prisma.FieldRef<"Todo", 'Int'>
   readonly title: Prisma.FieldRef<"Todo", 'String'>
   readonly createdAt: Prisma.FieldRef<"Todo", 'DateTime'>
+  readonly foo: Prisma.FieldRef<"Todo", 'String'>
 }
     
 
