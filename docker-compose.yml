@@ -1,13 +1,47 @@
 services:
+  indoor-nav:
+    container_name: indoor-nav
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+      network: host
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /src
+          initial_sync: true
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - navNet
   postgres:
     image: postgres:18
     container_name: postgres
     restart: unless-stopped
     env_file:
       - .env
-    ports: 
+    ports:
       - "5432:5432"
-    volumes: 
+    volumes:
       - postgres-data:/var/lib/postgresql
-volumes: 
-  postgres-data: 
+    networks:
+      - navNet
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  navNet:
+    driver: bridge
