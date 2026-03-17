@@ -7,10 +7,9 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-
-import TanStackQueryProvider from '../integrations/tanstack-query/root-provider'
-
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { getContext } from '../router'
 
 import appCss from '../styles.css?url'
 
@@ -46,15 +45,15 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   shellComponent: RootDocument,
 })
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
-        <TanStackQueryProvider>
+      <body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]">
+        <QueryClientProvider client={getContext().queryClient}>
           <Header />
           {children}
           <Footer />
@@ -67,10 +66,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 name: 'Tanstack Router',
                 render: <TanStackRouterDevtoolsPanel />,
               },
-              TanStackQueryDevtools,
+              { name: "Tanstack Query", render: <ReactQueryDevtoolsPanel /> }
             ]}
           />
-        </TanStackQueryProvider>
+        </QueryClientProvider>
         <Scripts />
       </body>
     </html>
