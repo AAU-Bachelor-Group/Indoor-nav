@@ -16,24 +16,28 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: pnpm
+
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       # LINT
       - name: Run ESLint
-        run: npm run lint
+        run: pnpm run lint
 
       # PRETTIER CHECK (fails if not formatted)
       - name: Check formatting
-        run: npm run format
+        run: pnpm run format
 
       # TYPESCRIPT STRICT CHECK
       - name: TypeScript check
-        run: npx tsc --noEmit
+        run: pnpm exec tsc --noEmit
 
       # TODO: UNIT TESTS ADD HERE
 
       # BUILD PROJECT
       - name: Build project
-        run: npm run build
+        run: pnpm run build
