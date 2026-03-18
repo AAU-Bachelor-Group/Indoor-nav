@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import ImportFloor from '../components/ImportFloor'
+import ImportFloor from '@/components/importFloorForm'
 
 export const Route = createFileRoute('/testImport')({
   component: RouteComponent,
