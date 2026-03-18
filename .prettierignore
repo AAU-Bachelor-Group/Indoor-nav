@@ -2,3 +2,7 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 src/routeTree.gen.ts
+src/generated/
+prisma/migrations/
+.output
+prisma/migration_lock.toml

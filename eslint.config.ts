@@ -22,6 +22,7 @@ export default [
       "node_modules/",
       ".pnpm-store/",
       "*/generated/",
+      "prisma/migrations/",
       // Ignores SHADCN components
       "src/components/ui/*.tsx",
     ],
