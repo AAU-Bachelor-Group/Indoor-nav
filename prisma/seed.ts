@@ -1,7 +1,7 @@
-import { PrismaClient } from '../src/generated/prisma/client.js'
-import { connectionString } from '#/db.js'
+import { PrismaClient } from "../src/generated/prisma/client.js"
+import { connectionString } from "#/db.js"
 
-import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaPg } from "@prisma/adapter-pg"
 
 const adapter = new PrismaPg({
   connectionString,
@@ -10,7 +10,7 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  console.log('🌱 Seeding database...')
+  console.log("🌱 Seeding database...")
 
   // Clear existing todos
   await prisma.todo.deleteMany()
@@ -18,9 +18,9 @@ async function main() {
   // Create example todos
   const todos = await prisma.todo.createMany({
     data: [
-      { title: 'Buy groceries', foo: 'bar' },
-      { title: 'Read a book', foo: 'baz' },
-      { title: 'Workout', foo: 'qux' },
+      { title: "Buy groceries", foo: "bar" },
+      { title: "Read a book", foo: "baz" },
+      { title: "Workout", foo: "qux" },
     ],
   })
 
@@ -29,7 +29,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('❌ Error seeding database:', e)
+    console.error("❌ Error seeding database:", e)
     process.exit(1)
   })
   .finally(async () => {

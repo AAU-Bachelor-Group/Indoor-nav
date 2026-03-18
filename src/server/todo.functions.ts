@@ -1,6 +1,7 @@
-import { createServerFn } from "@tanstack/react-start";
-import { getServerTodos } from "./todo.server";
+import { createServerFn } from "@tanstack/react-start"
 
-export const getTodos = createServerFn({method: "GET"}).handler(async () => {
-    return await getServerTodos()
+import { getServerTodos } from "./todo.server"
+
+export const getTodos = createServerFn({ method: "GET" }).handler(async () => {
+  return await getServerTodos()
 })
