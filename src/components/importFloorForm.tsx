@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { uploadImage } from "#/server/importFloor.functions"
+import { set } from "zod"
  
 export default function ImageUploadWithFloor() {
   const [file, setFile] = useState<File | null>(null)
@@ -14,6 +15,7 @@ export default function ImageUploadWithFloor() {
   const [floor, setFloor] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadedPath, setUploadedPath] = useState<string | null>(null)
+  const [failedUpload, setFailedUpload] = useState<string | null>(null)
  
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const selected = acceptedFiles[0]
@@ -38,11 +40,11 @@ export default function ImageUploadWithFloor() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!file) {
-      alert("Please upload an image")
+      setFailedUpload("Please upload an image")
       return
     }
     if (floor === null) {
-      alert("Please select a floor")
+      setFailedUpload("Please select a floor")
       return
     }
  
@@ -63,7 +65,7 @@ export default function ImageUploadWithFloor() {
       console.log("Uploaded to:", result.filepath)
     } catch (err) {
       console.error("Upload failed:", err)
-      alert("Upload failed. Please try again.")
+      setFailedUpload("Upload failed. Please try again.")
     } finally {
       setIsUploading(false)
     }
@@ -138,12 +140,17 @@ export default function ImageUploadWithFloor() {
           <Button type="submit" className="w-full" disabled={isUploading}>
             {isUploading ? "Uploading..." : "Upload Image"}
           </Button>
+
+          {failedUpload && (
+            <p className="text-sm text-red-500 font-bold text-center">
+              {failedUpload}
+            </p>
+          )}
  
           {/* Success feedback */}
           {uploadedPath && (
-            <p className="text-sm text-muted-foreground text-center">
-              Saved to:{" "}
-              <span className="font-mono text-foreground">{uploadedPath}</span>
+            <p className="text-sm text-green-500 font-bold text-center">
+              {"Floor plan was successfully uploaded for floor " + floor}
             </p>
           )}
         </form>
