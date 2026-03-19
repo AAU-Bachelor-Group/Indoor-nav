@@ -1,12 +1,28 @@
-"use client"
-import { useState, useCallback } from "react"
-import { useDropzone } from "react-dropzone"
-import { UploadCloud, X, AlertTriangle } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { uploadImage, getFloorImage } from "#/server/importFloor.functions"
+'use client'
+import { useState, useCallback } from 'react'
+import { useDropzone } from 'react-dropzone'
+import { UploadCloud, X, AlertTriangle } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { uploadImage, getFloorImage } from '#/server/importFloor.functions'
+
+const ACCEPTED_IMAGE_TYPES = {
+  'image/png': ['.png'],
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/svg+xml': ['.svg'],
+  'image/webp': ['.webp'],
+  'image/gif': ['.gif'],
+  'image/bmp': ['.bmp'],
+  'image/tiff': ['.tiff', '.tif'],
+}
 
 export default function ImageUploadWithFloor() {
   const [file, setFile] = useState<File | null>(null)
@@ -29,8 +45,19 @@ export default function ImageUploadWithFloor() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: { "image/*": [] },
+    accept: ACCEPTED_IMAGE_TYPES,
     maxFiles: 1,
+    maxSize: 10 * 1024 * 1024,
+    onDropRejected: (rejections) => {
+      const error = rejections[0]?.errors[0]
+      if (error?.code === 'file-too-large') {
+        setFailedUpload('Image must be 10 MB or smaller')
+      } else if (error?.code === 'file-invalid-type') {
+        setFailedUpload(
+          'Only PNG, JPEG, SVG, WebP, GIF, BMP, and TIFF files are accepted',
+        )
+      }
+    },
   })
 
   const handleRemove = () => {
@@ -46,7 +73,7 @@ export default function ImageUploadWithFloor() {
     setExistingImage(null)
 
     try {
-      const result = await getFloorImage({ data: { floor } })
+      const result = await getFloorImage({ data: { floor: value } }) // was: floor (stale state)
       setExistingImage(result.filepath)
     } catch {
       setExistingImage(null)
@@ -72,45 +99,55 @@ export default function ImageUploadWithFloor() {
       setExistingImage(result.filepath)
       setFailedUpload(null)
     } catch (err) {
-      console.error("Upload failed:", err)
-      setFailedUpload("Upload failed. Please try again.")
+      console.error('Upload failed:', err)
+      setFailedUpload('Upload failed. Please try again.')
     } finally {
       setIsUploading(false)
     }
   }
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  setFailedUpload(null)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setFailedUpload(null)
 
-  if (!file) {
-    setFailedUpload("Please upload an image")
-    return
-  }
-  if (floor === null) {
-    setFailedUpload("Please select a floor")
-    return
-  }
-
-  setUploadedPath("")
-  setFailedUpload("")
-
-  if (!showOverwriteWarning) {
-    // Always do a fresh check at submit time, don't trust state
-    try {
-      const result = await getFloorImage({ data: { floor } })
-      if (result.filepath) {
-        setExistingImage(result.filepath)
-        setShowOverwriteWarning(true)
-        return
-      }
-    } catch {
-      // No existing image, safe to proceed
+    if (!file) {
+      setFailedUpload('Please upload an image')
+      return
     }
-  }
+    if (file.size > 10 * 1024 * 1024) {
+      setFailedUpload('Image must be 10 MB or smaller')
+      return
+    }
+    if (floor === null) {
+      setFailedUpload('Please select a floor')
+      return
+    }
+    if (!Object.keys(ACCEPTED_IMAGE_TYPES).includes(file.type)) {
+      setFailedUpload(
+        'Only PNG, JPEG, SVG, WebP, GIF, BMP, and TIFF files are accepted',
+      )
+      return
+    }
 
-  await doUpload()
-}
+    setUploadedPath('')
+    setFailedUpload('')
+
+    if (!showOverwriteWarning) {
+      // Always do a fresh check at submit time, don't trust state
+      try {
+        const result = await getFloorImage({ data: { floor } })
+        if (result.filepath) {
+          setExistingImage(result.filepath)
+          setShowOverwriteWarning(true)
+          return
+        }
+      } catch {
+        // No existing image, safe to proceed
+      }
+    }
+
+    await doUpload()
+  }
 
   return (
     <>
@@ -120,7 +157,10 @@ const handleSubmit = async (e: React.FormEvent) => {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
           onClick={() => setLightboxOpen(false)}
         >
-          <div className="relative max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative max-w-4xl w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Button
               type="button"
               size="icon"
@@ -135,7 +175,9 @@ const handleSubmit = async (e: React.FormEvent) => {
               alt="Current floor plan"
               className="rounded-xl w-full max-h-[80vh] object-contain shadow-2xl"
             />
-            <p className="text-center text-white/70 text-sm mt-3">Floor {floor} — current floor plan</p>
+            <p className="text-center text-white/70 text-sm mt-3">
+              Floor {floor} — current floor plan
+            </p>
           </div>
         </div>
       )}
@@ -151,7 +193,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition
-                ${isDragActive ? "border-primary bg-muted" : "border-muted-foreground/30"}`}
+                ${isDragActive ? 'border-primary bg-muted' : 'border-muted-foreground/30'}`}
               >
                 <input {...getInputProps()} />
                 <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
@@ -160,7 +202,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                     <p>Drop the image here...</p>
                   ) : (
                     <>
-                      <p className="font-medium text-foreground">Drag & drop an image here</p>
+                      <p className="font-medium text-foreground">
+                        Drag & drop an image here
+                      </p>
+                      <p>PNG, JPEG, SVG, WebP, GIF, BMP, TIFF · Max 10 MB</p>
                       <p>or click to browse</p>
                     </>
                   )}
@@ -171,7 +216,11 @@ const handleSubmit = async (e: React.FormEvent) => {
             {/* Preview */}
             {preview && (
               <div className="relative">
-                <img src={preview} alt="Preview" className="rounded-xl w-full h-48 object-cover border" />
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="rounded-xl w-full h-48 object-cover border"
+                />
                 <Button
                   type="button"
                   size="icon"
@@ -206,11 +255,19 @@ const handleSubmit = async (e: React.FormEvent) => {
               <div className="rounded-xl border border-yellow-400 bg-yellow-50 dark:bg-yellow-950/30 p-4 space-y-3">
                 <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 font-semibold text-sm">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
-                  <span>A floor plan already exists for floor {floor}. It will be replaced.</span>
+                  <span>
+                    A floor plan already exists for floor {floor}. It will be
+                    replaced.
+                  </span>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Current image:</p>
-                  <div className="relative group cursor-zoom-in" onClick={() => setLightboxOpen(true)}>
+                  <p className="text-xs text-muted-foreground">
+                    Current image:
+                  </p>
+                  <div
+                    className="relative group cursor-zoom-in"
+                    onClick={() => setLightboxOpen(true)}
+                  >
                     <img
                       src={existingImage}
                       alt="Existing floor plan"
@@ -229,7 +286,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                     className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white"
                     disabled={isUploading}
                   >
-                    {isUploading ? "Uploading..." : "Yes, overwrite"}
+                    {isUploading ? 'Uploading...' : 'Yes, overwrite'}
                   </Button>
                   <Button
                     type="button"
@@ -245,17 +302,19 @@ const handleSubmit = async (e: React.FormEvent) => {
 
             {!showOverwriteWarning && (
               <Button type="submit" className="w-full" disabled={isUploading}>
-                {isUploading ? "Uploading..." : "Upload Image"}
+                {isUploading ? 'Uploading...' : 'Upload Image'}
               </Button>
             )}
 
             {failedUpload && (
-              <p className="text-sm text-red-500 font-bold text-center">{failedUpload}</p>
+              <p className="text-sm text-red-500 font-bold text-center">
+                {failedUpload}
+              </p>
             )}
 
             {uploadedPath && (
               <p className="text-sm text-green-500 font-bold text-center">
-                {"Floor plan was successfully uploaded for floor " + floor}
+                {'Floor plan was successfully uploaded for floor ' + floor}
               </p>
             )}
           </form>
