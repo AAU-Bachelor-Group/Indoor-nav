@@ -2,6 +2,7 @@
 import { UploadCloud, X, AlertTriangle } from "lucide-react"
 import { useState, useCallback } from "react"
 import { useDropzone } from "react-dropzone"
+import { useForm } from "@tanstack/react-form"
 
 import { uploadImage, getFloorImage } from "#/server/importFloor.functions"
 import { Button } from "@/components/ui/button"
@@ -26,23 +27,64 @@ const ACCEPTED_IMAGE_TYPES = {
 }
 
 export default function ImageUploadWithFloor() {
-  const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
-  const [floor, setFloor] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
-  const [uploadedPath, setUploadedPath] = useState<string | null>(null)
+  const [successfullyUploaded, setSuccessfullyUploaded] = useState(false)
   const [failedUpload, setFailedUpload] = useState<string | null>(null)
   const [existingImage, setExistingImage] = useState<string | null>(null)
   const [showOverwriteWarning, setShowOverwriteWarning] = useState(false)
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const selected = acceptedFiles[0]
-    if (!selected) return
-    setFile(selected)
-    setUploadedPath(null)
-    setPreview(URL.createObjectURL(selected))
-  }, [])
+  const form = useForm({
+    defaultValues: {
+      file: null as File | null,
+      floor: null as string | null,
+    },
+    validators: {
+      onSubmit: ({ value }) => {
+        if (!value.file) return "Please upload an image"
+        if (value.file.size > 10 * 1024 * 1024) return "Image must be 10 MB or smaller"
+        if (!value.floor) return "Please select a floor"
+        if (!Object.keys(ACCEPTED_IMAGE_TYPES).includes(value.file.type))
+          return "Only PNG, JPEG, SVG, WebP, GIF, BMP, and TIFF files are accepted"
+        return undefined
+      },
+    },
+    onSubmit: async ({ value }) => {
+      const { file, floor } = value
+      if (!file || !floor) return
+
+      setFailedUpload(null)
+      setSuccessfullyUploaded(false)
+
+      if (!showOverwriteWarning) {
+        try {
+          const result = await getFloorImage({ data: { floor } })
+          if (result.filepath) {
+            setExistingImage(result.filepath)
+            setShowOverwriteWarning(true)
+            return
+          }
+        } catch {
+          // No existing image, safe to proceed
+        }
+      }
+
+      await doUpload(file, floor)
+    },
+  })
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const selected = acceptedFiles[0]
+      if (!selected) return
+      form.setFieldValue("file", selected)
+      setSuccessfullyUploaded(false)
+      setShowOverwriteWarning(false)
+      setPreview(URL.createObjectURL(selected))
+    },
+    [form],
+  )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -60,30 +102,26 @@ export default function ImageUploadWithFloor() {
   })
 
   const handleRemove = () => {
-    setFile(null)
+    form.setFieldValue("file", null)
     setPreview(null)
-    setUploadedPath(null)
+    setSuccessfullyUploaded(false)
+    setShowOverwriteWarning(false)
   }
 
-const handleFloorChange = async (value: string | null) => {
-  if (!value) return
-  setFloor(value)
-  setUploadedPath(null)
-  setShowOverwriteWarning(false)
-  setExistingImage(null)
-
-  try {
-    const result = await getFloorImage({ data: { floor: value } })
-    setExistingImage(result.filepath)
-  } catch {
+  const handleFloorChange = async (value: string | null) => {
+    if (!value) return
+    form.setFieldValue("floor", value)
+    setSuccessfullyUploaded(false)
+    setShowOverwriteWarning(false)
     setExistingImage(null)
   }
-}
-  const doUpload = async () => {
-    if (!file || !floor) return
+
+  const doUpload = async (file: File, floor: string) => {
     const base64 = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader()
-      reader.onload = () => { resolve(reader.result as string); }
+      reader.onload = () => {
+        resolve(reader.result as string)
+      }
       reader.onerror = reject
       reader.readAsDataURL(file)
     })
@@ -91,59 +129,17 @@ const handleFloorChange = async (value: string | null) => {
     try {
       setIsUploading(true)
       setShowOverwriteWarning(false)
-      const result = await uploadImage({
+      await uploadImage({
         data: { base64, filename: file.name, floor },
       })
-      setUploadedPath(result.filepath)
-      setExistingImage(result.filepath)
       setFailedUpload(null)
     } catch (err) {
       console.error("Upload failed:", err)
       setFailedUpload("Upload failed. Please try again.")
     } finally {
       setIsUploading(false)
+      setSuccessfullyUploaded(true)
     }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setFailedUpload(null)
-
-    if (!file) {
-      setFailedUpload("Please upload an image")
-      return
-    }
-    if (file.size > 10 * 1024 * 1024) {
-      setFailedUpload("Image must be 10 MB or smaller")
-      return
-    }
-    if (floor === null) {
-      setFailedUpload("Please select a floor")
-      return
-    }
-    if (!Object.keys(ACCEPTED_IMAGE_TYPES).includes(file.type)) {
-      setFailedUpload("Only PNG, JPEG, SVG, WebP, GIF, BMP, and TIFF files are accepted")
-      return
-    }
-
-    setUploadedPath("")
-    setFailedUpload("")
-
-    if (!showOverwriteWarning) {
-      // Always do a fresh check at submit time, don't trust state
-      try {
-        const result = await getFloorImage({ data: { floor } })
-        if (result.filepath) {
-          setExistingImage(result.filepath)
-          setShowOverwriteWarning(true)
-          return
-        }
-      } catch {
-        // No existing image, safe to proceed
-      }
-    }
-
-    await doUpload()
   }
 
   return (
@@ -152,15 +148,15 @@ const handleFloorChange = async (value: string | null) => {
       {lightboxOpen && existingImage && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-          onClick={() => { setLightboxOpen(false); }}
+          onClick={() => setLightboxOpen(false)}
         >
-          <div className="relative max-w-4xl w-full" onClick={(e) => { e.stopPropagation(); }}>
+          <div className="relative max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
             <Button
               type="button"
               size="icon"
               variant="secondary"
               className="absolute -top-4 -right-4 z-10 rounded-full shadow-lg"
-              onClick={() => { setLightboxOpen(false); }}
+              onClick={() => setLightboxOpen(false)}
             >
               <X className="w-4 h-4" />
             </Button>
@@ -170,7 +166,7 @@ const handleFloorChange = async (value: string | null) => {
               className="rounded-xl w-full max-h-[80vh] object-contain shadow-2xl"
             />
             <p className="text-center text-white/70 text-sm mt-3">
-              Floor {floor} — current floor plan
+              Floor {form.getFieldValue("floor")} — current floor plan
             </p>
           </div>
         </div>
@@ -181,29 +177,38 @@ const handleFloorChange = async (value: string | null) => {
           <CardTitle>Upload Image</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Drag & Drop */}
-            {!preview && (
-              <div
-                {...getRootProps()}
-                className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              form.handleSubmit()
+            }}
+            className="space-y-4"
+          >
+            {/* Drag & Drop — always visible */}
+            <div
+              {...getRootProps()}
+              className={`border-2 border-dashed rounded-xl text-center cursor-pointer transition
+                ${preview ? "p-3" : "p-6"}
                 ${isDragActive ? "border-primary bg-muted" : "border-muted-foreground/30"}`}
+            >
+              <input {...getInputProps()} />
+              <div className={`flex items-center gap-2 text-sm text-muted-foreground
+                ${preview ? "justify-center flex-row" : "flex-col"}`}
               >
-                <input {...getInputProps()} />
-                <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
-                  <UploadCloud className="w-8 h-8" />
-                  {isDragActive ? (
-                    <p>Drop the image here...</p>
-                  ) : (
-                    <>
-                      <p className="font-medium text-foreground">Drag & drop an image here</p>
-                      <p>PNG, JPEG, SVG, WebP, GIF, BMP, TIFF · Max 10 MB</p>
-                      <p>or click to browse</p>
-                    </>
-                  )}
-                </div>
+                <UploadCloud className={preview ? "w-4 h-4 shrink-0" : "w-8 h-8"} />
+                {isDragActive ? (
+                  <p>Drop the image here...</p>
+                ) : preview ? (
+                  <p className="text-xs">Drop a new image to replace, or click to browse</p>
+                ) : (
+                  <>
+                    <p className="font-medium text-foreground">Drag & drop an image here</p>
+                    <p>PNG, JPEG, SVG, WebP, GIF, BMP, TIFF · Max 10 MB</p>
+                    <p>or click to browse</p>
+                  </>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Preview */}
             {preview && (
@@ -226,34 +231,44 @@ const handleFloorChange = async (value: string | null) => {
             )}
 
             {/* Floor Selector */}
-            <div className="space-y-2">
-              <Label htmlFor="floor">Select Floor</Label>
-              <Select onValueChange={handleFloorChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a floor" />
-                </SelectTrigger>
-                <SelectContent>
-                  {[-1, 0, 1, 2, 3, 4, 5, 6].map((f) => (
-                    <SelectItem key={f} value={f.toString()}>
-                      {f}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <form.Field name="floor">
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor="floor">Select Floor</Label>
+                  <Select onValueChange={handleFloorChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose a floor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[-1, 0, 1, 2, 3, 4, 5, 6].map((f) => (
+                        <SelectItem key={f} value={f.toString()}>
+                          {f}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-red-500">{field.state.meta.errors[0]}</p>
+                  )}
+                </div>
+              )}
+            </form.Field>
 
             {/* Overwrite Warning */}
             {showOverwriteWarning && existingImage && (
               <div className="rounded-xl border border-yellow-400 bg-yellow-50 dark:bg-yellow-950/30 p-4 space-y-3">
                 <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-400 font-semibold text-sm">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
-                  <span>A floor plan already exists for floor {floor}. It will be replaced.</span>
+                  <span>
+                    A floor plan already exists for floor {form.getFieldValue("floor")}. It will be
+                    replaced.
+                  </span>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs text-muted-foreground">Current image:</p>
                   <div
                     className="relative group cursor-zoom-in"
-                    onClick={() => { setLightboxOpen(true); }}
+                    onClick={() => setLightboxOpen(true)}
                   >
                     <img
                       src={existingImage}
@@ -279,7 +294,7 @@ const handleFloorChange = async (value: string | null) => {
                     type="button"
                     variant="outline"
                     className="flex-1"
-                    onClick={() => { setShowOverwriteWarning(false); }}
+                    onClick={() => setShowOverwriteWarning(false)}
                   >
                     Cancel
                   </Button>
@@ -293,13 +308,21 @@ const handleFloorChange = async (value: string | null) => {
               </Button>
             )}
 
+            <form.Subscribe selector={(state) => state.errors}>
+              {(errors) =>
+                errors.length > 0 && (
+                  <p className="text-sm text-red-500 font-bold text-center">{errors[0]}</p>
+                )
+              }
+            </form.Subscribe>
+
             {failedUpload && (
               <p className="text-sm text-red-500 font-bold text-center">{failedUpload}</p>
             )}
 
-            {uploadedPath && (
+            {successfullyUploaded && (
               <p className="text-sm text-green-500 font-bold text-center">
-                {"Floor plan was successfully uploaded for floor " + floor}
+                {"Floor plan was successfully uploaded for floor " + form.getFieldValue("floor")}
               </p>
             )}
           </form>

@@ -6,7 +6,7 @@ import { saveImageToServer } from "./importFloor.server"
 export const uploadImage = createServerFn({ method: "POST" })
   .inputValidator((data: { base64: string; filename: string; floor: string }) => data)
   .handler(async ({ data }) => {
-    return await saveImageToServer(data.base64, data.filename, data.floor)
+    await saveImageToServer(data.base64, data.filename, data.floor)
   })
 
 export const getFloorImage = createServerFn({ method: "POST" })
