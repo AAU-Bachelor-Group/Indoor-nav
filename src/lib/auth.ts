@@ -29,7 +29,6 @@ async function seedAdmin() {
         username: "admin",
       },
     })
-    console.log("Admin user ready")
   } catch (error) {
     console.error("Failed to seed admin user:", error)
   }

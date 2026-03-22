@@ -14,7 +14,7 @@ export const LoginForm = ({ className, ...props }: React.ComponentProps<"div">) 
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
     setError(null)
     setLoading(true)
@@ -41,7 +41,11 @@ export const LoginForm = ({ className, ...props }: React.ComponentProps<"div">) 
           <CardDescription>Enter the admin password to access maintenance features</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={(e) => { handleSubmit(e).catch(setError); }}>
+          <form
+            onSubmit={(e) => {
+              handleSubmit(e).catch(setError)
+            }}
+          >
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -49,7 +53,9 @@ export const LoginForm = ({ className, ...props }: React.ComponentProps<"div">) 
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => { setPassword(e.target.value); }}
+                  onChange={(e) => {
+                    setPassword(e.target.value)
+                  }}
                   required
                 />
               </Field>
