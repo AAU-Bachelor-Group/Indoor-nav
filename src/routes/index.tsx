@@ -2,11 +2,11 @@ import { useQuery } from "@tanstack/react-query"
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router"
 
 import { Button, buttonVariants } from "#/components/ui/button"
+import { ThreeScene } from "#/components/threeJS/map-scene"
 import { Input } from "#/components/ui/input"
 import { authClient } from "#/lib/auth-client"
 import { useIsLoggedIn } from "#/lib/auth-hooks"
 import { getTodos } from "#/server/todo.functions"
-import { ThreeScene } from "#/components/threeJS/map-scene"
 
 const App = () => {
   const { data: todos } = useQuery({ queryKey: ["todos"], queryFn: getTodos })

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react"
-import * as THREE from "three"
 import { useQuery } from "@tanstack/react-query"
+import { useEffect, useRef } from "react"
+import * as THREE from "three"
 
 import { getFloorPlansData } from "#/server/floorplan.functions"
 
@@ -21,7 +21,6 @@ interface ThreeSceneProps {
 
 export const ThreeScene = ({ currentFloor = null }: ThreeSceneProps) => {
   const sceneMountRef = useRef<HTMLDivElement | null>(null)
-  const [floorPlanes, setFloorPlanes] = useState<THREE.Mesh[]>([])
 
   const { data: floorPlansData } = useQuery({
     queryKey: ["floorPlans"],
@@ -47,10 +46,12 @@ export const ThreeScene = ({ currentFloor = null }: ThreeSceneProps) => {
     ////////////////////
     // Renderer setup //
     ////////////////////
-    let canvas = sceneMountRef.current.querySelector("canvas") as HTMLCanvasElement | null
+    const existingCanvas = sceneMountRef.current.querySelector("canvas")
+    let canvas: HTMLCanvasElement | null = null
     let renderer: THREE.WebGLRenderer
 
-    if (canvas && canvas instanceof HTMLCanvasElement) {
+    if (existingCanvas && existingCanvas instanceof HTMLCanvasElement) {
+      canvas = existingCanvas
       renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
     } else {
       renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -89,7 +90,6 @@ export const ThreeScene = ({ currentFloor = null }: ThreeSceneProps) => {
         planes.push(plane)
       })
     })
-    setFloorPlanes(planes)
 
     /////////////
     // Animate //
@@ -125,11 +125,13 @@ export const ThreeScene = ({ currentFloor = null }: ThreeSceneProps) => {
       planes.forEach((plane) => {
         scene.remove(plane)
         plane.geometry.dispose()
-        const material = plane.material as THREE.MeshBasicMaterial
-        if (material.map) {
-          material.map.dispose()
+        const material = plane.material
+        if (!Array.isArray(material)) {
+          if (material instanceof THREE.MeshBasicMaterial && material.map) {
+            material.map.dispose()
+          }
+          material.dispose()
         }
-        material.dispose()
       })
 
       renderer.dispose()
