@@ -53,6 +53,7 @@ export const LoginForm = ({ className, ...props }: React.ComponentProps<"div">) 
                   id="password"
                   type="password"
                   value={password}
+                  disabled={loading}
                   onChange={(e) => {
                     setPassword(e.target.value)
                   }}
