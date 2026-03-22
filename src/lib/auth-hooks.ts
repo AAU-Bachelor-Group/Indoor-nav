@@ -7,7 +7,7 @@ export function useSession() {
 export function useIsLoggedIn() {
   const { data, isPending } = authClient.useSession()
   return {
-    isLoggedIn: !!data,
+    isLoggedIn: !!data?.session,
     isPending,
   }
 }
