@@ -55,7 +55,7 @@ export const ThreeScene = ({ currentFloor = null }: ThreeSceneProps) => {
       renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
     } else {
       renderer = new THREE.WebGLRenderer({ antialias: true })
-      canvas = renderer.domElement as HTMLCanvasElement
+      canvas = renderer.domElement
       sceneMountRef.current.appendChild(canvas)
     }
     renderer.setSize(sceneMountRef.current.clientWidth, sceneMountRef.current.clientHeight)
