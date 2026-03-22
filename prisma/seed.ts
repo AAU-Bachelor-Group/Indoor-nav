@@ -12,8 +12,9 @@ const prisma = new PrismaClient({ adapter })
 async function main() {
   console.log("🌱 Seeding database...")
 
-  // Clear existing todos
+  // Clear existing data
   await prisma.todo.deleteMany()
+  await prisma.floorPlan.deleteMany()
 
   // Create example todos
   const todos = await prisma.todo.createMany({
@@ -25,6 +26,26 @@ async function main() {
   })
 
   console.log(`✅ Created ${todos.count} todos`)
+
+  // Example floor plans
+  const floorPlans = await prisma.floorPlan.createMany({
+    data: [
+      {
+        floor: 0,
+        imageUrl: "/floorplans/ACM15_1.Sal_page-0001.jpg",
+        aspectRatio: 1.64,
+        calibrationScale: 1.0,
+      },
+      {
+        floor: 1,
+        imageUrl: "/floorplans/ACM15_2.Sal_page-0001.jpg",
+        aspectRatio: 1.64,
+        calibrationScale: 1.0,
+      },
+    ],
+  })
+
+  console.log(`✅ Created ${floorPlans.count} floor plans`)
 }
 
 main()

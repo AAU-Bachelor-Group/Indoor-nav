@@ -6,6 +6,7 @@ import { Input } from "#/components/ui/input"
 import { authClient } from "#/lib/auth-client"
 import { useIsLoggedIn } from "#/lib/auth-hooks"
 import { getTodos } from "#/server/todo.functions"
+import { ThreeScene } from "#/components/threeJS/map-scene"
 
 const App = () => {
   const { data: todos } = useQuery({ queryKey: ["todos"], queryFn: getTodos })
@@ -37,6 +38,9 @@ const App = () => {
         </div>
       ))}
       <Input type="text" placeholder="Add a todo" />
+      <div style={{ width: "100%", height: "600px" }}>
+        <ThreeScene />
+      </div>
     </main>
   )
 }
