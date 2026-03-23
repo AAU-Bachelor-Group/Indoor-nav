@@ -139,7 +139,7 @@ export const useFloorUpload = () => {
       setUploadStatus({ state: "error", message: "Floor must be 20 or less" })
       return
     }
-    if(isNaN(Number(value))) {
+    if (isNaN(Number(value))) {
       setUploadStatus({ state: "error", message: "Floor must be a number" })
       return
     }
