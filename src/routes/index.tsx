@@ -10,8 +10,8 @@ const App = () => {
   const router = useRouter()
 
   return (
-    <main className="page-wrap px-4 pb-8 pt-14">
-      <div className="flex justify-end">
+    <main className="page-wrap px-4 pb-8 pt-8">
+      <div className="flex justify-center">
         {!isPending &&
           (isLoggedIn ? (
             <Button
@@ -29,7 +29,7 @@ const App = () => {
           ))}
       </div>
 
-      <div className="mx-auto w-full h-200 max-w-4xl rounded-lg border bg-popover p-6">
+      <div className="mx-auto w-full h-200 max-w-4xl rounded-lg border bg-popover p-6 mt-10">
         <ThreeScene currentFloor={1} />
       </div>
     </main>
