@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router"
 
-import { Button, buttonVariants } from "#/components/ui/button"
 import { ThreeScene } from "#/components/threeJS/map-scene"
+import { Button, buttonVariants } from "#/components/ui/button"
 import { authClient } from "#/lib/auth-client"
 import { useIsLoggedIn } from "#/lib/auth-hooks"
 
