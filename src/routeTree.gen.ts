@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UiDemoRouteImport } from './routes/ui-demo'
 import { Route as TestImportRouteImport } from './routes/test-import'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const UiDemoRoute = UiDemoRouteImport.update({
+  id: '/ui-demo',
+  path: '/ui-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TestImportRoute = TestImportRouteImport.update({
   id: '/test-import',
   path: '/test-import',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/test-import': typeof TestImportRoute
+  '/ui-demo': typeof UiDemoRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/test-import': typeof TestImportRoute
+  '/ui-demo': typeof UiDemoRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -52,25 +60,34 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/test-import': typeof TestImportRoute
+  '/ui-demo': typeof UiDemoRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/test-import' | '/api/auth/$'
+  fullPaths: '/' | '/login' | '/test-import' | '/ui-demo' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/test-import' | '/api/auth/$'
-  id: '__root__' | '/' | '/login' | '/test-import' | '/api/auth/$'
+  to: '/' | '/login' | '/test-import' | '/ui-demo' | '/api/auth/$'
+  id: '__root__' | '/' | '/login' | '/test-import' | '/ui-demo' | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   TestImportRoute: typeof TestImportRoute
+  UiDemoRoute: typeof UiDemoRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/ui-demo': {
+      id: '/ui-demo'
+      path: '/ui-demo'
+      fullPath: '/ui-demo'
+      preLoaderRoute: typeof UiDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/test-import': {
       id: '/test-import'
       path: '/test-import'
@@ -106,6 +123,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   TestImportRoute: TestImportRoute,
+  UiDemoRoute: UiDemoRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
