@@ -2,7 +2,7 @@
 
 <!-- What does this PR do and why? Link the PBI from GitHub Projects below. -->
 
-Closes #
+Closes #, closes #, ...
 
 ## How to run
 
