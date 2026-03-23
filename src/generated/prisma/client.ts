@@ -66,3 +66,28 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model Section
+ * 
+ */
+export type Section = Prisma.SectionModel
+/**
+ * Model Room
+ * 
+ */
+export type Room = Prisma.RoomModel
+/**
+ * Model Node
+ * 
+ */
+export type Node = Prisma.NodeModel
+/**
+ * Model Edge
+ * 
+ */
+export type Edge = Prisma.EdgeModel
+/**
+ * Model FloorPlan
+ * 
+ */
+export type FloorPlan = Prisma.FloorPlanModel

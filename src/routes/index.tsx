@@ -1,14 +1,11 @@
-import { useQuery } from "@tanstack/react-query"
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router"
 
+import { ThreeScene } from "#/components/threeJS/map-scene"
 import { Button, buttonVariants } from "#/components/ui/button"
-import { Input } from "#/components/ui/input"
 import { authClient } from "#/lib/auth-client"
 import { useIsLoggedIn } from "#/lib/auth-hooks"
-import { getTodos } from "#/server/todo.functions"
 
 const App = () => {
-  const { data: todos } = useQuery({ queryKey: ["todos"], queryFn: getTodos })
   const { isLoggedIn, isPending } = useIsLoggedIn()
   const router = useRouter()
 
@@ -31,12 +28,10 @@ const App = () => {
             </Link>
           ))}
       </div>
-      {todos?.map((todo) => (
-        <div key={todo.id}>
-          <h1>{todo.title}</h1>
-        </div>
-      ))}
-      <Input type="text" placeholder="Add a todo" />
+
+      <div className="mx-auto w-full h-200 max-w-4xl rounded-lg border bg-popover p-6">
+        <ThreeScene currentFloor={1} />
+      </div>
     </main>
   )
 }

@@ -9,7 +9,15 @@
 * 🟢 You can import this file directly.
 */
 
+export const NodeType = {
+  DEFAULT: 'DEFAULT'
+} as const
+
+export type NodeType = (typeof NodeType)[keyof typeof NodeType]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const RoomType = {
+  DEFAULT: 'DEFAULT'
+} as const
+
+export type RoomType = (typeof RoomType)[keyof typeof RoomType]

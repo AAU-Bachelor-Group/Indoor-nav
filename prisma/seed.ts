@@ -10,26 +10,33 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  console.log("🌱 Seeding database...")
+  console.log("Seeding database...")
 
-  // Clear existing todos
-  await prisma.todo.deleteMany()
+  // Clear existing data
+  await prisma.floorPlan.deleteMany()
 
-  // Create example todos
-  const todos = await prisma.todo.createMany({
+  // Create example floor plans
+  const floorPlans = await prisma.floorPlan.createMany({
     data: [
-      { title: "Buy groceries", foo: "bar" },
-      { title: "Read a book", foo: "baz" },
-      { title: "Workout", foo: "qux" },
+      {
+        floor: 0,
+        path: "/floorplans/ACM15_1.Sal_page-0001.jpg",
+        calibrationScale: 1.0,
+      },
+      {
+        floor: 1,
+        path: "/floorplans/ACM15_2.Sal_page-0001.jpg",
+        calibrationScale: 1.0,
+      },
     ],
   })
 
-  console.log(`✅ Created ${todos.count} todos`)
+  console.log(`Created ${floorPlans.count} floor plans`)
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Error seeding database:", e)
+    console.error("Error seeding database:", e)
     process.exit(1)
   })
   .finally(async () => {

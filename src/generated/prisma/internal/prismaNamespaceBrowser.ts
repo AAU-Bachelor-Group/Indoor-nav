@@ -55,7 +55,12 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Section: 'Section',
+  Room: 'Room',
+  Node: 'Node',
+  Edge: 'Edge',
+  FloorPlan: 'FloorPlan'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -142,6 +147,71 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const SectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SectionScalarFieldEnum = (typeof SectionScalarFieldEnum)[keyof typeof SectionScalarFieldEnum]
+
+
+export const RoomScalarFieldEnum = {
+  id: 'id',
+  isActivated: 'isActivated',
+  semanticNames: 'semanticNames',
+  type: 'type',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sectionId: 'sectionId'
+} as const
+
+export type RoomScalarFieldEnum = (typeof RoomScalarFieldEnum)[keyof typeof RoomScalarFieldEnum]
+
+
+export const NodeScalarFieldEnum = {
+  id: 'id',
+  x: 'x',
+  y: 'y',
+  z: 'z',
+  type: 'type',
+  isActivated: 'isActivated',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  roomId: 'roomId'
+} as const
+
+export type NodeScalarFieldEnum = (typeof NodeScalarFieldEnum)[keyof typeof NodeScalarFieldEnum]
+
+
+export const EdgeScalarFieldEnum = {
+  id: 'id',
+  distance: 'distance',
+  doors: 'doors',
+  stairs: 'stairs',
+  elevators: 'elevators',
+  isActivated: 'isActivated',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  fromNodeId: 'fromNodeId',
+  toNodeId: 'toNodeId'
+} as const
+
+export type EdgeScalarFieldEnum = (typeof EdgeScalarFieldEnum)[keyof typeof EdgeScalarFieldEnum]
+
+
+export const FloorPlanScalarFieldEnum = {
+  floor: 'floor',
+  path: 'path',
+  calibrationScale: 'calibrationScale',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FloorPlanScalarFieldEnum = (typeof FloorPlanScalarFieldEnum)[keyof typeof FloorPlanScalarFieldEnum]
 
 
 export const SortOrder = {

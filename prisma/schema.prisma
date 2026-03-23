@@ -162,3 +162,11 @@ enum NodeType {
 enum RoomType {
   DEFAULT
 }
+
+model FloorPlan {
+  floor                Int     @id @unique
+  path                 String
+  calibrationScale     Float   @default(1.0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
