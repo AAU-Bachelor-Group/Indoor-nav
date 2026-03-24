@@ -20,12 +20,12 @@ async function main() {
     data: [
       {
         floor: 0,
-        path: "/floorplans/ACM15_1.Sal_page-0001.jpg",
+        path: "/floorplans/floor_0_ACM15_1.Sal_page-0001.jpg",
         calibrationScale: 1.0,
       },
       {
         floor: 1,
-        path: "/floorplans/ACM15_2.Sal_page-0001.jpg",
+        path: "/floorplans/floor_1_ACM15_2.Sal_page-0001.jpg",
         calibrationScale: 1.0,
       },
     ],
