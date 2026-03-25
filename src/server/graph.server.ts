@@ -199,8 +199,32 @@ export const deleteNodeByIdInDb = async (nodeId: Node["id"]) => {
   return deleted
 }
 
+export const activateNodeByIdInDb = async (nodeId: Node["id"]) => {
+  const updated = await prisma.node.update({
+    where: { id: nodeId },
+    data: { isActivated: true },
+  })
+
+  const g = await getGraph()
+  g.activateNodeById(nodeId)
+
+  return updated
+}
+
+export const deactiveNodeByIdInDb = async (nodeId: Node["id"]) => {
+  const updated = await prisma.node.update({
+    where: { id: nodeId },
+    data: { isActivated: false },
+  })
+
+  const g = await getGraph()
+  g.deactivateNodeById(nodeId)
+
+  return updated
+}
+
 // Edge db operations
-export const addEdge = async (edge: EdgeCreateInput) => {
+export const addEdgeInDb = async (edge: EdgeCreateInput) => {
   const created = await prisma.edge.create({
     data: edge,
   })
