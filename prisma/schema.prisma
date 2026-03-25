@@ -7,6 +7,13 @@ datasource db {
   provider = "postgresql"
 }
 
+model Todo {
+  id        Int      @id @default(autoincrement())
+  title     String
+  createdAt DateTime @default(now())
+  foo       String
+}
+
 model User {
   id            String    @id
   name          String
