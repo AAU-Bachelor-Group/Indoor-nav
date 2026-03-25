@@ -18,15 +18,28 @@ export const auth = betterAuth({
 
 async function seedAdmin() {
   try {
-    // Delete and recreate to ensure password always matches env
-    await prisma.user.deleteMany({ where: { username: "admin" } })
+    // Delete and recreate to ensure password always matches env.
+    // Use direct Prisma insert instead of signUpEmail to avoid creating a session.
+    const ctx = await auth.$context
+    const hashedPassword = await ctx.password.hash(env.ADMIN_PASSWORD)
+    const userId = crypto.randomUUID()
 
-    await auth.api.signUpEmail({
-      body: {
+    await prisma.user.deleteMany({ where: { username: "admin" } })
+    await prisma.user.create({
+      data: {
+        id: userId,
         email: "admin@admin.local",
-        password: env.ADMIN_PASSWORD,
         name: "Admin",
         username: "admin",
+        emailVerified: true,
+        accounts: {
+          create: {
+            id: crypto.randomUUID(),
+            accountId: userId,
+            providerId: "credential",
+            password: hashedPassword,
+          },
+        },
       },
     })
     console.log("Admin user seeded successfully")
