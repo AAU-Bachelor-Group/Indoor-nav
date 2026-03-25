@@ -50,7 +50,6 @@ export const LoginForm = ({ className, ...props }: React.ComponentProps<"div">) 
               <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
                 <Input
-                  aria-invalid={!!error}
                   id="password"
                   type="password"
                   value={password}

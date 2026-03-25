@@ -23,7 +23,7 @@ const App = () => {
               Sign out
             </Button>
           ) : (
-            <Link to="/login" className={buttonVariants({ variant: "default" })}>
+            <Link to="/login" className={buttonVariants({ variant: "outline" })}>
               Admin Login
             </Link>
           ))}
