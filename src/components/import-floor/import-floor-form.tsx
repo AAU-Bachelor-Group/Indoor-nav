@@ -138,6 +138,7 @@ const ImportFloorForm = () => {
                   <Input
                     id="floor"
                     placeholder="Enter floor number"
+                    aria-invalid={field.state.meta.errors.length > 0}
                     value={field.state.value}
                     onChange={(e) => {
                       handleFloorChange(e.target.value)
