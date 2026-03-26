@@ -15,7 +15,7 @@ import { getFloorPlansData } from "#/server/floorplan.functions"
 
 import type { FloorPlan } from "#/components/threeJS/map-scene"
 
-interface TwoPoints {
+interface Point {
   x: number
   y: number
   rx: number
@@ -24,7 +24,7 @@ interface TwoPoints {
 
 export const CalibrateFloor = () => {
   const [selectedFloor, setSelectedFloor] = useState<number | null>(null)
-  const [points, setPoints] = useState<TwoPoints[]>([])
+  const [points, setPoints] = useState<Point[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { data: floorPlansData } = useQuery({
