@@ -31,6 +31,11 @@ const App = () => {
         <Link to="/test-import" className={buttonVariants({ variant: "default" })}>
           Import floor plan
         </Link>
+        {/* for convinence */}
+
+        <Link to="/calibrate-floor" className={buttonVariants({ variant: "default" })}>
+          Calibrate floor plan
+        </Link>
       </div>
 
       <div className="mx-auto w-full h-200 max-w-4xl rounded-lg border bg-popover p-6 mt-10">

@@ -4,7 +4,7 @@ import * as THREE from "three"
 
 import { getFloorPlansData } from "#/server/floorplan.functions"
 
-interface FloorPlan {
+export interface FloorPlan {
   floor: number
   path: string
   calibrationScale: number

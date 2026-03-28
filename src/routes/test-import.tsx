@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 
 import { buttonVariants } from "#/components/ui/button"
 
-import ImportFloorForm from "../components/import-floor/import-floor-form"
+import ImportFloorForm from "../components/forms/import-floor-form"
 
 const RouteComponent = () => {
   return (

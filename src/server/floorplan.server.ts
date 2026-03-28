@@ -11,3 +11,12 @@ export const getFloorPlansByFloor = async (floor: number) => {
     where: { floor },
   })
 }
+
+export const editFloorPlan = (floor: number, calibrationScale?: number, path?: string) =>
+  prisma.floorPlan.update({
+    where: { floor },
+    data: {
+      ...(calibrationScale !== undefined && { calibrationScale }),
+      ...(path !== undefined && { path }),
+    },
+  })
