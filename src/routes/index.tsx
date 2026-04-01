@@ -1,4 +1,4 @@
-import { createFileRoute , Link } from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { Building2, Coffee, GraduationCap, Train } from "lucide-react"
 
 import { ThreeScene } from "#/components/threeJS/map-scene"
@@ -7,7 +7,6 @@ import { SearchBar } from "#/components/ui/search-bar"
 import { useIsLoggedIn } from "#/lib/auth-hooks"
 
 import type { SearchResultItem } from "#/components/ui/search-result-list"
-
 
 // To do: Delete
 const ALL_RESULTS: SearchResultItem[] = [
