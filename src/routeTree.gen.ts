@@ -10,9 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UiDemoRouteImport } from './routes/ui-demo'
-import { Route as TestImportRouteImport } from './routes/test-import'
+import { Route as ManageFloorRouteImport } from './routes/manage-floor'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as CalibrateFloorRouteImport } from './routes/calibrate-floor'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -21,19 +20,14 @@ const UiDemoRoute = UiDemoRouteImport.update({
   path: '/ui-demo',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestImportRoute = TestImportRouteImport.update({
-  id: '/test-import',
-  path: '/test-import',
+const ManageFloorRoute = ManageFloorRouteImport.update({
+  id: '/manage-floor',
+  path: '/manage-floor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalibrateFloorRoute = CalibrateFloorRouteImport.update({
-  id: '/calibrate-floor',
-  path: '/calibrate-floor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,61 +43,38 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/calibrate-floor': typeof CalibrateFloorRoute
   '/login': typeof LoginRoute
-  '/test-import': typeof TestImportRoute
+  '/manage-floor': typeof ManageFloorRoute
   '/ui-demo': typeof UiDemoRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/calibrate-floor': typeof CalibrateFloorRoute
   '/login': typeof LoginRoute
-  '/test-import': typeof TestImportRoute
+  '/manage-floor': typeof ManageFloorRoute
   '/ui-demo': typeof UiDemoRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/calibrate-floor': typeof CalibrateFloorRoute
   '/login': typeof LoginRoute
-  '/test-import': typeof TestImportRoute
+  '/manage-floor': typeof ManageFloorRoute
   '/ui-demo': typeof UiDemoRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/calibrate-floor'
-    | '/login'
-    | '/test-import'
-    | '/ui-demo'
-    | '/api/auth/$'
+  fullPaths: '/' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/calibrate-floor'
-    | '/login'
-    | '/test-import'
-    | '/ui-demo'
-    | '/api/auth/$'
-  id:
-    | '__root__'
-    | '/'
-    | '/calibrate-floor'
-    | '/login'
-    | '/test-import'
-    | '/ui-demo'
-    | '/api/auth/$'
+  to: '/' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
+  id: '__root__' | '/' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CalibrateFloorRoute: typeof CalibrateFloorRoute
   LoginRoute: typeof LoginRoute
-  TestImportRoute: typeof TestImportRoute
+  ManageFloorRoute: typeof ManageFloorRoute
   UiDemoRoute: typeof UiDemoRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -117,11 +88,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UiDemoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/test-import': {
-      id: '/test-import'
-      path: '/test-import'
-      fullPath: '/test-import'
-      preLoaderRoute: typeof TestImportRouteImport
+    '/manage-floor': {
+      id: '/manage-floor'
+      path: '/manage-floor'
+      fullPath: '/manage-floor'
+      preLoaderRoute: typeof ManageFloorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -129,13 +100,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calibrate-floor': {
-      id: '/calibrate-floor'
-      path: '/calibrate-floor'
-      fullPath: '/calibrate-floor'
-      preLoaderRoute: typeof CalibrateFloorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -157,9 +121,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CalibrateFloorRoute: CalibrateFloorRoute,
   LoginRoute: LoginRoute,
-  TestImportRoute: TestImportRoute,
+  ManageFloorRoute: ManageFloorRoute,
   UiDemoRoute: UiDemoRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
