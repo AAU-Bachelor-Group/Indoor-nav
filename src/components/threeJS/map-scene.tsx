@@ -1,8 +1,7 @@
-import { useQuery } from "@tanstack/react-query"
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
 
-import { getFloorPlansData } from "#/server/floorplan.functions"
+import { useMap } from "#/lib/map-context"
 
 export interface FloorPlan {
   floor: number
@@ -13,23 +12,15 @@ export interface FloorPlan {
 const FLOOR_HEIGHT = 1 // Height between floors (z-axis)
 const BASE_HEIGHT = 2
 
-interface ThreeSceneProps {
-  currentFloor?: number | null
-}
-
-export const ThreeScene = ({ currentFloor = null }: ThreeSceneProps) => {
+export const ThreeScene = () => {
   const sceneMountRef = useRef<HTMLDivElement | null>(null)
-
-  const { data: floorPlansData } = useQuery({
-    queryKey: ["floorPlans"],
-    queryFn: getFloorPlansData,
-  })
+  const { floors: floorPlansData, currentFloor } = useMap()
 
   useEffect(() => {
     /////////////////
     // Scene setup //
     /////////////////
-    if (!sceneMountRef.current || !floorPlansData) return
+    if (!sceneMountRef.current || floorPlansData.length === 0) return
 
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(
@@ -65,9 +56,9 @@ export const ThreeScene = ({ currentFloor = null }: ThreeSceneProps) => {
     const planes: THREE.Mesh[] = []
 
     const floorsToLoad =
-      currentFloor !== null
-        ? floorPlansData.filter((fp: FloorPlan) => fp.floor === currentFloor)
-        : floorPlansData
+      currentFloor === null
+        ? floorPlansData
+        : floorPlansData.filter((fp: FloorPlan) => fp.floor === currentFloor)
 
     floorsToLoad.forEach((floorPlan: FloorPlan) => {
       textureLoader.load(floorPlan.path, (texture) => {

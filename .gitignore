@@ -14,3 +14,10 @@ __unconfig*
 todos.json
 .output
 .claude
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.webp
+*.pdf
+*.zip
