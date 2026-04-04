@@ -21,6 +21,7 @@ export default [
     ignores: [
       "node_modules/",
       ".pnpm-store/",
+      ".output/",
       "*/generated/",
       "prisma/migrations/",
       // Ignores SHADCN components
