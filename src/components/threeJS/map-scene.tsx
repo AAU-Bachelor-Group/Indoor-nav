@@ -39,7 +39,7 @@ export const ThreeScene = ({ currentFloor = null }: ThreeSceneProps) => {
       1000,
     )
 
-    camera.position.z = 2.5 //!!!!needs to be updated when more camera controls are added
+    camera.position.z = 7 //!!!!needs to be updated when more camera controls are added
 
     ////////////////////
     // Renderer setup //

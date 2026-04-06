@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form"
+import { useQueryClient } from "@tanstack/react-query"
 import { useState, useCallback } from "react"
 import { useDropzone, type FileRejection } from "react-dropzone"
 import { z } from "zod"
@@ -25,6 +26,7 @@ export const formSchema = z.object({
 })
 
 export const useFloorUpload = () => {
+  const queryClient = useQueryClient()
   const [preview, setPreview] = useState<string | null>(null)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [uploadStatus, setUploadStatus] = useState<{ state: UploadState; message?: string }>({
@@ -49,6 +51,7 @@ export const useFloorUpload = () => {
       setUploadStatus({ state: "uploading" })
       setOverwrite({ show: false, existingImage: null })
       await uploadImage({ data: { base64, filename: file.name, floor } })
+      await queryClient.invalidateQueries({ queryKey: ["floorPlans"] })
       setUploadStatus({ state: "success" })
     } catch (err) {
       console.error("Upload failed:", err)
