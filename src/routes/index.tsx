@@ -6,36 +6,7 @@ import { MapScene } from "#/components/threeJS/map-scene"
 import { buttonVariants } from "#/components/ui/button"
 import { SearchBar } from "#/components/ui/search-bar"
 import { useIsLoggedIn } from "#/lib/auth-hooks"
-
-import type { SearchResultItem } from "#/components/ui/search-result-list"
-
-// To do: Delete
-const ALL_RESULTS: SearchResultItem[] = [
-  {
-    id: "lecture-hall",
-    icon: <GraduationCap className="w-5 h-5" />,
-    title: "Building 101",
-    semantic: "Software lecture room",
-  },
-  {
-    id: "library",
-    icon: <Building2 className="w-5 h-5" />,
-    title: "Main Library",
-    semantic: "University library",
-  },
-  {
-    id: "station",
-    icon: <Train className="w-5 h-5" />,
-    title: "Central Station",
-    semantic: "Train station",
-  },
-  {
-    id: "coffee",
-    icon: <Coffee className="w-5 h-5" />,
-    title: "Campus Coffee",
-    semantic: "Coffee shop",
-  },
-]
+import { MapProvider } from "#/lib/map-context"
 
 const App = () => {
   const { isLoggedIn, isPending } = useIsLoggedIn()
