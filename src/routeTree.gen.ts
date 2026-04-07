@@ -10,7 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UiDemoRouteImport } from './routes/ui-demo'
+<<<<<<< HEAD
 import { Route as ManageFloorRouteImport } from './routes/manage-floor'
+=======
+import { Route as TestSearchbarRouteImport } from './routes/test-searchbar'
+import { Route as TestImportRouteImport } from './routes/test-import'
+>>>>>>> f9df989 (added fuzzy search bar)
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -20,9 +25,20 @@ const UiDemoRoute = UiDemoRouteImport.update({
   path: '/ui-demo',
   getParentRoute: () => rootRouteImport,
 } as any)
+<<<<<<< HEAD
 const ManageFloorRoute = ManageFloorRouteImport.update({
   id: '/manage-floor',
   path: '/manage-floor',
+=======
+const TestSearchbarRoute = TestSearchbarRouteImport.update({
+  id: '/test-searchbar',
+  path: '/test-searchbar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestImportRoute = TestImportRouteImport.update({
+  id: '/test-import',
+  path: '/test-import',
+>>>>>>> f9df989 (added fuzzy search bar)
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -44,14 +60,24 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+<<<<<<< HEAD
   '/manage-floor': typeof ManageFloorRoute
+=======
+  '/test-import': typeof TestImportRoute
+  '/test-searchbar': typeof TestSearchbarRoute
+>>>>>>> f9df989 (added fuzzy search bar)
   '/ui-demo': typeof UiDemoRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+<<<<<<< HEAD
   '/manage-floor': typeof ManageFloorRoute
+=======
+  '/test-import': typeof TestImportRoute
+  '/test-searchbar': typeof TestSearchbarRoute
+>>>>>>> f9df989 (added fuzzy search bar)
   '/ui-demo': typeof UiDemoRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -59,22 +85,61 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+<<<<<<< HEAD
   '/manage-floor': typeof ManageFloorRoute
+=======
+  '/test-import': typeof TestImportRoute
+  '/test-searchbar': typeof TestSearchbarRoute
+>>>>>>> f9df989 (added fuzzy search bar)
   '/ui-demo': typeof UiDemoRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
+<<<<<<< HEAD
   fullPaths: '/' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
   id: '__root__' | '/' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
+=======
+  fullPaths:
+    | '/'
+    | '/calibrate-floor'
+    | '/login'
+    | '/test-import'
+    | '/test-searchbar'
+    | '/ui-demo'
+    | '/api/auth/$'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/calibrate-floor'
+    | '/login'
+    | '/test-import'
+    | '/test-searchbar'
+    | '/ui-demo'
+    | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/calibrate-floor'
+    | '/login'
+    | '/test-import'
+    | '/test-searchbar'
+    | '/ui-demo'
+    | '/api/auth/$'
+>>>>>>> f9df989 (added fuzzy search bar)
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+<<<<<<< HEAD
   ManageFloorRoute: typeof ManageFloorRoute
+=======
+  TestImportRoute: typeof TestImportRoute
+  TestSearchbarRoute: typeof TestSearchbarRoute
+>>>>>>> f9df989 (added fuzzy search bar)
   UiDemoRoute: typeof UiDemoRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -88,11 +153,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UiDemoRouteImport
       parentRoute: typeof rootRouteImport
     }
+<<<<<<< HEAD
     '/manage-floor': {
       id: '/manage-floor'
       path: '/manage-floor'
       fullPath: '/manage-floor'
       preLoaderRoute: typeof ManageFloorRouteImport
+=======
+    '/test-searchbar': {
+      id: '/test-searchbar'
+      path: '/test-searchbar'
+      fullPath: '/test-searchbar'
+      preLoaderRoute: typeof TestSearchbarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test-import': {
+      id: '/test-import'
+      path: '/test-import'
+      fullPath: '/test-import'
+      preLoaderRoute: typeof TestImportRouteImport
+>>>>>>> f9df989 (added fuzzy search bar)
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -122,7 +202,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+<<<<<<< HEAD
   ManageFloorRoute: ManageFloorRoute,
+=======
+  TestImportRoute: TestImportRoute,
+  TestSearchbarRoute: TestSearchbarRoute,
+>>>>>>> f9df989 (added fuzzy search bar)
   UiDemoRoute: UiDemoRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
