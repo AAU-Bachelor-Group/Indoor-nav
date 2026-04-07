@@ -99,10 +99,10 @@ async function main() {
   // Create example nodes (this should be deleted later!!!)
   await prisma.node.createMany({
     data: [
-      { x: 0, y: 0, z: 0, type: "DEFAULT" },
-      { x: 5, y: 0, z: 0, type: "DEFAULT" },
-      { x: 5, y: 5, z: 0, type: "DEFAULT" },
-      { x: 0, y: 5, z: 0, type: "DEFAULT" },
+      { x: 0, y: 0, z: 0, type: "DEFAULT", floor: 0 },
+      { x: 5, y: 0, z: 0, type: "DEFAULT", floor: 0 },
+      { x: 5, y: 5, z: 0, type: "DEFAULT", floor: 0 },
+      { x: 0, y: 5, z: 0, type: "DEFAULT", floor: 0 },
     ],
   })
 

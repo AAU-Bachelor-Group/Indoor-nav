@@ -78,20 +78,26 @@ model Section {
 
 model Room {
   id            String    @id
+  roomNumber    String
+  displayName   String
   isActivated   Boolean   @default(true)
   semanticNames String[]
   type          RoomType
 
-  /// PostGIS geometry columns
-  pointZ        Unsupported("geometry(PointZ, 4326)")?
-  polygon       Unsupported("geometry(Polygon, 4326)")?
-  multiPolygon  Unsupported("geometry(MultiPolygon, 4326)")?
+  /// PostGIS geometry columns (SRID 0 - local Cartesian meters in the floor frame)
+  pointZ        Unsupported("geometry(PointZ, 0)")?
+  polygon       Unsupported("geometry(Polygon, 0)")?
+  multiPolygon  Unsupported("geometry(MultiPolygon, 0)")?
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   sectionId     String?
   section       Section?  @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+
+  /// Floor this room lives on. Coordinates are in this floor's local frame.
+  floor         Int
+  floorPlan     FloorPlan @relation(fields: [floor], references: [floor], onDelete: Cascade)
 
   /// A room can have many nodes.
   /// A node may optionally belong to a room.
@@ -100,6 +106,7 @@ model Room {
   @@index([sectionId])
   @@index([type])
   @@index([isActivated])
+  @@index([floor])
 }
 
 model Node {
@@ -115,6 +122,10 @@ model Node {
   roomId        String?
   room          Room?     @relation(fields: [roomId], references: [id], onDelete: SetNull)
 
+  /// Floor this node lives on. Coordinates are in this floor's local frame.
+  floor         Int
+  floorPlan     FloorPlan @relation(fields: [floor], references: [floor], onDelete: Cascade)
+
   edgesFrom     Edge[]    @relation("EdgeFromNode")
   edgesTo       Edge[]    @relation("EdgeToNode")
 
@@ -122,6 +133,7 @@ model Node {
   @@index([type])
   @@index([isActivated])
   @@index([x, y, z])
+  @@index([floor])
 }
 
 model Edge {
@@ -154,6 +166,14 @@ enum NodeType {
 
 enum RoomType {
   DEFAULT
+  CLASSROOM
+  MEETING_ROOM
+  OFFICE
+  STUDY_SPACE
+  AUDITORIUM
+  LIBRARY
+  FOOD_DRINK
+  FACILITY
 }
 
 model FloorPlan {
@@ -162,4 +182,7 @@ model FloorPlan {
   calibrationScale     Float   @default(1.0)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+
+  rooms                Room[]
+  nodes                Node[]
 }

@@ -150,12 +150,15 @@ export type SectionScalarFieldEnum = (typeof SectionScalarFieldEnum)[keyof typeo
 
 export const RoomScalarFieldEnum = {
   id: 'id',
+  roomNumber: 'roomNumber',
+  displayName: 'displayName',
   isActivated: 'isActivated',
   semanticNames: 'semanticNames',
   type: 'type',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  sectionId: 'sectionId'
+  sectionId: 'sectionId',
+  floor: 'floor'
 } as const
 
 export type RoomScalarFieldEnum = (typeof RoomScalarFieldEnum)[keyof typeof RoomScalarFieldEnum]
@@ -170,7 +173,8 @@ export const NodeScalarFieldEnum = {
   isActivated: 'isActivated',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  roomId: 'roomId'
+  roomId: 'roomId',
+  floor: 'floor'
 } as const
 
 export type NodeScalarFieldEnum = (typeof NodeScalarFieldEnum)[keyof typeof NodeScalarFieldEnum]

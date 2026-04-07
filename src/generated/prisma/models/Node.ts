@@ -30,12 +30,14 @@ export type NodeAvgAggregateOutputType = {
   x: number | null
   y: number | null
   z: number | null
+  floor: number | null
 }
 
 export type NodeSumAggregateOutputType = {
   x: number | null
   y: number | null
   z: number | null
+  floor: number | null
 }
 
 export type NodeMinAggregateOutputType = {
@@ -48,6 +50,7 @@ export type NodeMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   roomId: string | null
+  floor: number | null
 }
 
 export type NodeMaxAggregateOutputType = {
@@ -60,6 +63,7 @@ export type NodeMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   roomId: string | null
+  floor: number | null
 }
 
 export type NodeCountAggregateOutputType = {
@@ -72,6 +76,7 @@ export type NodeCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   roomId: number
+  floor: number
   _all: number
 }
 
@@ -80,12 +85,14 @@ export type NodeAvgAggregateInputType = {
   x?: true
   y?: true
   z?: true
+  floor?: true
 }
 
 export type NodeSumAggregateInputType = {
   x?: true
   y?: true
   z?: true
+  floor?: true
 }
 
 export type NodeMinAggregateInputType = {
@@ -98,6 +105,7 @@ export type NodeMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   roomId?: true
+  floor?: true
 }
 
 export type NodeMaxAggregateInputType = {
@@ -110,6 +118,7 @@ export type NodeMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   roomId?: true
+  floor?: true
 }
 
 export type NodeCountAggregateInputType = {
@@ -122,6 +131,7 @@ export type NodeCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   roomId?: true
+  floor?: true
   _all?: true
 }
 
@@ -221,6 +231,7 @@ export type NodeGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   roomId: string | null
+  floor: number
   _count: NodeCountAggregateOutputType | null
   _avg: NodeAvgAggregateOutputType | null
   _sum: NodeSumAggregateOutputType | null
@@ -256,7 +267,9 @@ export type NodeWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Node"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Node"> | Date | string
   roomId?: Prisma.StringNullableFilter<"Node"> | string | null
+  floor?: Prisma.IntFilter<"Node"> | number
   room?: Prisma.XOR<Prisma.RoomNullableScalarRelationFilter, Prisma.RoomWhereInput> | null
+  floorPlan?: Prisma.XOR<Prisma.FloorPlanScalarRelationFilter, Prisma.FloorPlanWhereInput>
   edgesFrom?: Prisma.EdgeListRelationFilter
   edgesTo?: Prisma.EdgeListRelationFilter
 }
@@ -271,7 +284,9 @@ export type NodeOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
+  floor?: Prisma.SortOrder
   room?: Prisma.RoomOrderByWithRelationInput
+  floorPlan?: Prisma.FloorPlanOrderByWithRelationInput
   edgesFrom?: Prisma.EdgeOrderByRelationAggregateInput
   edgesTo?: Prisma.EdgeOrderByRelationAggregateInput
 }
@@ -289,7 +304,9 @@ export type NodeWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Node"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Node"> | Date | string
   roomId?: Prisma.StringNullableFilter<"Node"> | string | null
+  floor?: Prisma.IntFilter<"Node"> | number
   room?: Prisma.XOR<Prisma.RoomNullableScalarRelationFilter, Prisma.RoomWhereInput> | null
+  floorPlan?: Prisma.XOR<Prisma.FloorPlanScalarRelationFilter, Prisma.FloorPlanWhereInput>
   edgesFrom?: Prisma.EdgeListRelationFilter
   edgesTo?: Prisma.EdgeListRelationFilter
 }, "id">
@@ -304,6 +321,7 @@ export type NodeOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   roomId?: Prisma.SortOrderInput | Prisma.SortOrder
+  floor?: Prisma.SortOrder
   _count?: Prisma.NodeCountOrderByAggregateInput
   _avg?: Prisma.NodeAvgOrderByAggregateInput
   _max?: Prisma.NodeMaxOrderByAggregateInput
@@ -324,6 +342,7 @@ export type NodeScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Node"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Node"> | Date | string
   roomId?: Prisma.StringNullableWithAggregatesFilter<"Node"> | string | null
+  floor?: Prisma.IntWithAggregatesFilter<"Node"> | number
 }
 
 export type NodeCreateInput = {
@@ -336,6 +355,7 @@ export type NodeCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   room?: Prisma.RoomCreateNestedOneWithoutNodesInput
+  floorPlan: Prisma.FloorPlanCreateNestedOneWithoutNodesInput
   edgesFrom?: Prisma.EdgeCreateNestedManyWithoutFromNodeInput
   edgesTo?: Prisma.EdgeCreateNestedManyWithoutToNodeInput
 }
@@ -350,6 +370,7 @@ export type NodeUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   roomId?: string | null
+  floor: number
   edgesFrom?: Prisma.EdgeUncheckedCreateNestedManyWithoutFromNodeInput
   edgesTo?: Prisma.EdgeUncheckedCreateNestedManyWithoutToNodeInput
 }
@@ -364,6 +385,7 @@ export type NodeUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   room?: Prisma.RoomUpdateOneWithoutNodesNestedInput
+  floorPlan?: Prisma.FloorPlanUpdateOneRequiredWithoutNodesNestedInput
   edgesFrom?: Prisma.EdgeUpdateManyWithoutFromNodeNestedInput
   edgesTo?: Prisma.EdgeUpdateManyWithoutToNodeNestedInput
 }
@@ -378,6 +400,7 @@ export type NodeUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
   edgesFrom?: Prisma.EdgeUncheckedUpdateManyWithoutFromNodeNestedInput
   edgesTo?: Prisma.EdgeUncheckedUpdateManyWithoutToNodeNestedInput
 }
@@ -392,6 +415,7 @@ export type NodeCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   roomId?: string | null
+  floor: number
 }
 
 export type NodeUpdateManyMutationInput = {
@@ -415,6 +439,7 @@ export type NodeUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type NodeListRelationFilter = {
@@ -437,12 +462,14 @@ export type NodeCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  floor?: Prisma.SortOrder
 }
 
 export type NodeAvgOrderByAggregateInput = {
   x?: Prisma.SortOrder
   y?: Prisma.SortOrder
   z?: Prisma.SortOrder
+  floor?: Prisma.SortOrder
 }
 
 export type NodeMaxOrderByAggregateInput = {
@@ -455,6 +482,7 @@ export type NodeMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  floor?: Prisma.SortOrder
 }
 
 export type NodeMinOrderByAggregateInput = {
@@ -467,12 +495,14 @@ export type NodeMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   roomId?: Prisma.SortOrder
+  floor?: Prisma.SortOrder
 }
 
 export type NodeSumOrderByAggregateInput = {
   x?: Prisma.SortOrder
   y?: Prisma.SortOrder
   z?: Prisma.SortOrder
+  floor?: Prisma.SortOrder
 }
 
 export type NodeScalarRelationFilter = {
@@ -562,6 +592,48 @@ export type NodeUpdateOneRequiredWithoutEdgesToNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.NodeUpdateToOneWithWhereWithoutEdgesToInput, Prisma.NodeUpdateWithoutEdgesToInput>, Prisma.NodeUncheckedUpdateWithoutEdgesToInput>
 }
 
+export type NodeCreateNestedManyWithoutFloorPlanInput = {
+  create?: Prisma.XOR<Prisma.NodeCreateWithoutFloorPlanInput, Prisma.NodeUncheckedCreateWithoutFloorPlanInput> | Prisma.NodeCreateWithoutFloorPlanInput[] | Prisma.NodeUncheckedCreateWithoutFloorPlanInput[]
+  connectOrCreate?: Prisma.NodeCreateOrConnectWithoutFloorPlanInput | Prisma.NodeCreateOrConnectWithoutFloorPlanInput[]
+  createMany?: Prisma.NodeCreateManyFloorPlanInputEnvelope
+  connect?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+}
+
+export type NodeUncheckedCreateNestedManyWithoutFloorPlanInput = {
+  create?: Prisma.XOR<Prisma.NodeCreateWithoutFloorPlanInput, Prisma.NodeUncheckedCreateWithoutFloorPlanInput> | Prisma.NodeCreateWithoutFloorPlanInput[] | Prisma.NodeUncheckedCreateWithoutFloorPlanInput[]
+  connectOrCreate?: Prisma.NodeCreateOrConnectWithoutFloorPlanInput | Prisma.NodeCreateOrConnectWithoutFloorPlanInput[]
+  createMany?: Prisma.NodeCreateManyFloorPlanInputEnvelope
+  connect?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+}
+
+export type NodeUpdateManyWithoutFloorPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.NodeCreateWithoutFloorPlanInput, Prisma.NodeUncheckedCreateWithoutFloorPlanInput> | Prisma.NodeCreateWithoutFloorPlanInput[] | Prisma.NodeUncheckedCreateWithoutFloorPlanInput[]
+  connectOrCreate?: Prisma.NodeCreateOrConnectWithoutFloorPlanInput | Prisma.NodeCreateOrConnectWithoutFloorPlanInput[]
+  upsert?: Prisma.NodeUpsertWithWhereUniqueWithoutFloorPlanInput | Prisma.NodeUpsertWithWhereUniqueWithoutFloorPlanInput[]
+  createMany?: Prisma.NodeCreateManyFloorPlanInputEnvelope
+  set?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+  disconnect?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+  delete?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+  connect?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+  update?: Prisma.NodeUpdateWithWhereUniqueWithoutFloorPlanInput | Prisma.NodeUpdateWithWhereUniqueWithoutFloorPlanInput[]
+  updateMany?: Prisma.NodeUpdateManyWithWhereWithoutFloorPlanInput | Prisma.NodeUpdateManyWithWhereWithoutFloorPlanInput[]
+  deleteMany?: Prisma.NodeScalarWhereInput | Prisma.NodeScalarWhereInput[]
+}
+
+export type NodeUncheckedUpdateManyWithoutFloorPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.NodeCreateWithoutFloorPlanInput, Prisma.NodeUncheckedCreateWithoutFloorPlanInput> | Prisma.NodeCreateWithoutFloorPlanInput[] | Prisma.NodeUncheckedCreateWithoutFloorPlanInput[]
+  connectOrCreate?: Prisma.NodeCreateOrConnectWithoutFloorPlanInput | Prisma.NodeCreateOrConnectWithoutFloorPlanInput[]
+  upsert?: Prisma.NodeUpsertWithWhereUniqueWithoutFloorPlanInput | Prisma.NodeUpsertWithWhereUniqueWithoutFloorPlanInput[]
+  createMany?: Prisma.NodeCreateManyFloorPlanInputEnvelope
+  set?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+  disconnect?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+  delete?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+  connect?: Prisma.NodeWhereUniqueInput | Prisma.NodeWhereUniqueInput[]
+  update?: Prisma.NodeUpdateWithWhereUniqueWithoutFloorPlanInput | Prisma.NodeUpdateWithWhereUniqueWithoutFloorPlanInput[]
+  updateMany?: Prisma.NodeUpdateManyWithWhereWithoutFloorPlanInput | Prisma.NodeUpdateManyWithWhereWithoutFloorPlanInput[]
+  deleteMany?: Prisma.NodeScalarWhereInput | Prisma.NodeScalarWhereInput[]
+}
+
 export type NodeCreateWithoutRoomInput = {
   id?: string
   x: number
@@ -571,6 +643,7 @@ export type NodeCreateWithoutRoomInput = {
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  floorPlan: Prisma.FloorPlanCreateNestedOneWithoutNodesInput
   edgesFrom?: Prisma.EdgeCreateNestedManyWithoutFromNodeInput
   edgesTo?: Prisma.EdgeCreateNestedManyWithoutToNodeInput
 }
@@ -584,6 +657,7 @@ export type NodeUncheckedCreateWithoutRoomInput = {
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  floor: number
   edgesFrom?: Prisma.EdgeUncheckedCreateNestedManyWithoutFromNodeInput
   edgesTo?: Prisma.EdgeUncheckedCreateNestedManyWithoutToNodeInput
 }
@@ -627,6 +701,7 @@ export type NodeScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Node"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Node"> | Date | string
   roomId?: Prisma.StringNullableFilter<"Node"> | string | null
+  floor?: Prisma.IntFilter<"Node"> | number
 }
 
 export type NodeCreateWithoutEdgesFromInput = {
@@ -639,6 +714,7 @@ export type NodeCreateWithoutEdgesFromInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   room?: Prisma.RoomCreateNestedOneWithoutNodesInput
+  floorPlan: Prisma.FloorPlanCreateNestedOneWithoutNodesInput
   edgesTo?: Prisma.EdgeCreateNestedManyWithoutToNodeInput
 }
 
@@ -652,6 +728,7 @@ export type NodeUncheckedCreateWithoutEdgesFromInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   roomId?: string | null
+  floor: number
   edgesTo?: Prisma.EdgeUncheckedCreateNestedManyWithoutToNodeInput
 }
 
@@ -670,6 +747,7 @@ export type NodeCreateWithoutEdgesToInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   room?: Prisma.RoomCreateNestedOneWithoutNodesInput
+  floorPlan: Prisma.FloorPlanCreateNestedOneWithoutNodesInput
   edgesFrom?: Prisma.EdgeCreateNestedManyWithoutFromNodeInput
 }
 
@@ -683,6 +761,7 @@ export type NodeUncheckedCreateWithoutEdgesToInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   roomId?: string | null
+  floor: number
   edgesFrom?: Prisma.EdgeUncheckedCreateNestedManyWithoutFromNodeInput
 }
 
@@ -712,6 +791,7 @@ export type NodeUpdateWithoutEdgesFromInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   room?: Prisma.RoomUpdateOneWithoutNodesNestedInput
+  floorPlan?: Prisma.FloorPlanUpdateOneRequiredWithoutNodesNestedInput
   edgesTo?: Prisma.EdgeUpdateManyWithoutToNodeNestedInput
 }
 
@@ -725,6 +805,7 @@ export type NodeUncheckedUpdateWithoutEdgesFromInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
   edgesTo?: Prisma.EdgeUncheckedUpdateManyWithoutToNodeNestedInput
 }
 
@@ -749,6 +830,7 @@ export type NodeUpdateWithoutEdgesToInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   room?: Prisma.RoomUpdateOneWithoutNodesNestedInput
+  floorPlan?: Prisma.FloorPlanUpdateOneRequiredWithoutNodesNestedInput
   edgesFrom?: Prisma.EdgeUpdateManyWithoutFromNodeNestedInput
 }
 
@@ -762,7 +844,62 @@ export type NodeUncheckedUpdateWithoutEdgesToInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
   edgesFrom?: Prisma.EdgeUncheckedUpdateManyWithoutFromNodeNestedInput
+}
+
+export type NodeCreateWithoutFloorPlanInput = {
+  id?: string
+  x: number
+  y: number
+  z: number
+  type: $Enums.NodeType
+  isActivated?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  room?: Prisma.RoomCreateNestedOneWithoutNodesInput
+  edgesFrom?: Prisma.EdgeCreateNestedManyWithoutFromNodeInput
+  edgesTo?: Prisma.EdgeCreateNestedManyWithoutToNodeInput
+}
+
+export type NodeUncheckedCreateWithoutFloorPlanInput = {
+  id?: string
+  x: number
+  y: number
+  z: number
+  type: $Enums.NodeType
+  isActivated?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  roomId?: string | null
+  edgesFrom?: Prisma.EdgeUncheckedCreateNestedManyWithoutFromNodeInput
+  edgesTo?: Prisma.EdgeUncheckedCreateNestedManyWithoutToNodeInput
+}
+
+export type NodeCreateOrConnectWithoutFloorPlanInput = {
+  where: Prisma.NodeWhereUniqueInput
+  create: Prisma.XOR<Prisma.NodeCreateWithoutFloorPlanInput, Prisma.NodeUncheckedCreateWithoutFloorPlanInput>
+}
+
+export type NodeCreateManyFloorPlanInputEnvelope = {
+  data: Prisma.NodeCreateManyFloorPlanInput | Prisma.NodeCreateManyFloorPlanInput[]
+  skipDuplicates?: boolean
+}
+
+export type NodeUpsertWithWhereUniqueWithoutFloorPlanInput = {
+  where: Prisma.NodeWhereUniqueInput
+  update: Prisma.XOR<Prisma.NodeUpdateWithoutFloorPlanInput, Prisma.NodeUncheckedUpdateWithoutFloorPlanInput>
+  create: Prisma.XOR<Prisma.NodeCreateWithoutFloorPlanInput, Prisma.NodeUncheckedCreateWithoutFloorPlanInput>
+}
+
+export type NodeUpdateWithWhereUniqueWithoutFloorPlanInput = {
+  where: Prisma.NodeWhereUniqueInput
+  data: Prisma.XOR<Prisma.NodeUpdateWithoutFloorPlanInput, Prisma.NodeUncheckedUpdateWithoutFloorPlanInput>
+}
+
+export type NodeUpdateManyWithWhereWithoutFloorPlanInput = {
+  where: Prisma.NodeScalarWhereInput
+  data: Prisma.XOR<Prisma.NodeUpdateManyMutationInput, Prisma.NodeUncheckedUpdateManyWithoutFloorPlanInput>
 }
 
 export type NodeCreateManyRoomInput = {
@@ -774,6 +911,7 @@ export type NodeCreateManyRoomInput = {
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  floor: number
 }
 
 export type NodeUpdateWithoutRoomInput = {
@@ -785,6 +923,7 @@ export type NodeUpdateWithoutRoomInput = {
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floorPlan?: Prisma.FloorPlanUpdateOneRequiredWithoutNodesNestedInput
   edgesFrom?: Prisma.EdgeUpdateManyWithoutFromNodeNestedInput
   edgesTo?: Prisma.EdgeUpdateManyWithoutToNodeNestedInput
 }
@@ -798,6 +937,7 @@ export type NodeUncheckedUpdateWithoutRoomInput = {
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
   edgesFrom?: Prisma.EdgeUncheckedUpdateManyWithoutFromNodeNestedInput
   edgesTo?: Prisma.EdgeUncheckedUpdateManyWithoutToNodeNestedInput
 }
@@ -811,6 +951,59 @@ export type NodeUncheckedUpdateManyWithoutRoomInput = {
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type NodeCreateManyFloorPlanInput = {
+  id?: string
+  x: number
+  y: number
+  z: number
+  type: $Enums.NodeType
+  isActivated?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  roomId?: string | null
+}
+
+export type NodeUpdateWithoutFloorPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  x?: Prisma.FloatFieldUpdateOperationsInput | number
+  y?: Prisma.FloatFieldUpdateOperationsInput | number
+  z?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.EnumNodeTypeFieldUpdateOperationsInput | $Enums.NodeType
+  isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  room?: Prisma.RoomUpdateOneWithoutNodesNestedInput
+  edgesFrom?: Prisma.EdgeUpdateManyWithoutFromNodeNestedInput
+  edgesTo?: Prisma.EdgeUpdateManyWithoutToNodeNestedInput
+}
+
+export type NodeUncheckedUpdateWithoutFloorPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  x?: Prisma.FloatFieldUpdateOperationsInput | number
+  y?: Prisma.FloatFieldUpdateOperationsInput | number
+  z?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.EnumNodeTypeFieldUpdateOperationsInput | $Enums.NodeType
+  isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edgesFrom?: Prisma.EdgeUncheckedUpdateManyWithoutFromNodeNestedInput
+  edgesTo?: Prisma.EdgeUncheckedUpdateManyWithoutToNodeNestedInput
+}
+
+export type NodeUncheckedUpdateManyWithoutFloorPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  x?: Prisma.FloatFieldUpdateOperationsInput | number
+  y?: Prisma.FloatFieldUpdateOperationsInput | number
+  z?: Prisma.FloatFieldUpdateOperationsInput | number
+  type?: Prisma.EnumNodeTypeFieldUpdateOperationsInput | $Enums.NodeType
+  isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roomId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -863,7 +1056,9 @@ export type NodeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   roomId?: boolean
+  floor?: boolean
   room?: boolean | Prisma.Node$roomArgs<ExtArgs>
+  floorPlan?: boolean | Prisma.FloorPlanDefaultArgs<ExtArgs>
   edgesFrom?: boolean | Prisma.Node$edgesFromArgs<ExtArgs>
   edgesTo?: boolean | Prisma.Node$edgesToArgs<ExtArgs>
   _count?: boolean | Prisma.NodeCountOutputTypeDefaultArgs<ExtArgs>
@@ -879,7 +1074,9 @@ export type NodeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   roomId?: boolean
+  floor?: boolean
   room?: boolean | Prisma.Node$roomArgs<ExtArgs>
+  floorPlan?: boolean | Prisma.FloorPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["node"]>
 
 export type NodeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -892,7 +1089,9 @@ export type NodeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   roomId?: boolean
+  floor?: boolean
   room?: boolean | Prisma.Node$roomArgs<ExtArgs>
+  floorPlan?: boolean | Prisma.FloorPlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["node"]>
 
 export type NodeSelectScalar = {
@@ -905,26 +1104,31 @@ export type NodeSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   roomId?: boolean
+  floor?: boolean
 }
 
-export type NodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "x" | "y" | "z" | "type" | "isActivated" | "createdAt" | "updatedAt" | "roomId", ExtArgs["result"]["node"]>
+export type NodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "x" | "y" | "z" | "type" | "isActivated" | "createdAt" | "updatedAt" | "roomId" | "floor", ExtArgs["result"]["node"]>
 export type NodeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   room?: boolean | Prisma.Node$roomArgs<ExtArgs>
+  floorPlan?: boolean | Prisma.FloorPlanDefaultArgs<ExtArgs>
   edgesFrom?: boolean | Prisma.Node$edgesFromArgs<ExtArgs>
   edgesTo?: boolean | Prisma.Node$edgesToArgs<ExtArgs>
   _count?: boolean | Prisma.NodeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type NodeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   room?: boolean | Prisma.Node$roomArgs<ExtArgs>
+  floorPlan?: boolean | Prisma.FloorPlanDefaultArgs<ExtArgs>
 }
 export type NodeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   room?: boolean | Prisma.Node$roomArgs<ExtArgs>
+  floorPlan?: boolean | Prisma.FloorPlanDefaultArgs<ExtArgs>
 }
 
 export type $NodePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Node"
   objects: {
     room: Prisma.$RoomPayload<ExtArgs> | null
+    floorPlan: Prisma.$FloorPlanPayload<ExtArgs>
     edgesFrom: Prisma.$EdgePayload<ExtArgs>[]
     edgesTo: Prisma.$EdgePayload<ExtArgs>[]
   }
@@ -938,6 +1142,10 @@ export type $NodePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     updatedAt: Date
     roomId: string | null
+    /**
+     * Floor this node lives on. Coordinates are in this floor's local frame.
+     */
+    floor: number
   }, ExtArgs["result"]["node"]>
   composites: {}
 }
@@ -1333,6 +1541,7 @@ readonly fields: NodeFieldRefs;
 export interface Prisma__NodeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   room<T extends Prisma.Node$roomArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Node$roomArgs<ExtArgs>>): Prisma.Prisma__RoomClient<runtime.Types.Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  floorPlan<T extends Prisma.FloorPlanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloorPlanDefaultArgs<ExtArgs>>): Prisma.Prisma__FloorPlanClient<runtime.Types.Result.GetResult<Prisma.$FloorPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   edgesFrom<T extends Prisma.Node$edgesFromArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Node$edgesFromArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EdgePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   edgesTo<T extends Prisma.Node$edgesToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Node$edgesToArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EdgePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1373,6 +1582,7 @@ export interface NodeFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Node", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Node", 'DateTime'>
   readonly roomId: Prisma.FieldRef<"Node", 'String'>
+  readonly floor: Prisma.FieldRef<"Node", 'Int'>
 }
     
 
