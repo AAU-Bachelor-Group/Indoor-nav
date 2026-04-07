@@ -102,7 +102,7 @@ export function SearchBar(props: SearchBarProps) {
     if (e.key === "Escape" && props.type === "integrated") setIsFocused(false)
   }
 
-  // ── Integrated ───────────────────────────────────────────────────────────
+  // ── Integrated mode (rounded, dropdown overlays content) ─────────────────
   if (props.type === "integrated") {
     const { results, onResultClick, showResultsWhenEmpty = true } = props
     const showDropdown =
