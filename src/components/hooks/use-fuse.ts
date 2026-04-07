@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
-import { getAllRoomsFunction } from "#/server/search.functions"
 import Fuse from "fuse.js"
+
+import { getAllRoomsFunction } from "#/server/search.functions"
 
 export const useFuzzySearch = (searchTerm: string) => {
   const {

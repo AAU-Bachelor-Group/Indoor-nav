@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { Building2, Coffee, GraduationCap, Train } from "lucide-react"
 
 import { FloorSelector } from "#/components/floor-selector"
 import { RenderModeToggle } from "#/components/render-mode-toggle"
@@ -7,7 +6,6 @@ import { MapScene } from "#/components/threeJS/map-scene"
 import { buttonVariants } from "#/components/ui/button"
 import { SearchBar } from "#/components/ui/search-bar"
 import { useIsLoggedIn } from "#/lib/auth-hooks"
-import { MapProvider } from "#/lib/map-context"
 
 import type { SearchResultItem } from "#/components/ui/search-result-list"
 
@@ -59,7 +57,9 @@ const App = () => {
           className="absolute top-4 left-30 z-10 w-90"
           placeholder="Search for rooms..."
           type="fuzzysearch"
-          onResultClick={(item) => console.log("Selected:", item.title)}
+          onResultClick={(item) => {
+          console.log("Selected:", item.title)
+        }}
         />
         <MapScene />
         <div className="absolute flex flex-col gap-2 bottom-6 right-6 z-10">
