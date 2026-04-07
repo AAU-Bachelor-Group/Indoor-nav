@@ -1,9 +1,19 @@
 import { useQuery } from "@tanstack/react-query"
 import Fuse from "fuse.js"
+import React from "react"
 
 import { getAllRoomsFunction } from "#/server/search.functions"
 
 export const useFuzzySearch = (searchTerm: string) => {
+  const [debouncedTerm, setDebouncedTerm] = React.useState(searchTerm)
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => (setDebouncedTerm(searchTerm), 200))
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [searchTerm])
+
   const {
     data: allRooms,
     isLoading,
@@ -21,7 +31,7 @@ export const useFuzzySearch = (searchTerm: string) => {
     threshold: 0.4,
   })
 
-  const results = fuse.search(searchTerm)
+  const results = fuse.search(debouncedTerm)
 
   return { results, isLoading, isError }
 }
