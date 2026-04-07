@@ -11,21 +11,29 @@ import { useFuzzySearch } from "#/components/hooks/use-fuse"
 
 interface SearchBarBaseProps {
   placeholder?: string
+  /** Called on input value change (both modes) */
   onQueryChange?: (query: string) => void
+  /** Called when the search icon / Enter key is pressed (both modes) */
   onSearch?: (query: string) => void
   className?: string
+  /** Initial / controlled value */
   value?: string
+  /** aria-label for the input */
   inputAriaLabel?: string
 }
 
+/** Standalone bar – no results dropdown */
 interface SearchBarStandaloneProps extends SearchBarBaseProps {
   type: "standalone"
 }
 
+/** Integrated bar – dropdown opens when focused / query changes */
 interface SearchBarIntegratedProps extends SearchBarBaseProps {
   type: "integrated"
+  /** Items to show in the dropdown */
   results: SearchResultItem[]
   onResultClick?: (item: SearchResultItem) => void
+  /** Show results even when query is empty (like Google Maps on focus) */
   showResultsWhenEmpty?: boolean
 }
 
@@ -63,10 +71,12 @@ export function SearchBar(props: SearchBarProps) {
 
   const query = controlledValue !== undefined ? controlledValue : internalQuery
 
+  // Sync if controlled
   React.useEffect(() => {
     if (controlledValue !== undefined) setInternalQuery(controlledValue)
   }, [controlledValue])
 
+  // Close dropdown when clicking outside
   React.useEffect(() => {
     if (props.type !== "integrated") return
     function handlePointerDown(e: PointerEvent) {
@@ -100,12 +110,14 @@ export function SearchBar(props: SearchBarProps) {
 
     return (
       <div ref={wrapperRef} className={cn("relative w-full", className)}>
+        {/* Search bar */}
         <div
           className={cn(
             "bg-card shadow-md border border-border/60 overflow-hidden",
             showDropdown ? "rounded-t-2xl rounded-b-none" : "rounded-full",
           )}
         >
+          {/* Input row */}
           <div className="flex items-center gap-3 px-4 py-3">
             <Search className="w-5 h-5 text-muted-foreground shrink-0" aria-hidden="true" />
             <input
@@ -130,6 +142,7 @@ export function SearchBar(props: SearchBarProps) {
             />
           </div>
         </div>
+        {/* Dropdown results – positioned absolutely to overlay content */}
         {showDropdown && (
           <div
             id="search-results-dropdown"
@@ -150,7 +163,7 @@ export function SearchBar(props: SearchBarProps) {
     )
   }
 
-  // ── Standalone ───────────────────────────────────────────────────────────
+  // ── Standalone mode (more square/rectangular) ────────────────────────────
   return (
     <div
       className={cn(
