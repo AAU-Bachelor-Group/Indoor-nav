@@ -83,12 +83,16 @@ export function SearchBar(props: SearchBarProps) {
       onSearch?.(query)
       if (props.type === "integrated") setIsFocused(false)
     }
-    if (e.key === "Escape" && props.type === "integrated") setIsFocused(false)
+    if (e.key === "Escape" && props.type === "integrated") {
+      setIsFocused(false)
+    }
   }
 
   // ── Integrated mode (rounded, dropdown overlays content) ─────────────────
+
   if (props.type === "integrated") {
     const { results, onResultClick, showResultsWhenEmpty = true } = props
+
     const showDropdown =
       isFocused && (showResultsWhenEmpty || query.length > 0) && results.length > 0
 
@@ -126,6 +130,7 @@ export function SearchBar(props: SearchBarProps) {
             />
           </div>
         </div>
+
         {/* Dropdown results – positioned absolutely to overlay content */}
         {showDropdown && (
           <div
@@ -148,6 +153,7 @@ export function SearchBar(props: SearchBarProps) {
   }
 
   // ── Standalone mode (more square/rectangular) ────────────────────────────
+
   return (
     <div
       className={cn(
