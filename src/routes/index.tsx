@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import { Building2 } from "lucide-react"
 import { useState } from "react"
 
+import { DebugToggle } from "#/components/debug-toggle"
 import { FloorSelector } from "#/components/floor-selector"
 import { useFuzzySearch } from "#/components/hooks/use-fuse"
 import { RenderModeToggle } from "#/components/render-mode-toggle"
@@ -12,7 +13,6 @@ import { useIsLoggedIn } from "#/lib/auth-hooks"
 import { MapProvider } from "#/lib/map-context"
 
 import type { SearchResultItem } from "#/components/ui/search-result-list"
-import { DebugToggle } from "#/components/debug-toggle"
 
 const App = () => {
   const { isLoggedIn, isPending } = useIsLoggedIn()
