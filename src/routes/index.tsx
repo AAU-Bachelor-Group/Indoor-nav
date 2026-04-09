@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { Building2, Coffee, GraduationCap, Train } from "lucide-react"
+import { Building2 } from "lucide-react"
+import { useState } from "react"
 
 import { FloorSelector } from "#/components/floor-selector"
+import { useFuzzySearch } from "#/components/hooks/use-fuse"
 import { RenderModeToggle } from "#/components/render-mode-toggle"
 import { MapScene } from "#/components/threeJS/map-scene"
 import { buttonVariants } from "#/components/ui/button"
@@ -11,43 +13,26 @@ import { MapProvider } from "#/lib/map-context"
 
 import type { SearchResultItem } from "#/components/ui/search-result-list"
 
-// To do: Delete
-const ALL_RESULTS: SearchResultItem[] = [
-  {
-    id: "lecture-hall",
-    icon: <GraduationCap className="w-5 h-5" />,
-    title: "Building 101",
-    semantic: "Software lecture room",
-  },
-  {
-    id: "library",
-    icon: <Building2 className="w-5 h-5" />,
-    title: "Main Library",
-    semantic: "University library",
-  },
-  {
-    id: "station",
-    icon: <Train className="w-5 h-5" />,
-    title: "Central Station",
-    semantic: "Train station",
-  },
-  {
-    id: "coffee",
-    icon: <Coffee className="w-5 h-5" />,
-    title: "Campus Coffee",
-    semantic: "Coffee shop",
-  },
-]
-
 const App = () => {
   const { isLoggedIn, isPending } = useIsLoggedIn()
+  const [query, setQuery] = useState("")
+
+  const { results, isLoading } = useFuzzySearch(query)
+
+  const fuzzyResults: SearchResultItem[] = isLoading
+    ? []
+    : results.map((r) => ({
+        id: r.item.id,
+        icon: <Building2 className="w-5 h-5" />,
+        title: r.item.semanticNames[0],
+        semantic: r.item.semanticNames.slice(1).join(", "),
+      }))
 
   return (
     <MapProvider>
       <main className="w-screen h-screen overflow-y-hidden">
         {!isPending &&
           (isLoggedIn ? (
-            // TO DO: Replace with toggle between different admin views
             <Link
               className={`${buttonVariants({ variant: "default" })} absolute top-4 left-200`}
               to="/manage-floor"
@@ -57,11 +42,19 @@ const App = () => {
           ) : null)}
         <SearchBar
           className="absolute top-4 left-30 z-10 w-90"
-          placeholder="Search for rooms..."
           type="integrated"
-          results={ALL_RESULTS}
+          placeholder="Search locations..."
+          value={query}
+          onQueryChange={setQuery}
+          onSearch={(q) => {
+            console.log("Search:", q)
+          }}
+          results={fuzzyResults}
+          onResultClick={(item) => {
+            console.log("Selected:", item.title)
+          }}
+          showResultsWhenEmpty={true}
         />
-
         <MapScene />
         <div className="absolute flex flex-col gap-2 bottom-6 right-6 z-10">
           <FloorSelector />

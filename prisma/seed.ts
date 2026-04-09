@@ -16,6 +16,8 @@ async function main() {
   await prisma.floorPlan.deleteMany()
   await prisma.node.deleteMany()
   await prisma.edge.deleteMany()
+  await prisma.room.deleteMany()
+  await prisma.section.deleteMany()
 
   // Create example floor plans
   const floorPlans = await prisma.floorPlan.createMany({
@@ -34,6 +36,35 @@ async function main() {
   })
 
   console.log(`Created ${floorPlans.count} floor plans`)
+
+  const section = await prisma.section.create({
+    data: {
+      id: "cmnn25g3f0008xpmt1j9xv22c",
+      name: "Main Campus",
+    },
+  })
+  console.log(`Created section: ${section.name}`)
+
+  await prisma.room.createMany({
+    data: [
+      {
+        id: "room-101",
+        isActivated: true,
+        semanticNames: ["Room 101", "Lecture Hall", "Main Auditorium"],
+        type: "DEFAULT",
+        sectionId: section.id,
+      },
+      {
+        id: "room-102",
+        isActivated: true,
+        semanticNames: ["Room 102", "Computer Lab", "IT Lab"],
+        type: "DEFAULT",
+        sectionId: section.id,
+      },
+    ],
+  })
+
+  console.log("Created 2 rooms: room-101, room-102")
 
   // Create example nodes (this should be deleted later!!!)
   await prisma.node.createMany({
