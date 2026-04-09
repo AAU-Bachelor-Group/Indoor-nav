@@ -185,7 +185,7 @@ const CalibrateFloor = () => {
 export const Route = createFileRoute("/manage-floor")({
   beforeLoad: async () => {
     const session = await getServerSession()
-    if (!session?.user || session.user.username !== "admin") {
+    if (session?.user?.username !== "admin") {
       throw redirect({ to: "/login" })
     }
   },
