@@ -2,8 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import { Building2 } from "lucide-react"
 import { useState } from "react"
 
+import { AdminToolbar } from "#/components/admin-toolbar"
 import { DebugToggle } from "#/components/debug-toggle"
 import { FloorSelector } from "#/components/floor-selector"
+import { RoomMetadataPanel } from "#/components/forms/room-metadata-panel"
 import { useFuzzySearch } from "#/components/hooks/use-fuse"
 import { RenderModeToggle } from "#/components/render-mode-toggle"
 import { MapScene } from "#/components/threeJS/map-scene"
@@ -34,7 +36,6 @@ const App = () => {
       <main className="w-screen h-screen overflow-y-hidden">
         {!isPending &&
           (isLoggedIn ? (
-            // TO DO: Replace with toggle between different admin views
             <>
               <Link
                 className={`${buttonVariants({ variant: "default" })} absolute top-4 left-200 z-100`}
@@ -42,6 +43,8 @@ const App = () => {
               >
                 Temp: Manage floor link
               </Link>
+              <AdminToolbar className="absolute bottom-6 left-6 z-10" />
+              <RoomMetadataPanel />
               <DebugToggle className="absolute top-4 left-[500px] z-100" />
             </>
           ) : null)}

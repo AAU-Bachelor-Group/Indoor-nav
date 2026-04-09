@@ -7,11 +7,14 @@ import { useMap } from "#/lib/map-context"
 
 import { CameraRig } from "./camera-rig"
 import { FLOOR_HEIGHT, MAX_POLAR_ANGLE, TOP_DOWN_POLAR } from "./constants"
+import { DrawingLayer } from "./drawing-layer"
 import { CursorCoordinates } from "./cursor-coordinates"
 import { FloorPlane } from "./floor-plane"
+import { RoomPolygonsLayer } from "./room-polygons-layer"
 
 export const MapScene = () => {
-  const { floors, currentFloor, renderMode } = useMap()
+  const { floors, currentFloor, renderMode, activeTool } = useMap()
+  const activeFloorPlan = floors.find((f) => f.floor === currentFloor) ?? null
   const controlsRef = useRef(null)
   const neighbourOpacityRef = useRef(0)
 
@@ -25,8 +28,12 @@ export const MapScene = () => {
     <Canvas
       gl={{ antialias: true }}
       scene={{ background: new THREE.Color("#333") }}
-      camera={{ fov: 60, near: 0.1, far: 1000, position: [0, 20, 0.01] }}
-      style={{ width: "100%", height: "100%" }}
+      camera={{ fov: 60, near: 0.1, far: 1000, position: [0, 50, 0], zoom: 20 }}
+      style={{
+        width: "100%",
+        height: "100%",
+        cursor: activeTool === null ? "default" : "crosshair",
+      }}
       orthographic={renderMode === "2d"}
     >
       <CameraRig
@@ -59,6 +66,8 @@ export const MapScene = () => {
         ))}
 
         <CursorCoordinates />
+        <RoomPolygonsLayer neighbourOpacityRef={neighbourOpacityRef} />
+        {activeTool === "draw-room" && activeFloorPlan && <DrawingLayer floor={activeFloorPlan} />}
       </Suspense>
     </Canvas>
   )
