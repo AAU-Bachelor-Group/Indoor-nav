@@ -26,7 +26,7 @@ async function main() {
         floor: -1,
         path: "/floorplans/floor_-1_ACM15_Kælder-1.png",
         calibrationScale: 1.0,
-      }
+      },
       {
         floor: 0,
         path: "/floorplans/floor_0_ACM15_Stue-1.png",
