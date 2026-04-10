@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import { Building2 } from "lucide-react"
 import { useState } from "react"
 
+import { DebugToggle } from "#/components/debug-toggle"
 import { FloorSelector } from "#/components/floor-selector"
 import { useFuzzySearch } from "#/components/hooks/use-fuse"
 import { RenderModeToggle } from "#/components/render-mode-toggle"
@@ -33,12 +34,16 @@ const App = () => {
       <main className="w-screen h-screen overflow-y-hidden">
         {!isPending &&
           (isLoggedIn ? (
-            <Link
-              className={`${buttonVariants({ variant: "default" })} absolute top-4 right-6 z-20`}
-              to="/manage-floor"
-            >
-              Temp: Manage floor link
-            </Link>
+            // TO DO: Replace with toggle between different admin views
+            <>
+              <Link
+                className={`${buttonVariants({ variant: "default" })} absolute top-4 left-200 z-100`}
+                to="/manage-floor"
+              >
+                Temp: Manage floor link
+              </Link>
+              <DebugToggle className="absolute top-4 left-[500px] z-100" />
+            </>
           ) : null)}
         <SearchBar
           className="absolute top-4 left-30 z-10 w-90"

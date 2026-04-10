@@ -7,6 +7,7 @@ import { useMap } from "#/lib/map-context"
 
 import { CameraRig } from "./camera-rig"
 import { FLOOR_HEIGHT, MAX_POLAR_ANGLE, TOP_DOWN_POLAR } from "./constants"
+import { CursorCoordinates } from "./cursor-coordinates"
 import { FloorPlane } from "./floor-plane"
 
 export const MapScene = () => {
@@ -54,6 +55,8 @@ export const MapScene = () => {
             neighbourOpacityRef={neighbourOpacityRef}
           />
         ))}
+
+        <CursorCoordinates />
       </Suspense>
     </Canvas>
   )

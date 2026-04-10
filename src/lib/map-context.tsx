@@ -15,6 +15,8 @@ interface MapContextValue {
   isLoading: boolean
   renderMode: RenderMode
   setRenderMode: (mode: RenderMode) => void
+  debugMode: boolean
+  setDebugMode: (debug: boolean) => void
 }
 
 const MapContext = createContext<MapContextValue | null>(null)
@@ -37,6 +39,8 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
 
   const [renderMode, setRenderMode] = useState<RenderMode>("2d")
 
+  const [debugMode, setDebugMode] = useState(false)
+
   return (
     <MapContext.Provider
       value={{
@@ -46,6 +50,8 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         renderMode,
         setRenderMode,
+        debugMode,
+        setDebugMode,
       }}
     >
       {children}

@@ -4,7 +4,9 @@ import { useFrame } from "@react-three/fiber"
 import { useRef } from "react"
 import * as THREE from "three"
 
-import { BASE_HEIGHT, FLOOR_HEIGHT } from "./constants"
+import { worldFromPixel } from "#/lib/coordinates"
+
+import { FLOOR_HEIGHT } from "./constants"
 
 import type { FloorPlan } from "#/types/floor-plan"
 
@@ -25,8 +27,7 @@ export const FloorPlane = ({ floor, active, neighbourOpacityRef }: FloorPlanePro
   const meshRef = useRef<THREE.Mesh>(null)
 
   const image = texture.image as HTMLImageElement
-  const height = BASE_HEIGHT * floor.calibrationScale
-  const width = height * (image.width / image.height)
+  const { x: width, y: height } = worldFromPixel(image.width, image.height, floor)
 
   useFrame(() => {
     const material = materialRef.current

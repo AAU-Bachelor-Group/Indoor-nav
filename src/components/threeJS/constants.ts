@@ -1,9 +1,6 @@
 /** Vertical distance between floors in world units */
 export const FLOOR_HEIGHT = 3
 
-/** Base size of a floor plane before calibration scaling */
-export const BASE_HEIGHT = 2
-
 /** Interpolation speed for camera and target animations (0–1, higher = faster) */
 export const LERP_SPEED = 0.08
 
