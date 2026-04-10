@@ -53,8 +53,10 @@ export const FloorSelector = ({ className }: FloorSelectorProps) => {
             className={cn(
               "cursor-pointer w-12 h-12 rounded-xl backdrop-blur-sm font-medium text-sm",
               "transition-colors duration-150 flex items-center justify-center",
-              "border shadow-lg text-white border-black hover:bg-secondary",
-              floor === currentFloor ? "bg-secondary" : "bg-primary",
+              "border shadow-lg",
+              floor === currentFloor
+                ? "bg-secondary text-white border-black hover:bg-secondary/80"
+                : "bg-primary text-white border-black hover:bg-primary/80 ",
             )}
           >
             {floor}

@@ -44,7 +44,7 @@ export const CalibrateFloorForm = ({ floor, pixelDistance, position, onReset }: 
         left: position.x,
         top: position.y,
         transform: "translate(5%, -120%)",
-        zIndex: 10,
+        zIndex: 100,
       }}
     >
       <Card className="w-[220px] p-2 pb-5">

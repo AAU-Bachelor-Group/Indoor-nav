@@ -125,7 +125,7 @@ const CalibrateFloor = () => {
               tabIndex={0}
               ref={containerRef}
               onClick={handleImageClick}
-              className="mt-2 max-w-full overflow-auto"
+              className="mt-2 max-w-full"
               style={{ position: "relative", display: "inline-block", cursor: "crosshair" }}
             >
               <img src={selectedFloorPlan.path} alt="Floor plan" className="border max-w-full" />
