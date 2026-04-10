@@ -168,7 +168,7 @@ export type RoomGroupByOutputType = {
   _max: RoomMaxAggregateOutputType | null
 }
 
-type GetRoomGroupByPayload<T extends RoomGroupByArgs> = Prisma.PrismaPromise<
+export type GetRoomGroupByPayload<T extends RoomGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<RoomGroupByOutputType, T['by']> &
       {

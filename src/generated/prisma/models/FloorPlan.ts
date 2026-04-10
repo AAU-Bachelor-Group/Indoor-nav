@@ -196,7 +196,7 @@ export type FloorPlanGroupByOutputType = {
   _max: FloorPlanMaxAggregateOutputType | null
 }
 
-type GetFloorPlanGroupByPayload<T extends FloorPlanGroupByArgs> = Prisma.PrismaPromise<
+export type GetFloorPlanGroupByPayload<T extends FloorPlanGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<FloorPlanGroupByOutputType, T['by']> &
       {

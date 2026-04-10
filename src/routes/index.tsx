@@ -34,7 +34,7 @@ const App = () => {
         {!isPending &&
           (isLoggedIn ? (
             <Link
-              className={`${buttonVariants({ variant: "default" })} absolute top-4 left-200`}
+              className={`${buttonVariants({ variant: "default" })} absolute top-4 right-6 z-20`}
               to="/manage-floor"
             >
               Temp: Manage floor link

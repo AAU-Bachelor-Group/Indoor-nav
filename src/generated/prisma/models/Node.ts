@@ -228,7 +228,7 @@ export type NodeGroupByOutputType = {
   _max: NodeMaxAggregateOutputType | null
 }
 
-type GetNodeGroupByPayload<T extends NodeGroupByArgs> = Prisma.PrismaPromise<
+export type GetNodeGroupByPayload<T extends NodeGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<NodeGroupByOutputType, T['by']> &
       {

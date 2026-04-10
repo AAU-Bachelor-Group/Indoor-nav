@@ -227,7 +227,7 @@ export type EdgeGroupByOutputType = {
   _max: EdgeMaxAggregateOutputType | null
 }
 
-type GetEdgeGroupByPayload<T extends EdgeGroupByArgs> = Prisma.PrismaPromise<
+export type GetEdgeGroupByPayload<T extends EdgeGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<EdgeGroupByOutputType, T['by']> &
       {

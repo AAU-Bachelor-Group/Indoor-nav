@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { createFileRoute, Link, redirect } from "@tanstack/react-router"
 import { useState, useRef } from "react"
 
 import { CalibrateFloorForm } from "#/components/forms/calibrate-floor-form"
@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "#/components/ui/select"
+import { getServerSession } from "#/lib/auth-server"
 import { getFloorPlansData } from "#/server/floorplan.functions"
 
 import type { FloorPlan } from "#/types/floor-plan"
@@ -70,24 +71,24 @@ const CalibrateFloor = () => {
 
   return (
     <>
-      <div className="ml-2 mt-2">
+      <div className="mx-auto w-full max-w-7xl px-6 pt-4">
         <Link to="/" className={buttonVariants({ variant: "default" })}>
           ← Back
         </Link>
       </div>
 
-      <div className="w-full h-full flex">
-        <div className="flex w-full h-full flex-col gap-y-2 items-center">
+      <div className="mx-auto mt-6 flex w-full max-w-7xl gap-8 px-6 pb-10">
+        <div className="flex min-h-[70vh] w-1/2 flex-col items-center gap-y-3 rounded-xl border bg-card p-6 text-center">
           <h1 className="font-bold">Upload Floor Plan</h1>
-          <p className="mb-18">
+          <p className="max-w-md text-sm text-muted-foreground">
             Upload a floor plan image for each floor. Supported formats: PNG, JPEG. Max size: 5MB.
           </p>
           <ImportFloorForm />
         </div>
 
-        <div className="pb-20 px-3 flex flex-col w-full items-center gap-y-2">
+        <div className="flex min-h-[70vh] w-1/2 flex-col items-center gap-y-3 rounded-xl border bg-card p-6 text-center">
           <h1 className="font-bold">Calibrate Floor Plan</h1>
-          <p>
+          <p className="max-w-md text-sm text-muted-foreground">
             Select a floor, then click 2 points on the map and enter the real distance in meters.
           </p>
 
@@ -97,7 +98,7 @@ const CalibrateFloor = () => {
             </p>
           )}
 
-          <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-2">
             <p className="text-xs">Toggle a floor:</p>
             <Select
               onValueChange={(v) => {
@@ -105,7 +106,7 @@ const CalibrateFloor = () => {
                 setPoints([]) // Reset points when changing floor
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="Select floor" />
               </SelectTrigger>
               <SelectContent>
@@ -124,6 +125,7 @@ const CalibrateFloor = () => {
               tabIndex={0}
               ref={containerRef}
               onClick={handleImageClick}
+              className="mt-2 max-w-full overflow-auto"
               style={{ position: "relative", display: "inline-block", cursor: "crosshair" }}
             >
               <img src={selectedFloorPlan.path} alt="Floor plan" className="border max-w-full" />
@@ -180,5 +182,12 @@ const CalibrateFloor = () => {
 }
 
 export const Route = createFileRoute("/manage-floor")({
+  beforeLoad: async () => {
+    const session = await getServerSession()
+    if (session?.user.username !== "admin") {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
+      throw redirect({ to: "/login" })
+    }
+  },
   component: CalibrateFloor,
 })
