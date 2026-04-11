@@ -1,5 +1,5 @@
 /** Vertical distance between floors in world units */
-export const FLOOR_HEIGHT = 3
+export const FLOOR_HEIGHT = 8
 
 /** Interpolation speed for camera and target animations (0–1, higher = faster) */
 export const LERP_SPEED = 0.08

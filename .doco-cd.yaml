@@ -1,0 +1,23 @@
+# Dev - deploys on push to dev
+name: indoor-nav-dev
+reference: refs/heads/dev
+webhook_filter: "^refs/heads/dev$"
+compose_files:
+  - /compose/indoor-nav-dev.yaml
+env_files:
+  - /env/indoor-nav-dev.env
+force_recreate: true
+remove_orphans: true
+timeout: 300
+---
+# Prod - deploys on push to main
+name: indoor-nav-prod
+reference: refs/heads/main
+webhook_filter: "^refs/heads/main$"
+compose_files:
+  - /compose/indoor-nav-prod.yaml
+env_files:
+  - /env/indoor-nav-prod.env
+force_recreate: true
+remove_orphans: true
+timeout: 300
