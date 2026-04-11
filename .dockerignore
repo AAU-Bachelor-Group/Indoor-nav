@@ -1,2 +1,14 @@
 node_modules
 .git
+.output
+dist
+build
+.env
+.env.local
+.env.development
+.env.production
+.doco-cd.yaml
+docker-compose.yaml
+docker-compose-deploy.yaml
+*.log
+*.md
