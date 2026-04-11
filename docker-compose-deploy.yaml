@@ -1,0 +1,65 @@
+services:
+  indoor-nav:
+    container_name: ${CONTAINER_NAME}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    restart: unless-stopped
+    ports:
+      - "${APP_HOST_PORT}:3000"
+    environment:
+      - NODE_ENV=production
+      - BETTER_AUTH_URL=https://${HOSTNAME}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    labels:
+      - "kop.bind.ip=${KOP_BIND_IP}"
+      - "traefik.enable=true"
+      - "traefik.http.services.${TRAEFIK_SERVICE}.loadbalancer.server.port=${APP_HOST_PORT}"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-http.rule=Host(`${HOSTNAME}`)"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-http.entrypoints=http"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-http.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-http.service=${TRAEFIK_SERVICE}"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-https.rule=Host(`${HOSTNAME}`)"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-https.entrypoints=https"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-https.middlewares=publicSecurityHeaders@file"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-https.service=${TRAEFIK_SERVICE}"
+    networks:
+      - navNet
+    depends_on:
+      postgres:
+        condition: service_started
+
+  postgres:
+    image: postgis/postgis:18-3.6
+    platform: linux/amd64
+    container_name: ${CONTAINER_NAME}-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - navNet
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  navNet:
+    driver: bridge

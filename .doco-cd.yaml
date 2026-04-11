@@ -1,9 +1,7 @@
 name: indoor-nav-dev
-reference: refs/heads/main
-repository_url: https://gitea.ollioddi.dk/ollioddi/indoor-nav-deployment.git
 webhook_filter: "^refs/heads/dev$"
 compose_files:
-  - docker-compose.dev.yaml
+  - docker-compose-deploy.yaml
 env_files:
   - /env/indoor-nav-dev.env
 force_recreate: true
@@ -11,11 +9,9 @@ remove_orphans: true
 timeout: 300
 ---
 name: indoor-nav-prod
-reference: refs/heads/main
-repository_url: https://gitea.ollioddi.dk/ollioddi/indoor-nav-deployment.git
 webhook_filter: "^refs/heads/main$"
 compose_files:
-  - docker-compose.prod.yaml
+  - docker-compose-deploy.yaml
 env_files:
   - /env/indoor-nav-prod.env
 force_recreate: true
