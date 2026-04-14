@@ -37,12 +37,7 @@ const orientation = (p: PlanePoint, q: PlanePoint, r: PlanePoint): number => {
  * lets adjacent polygon edges (which share a vertex) pass, and lets two
  * polygons that share an edge or a corner pass.
  */
-const segmentsCross = (
-  a: PlanePoint,
-  b: PlanePoint,
-  c: PlanePoint,
-  d: PlanePoint,
-): boolean => {
+const segmentsCross = (a: PlanePoint, b: PlanePoint, c: PlanePoint, d: PlanePoint): boolean => {
   const o1 = orientation(a, b, c)
   const o2 = orientation(a, b, d)
   const o3 = orientation(c, d, a)
@@ -71,10 +66,7 @@ const segmentsCross = (
  * doesn't flip and the parity stays even, so the point is classified as
  * outside. That's the behavior we need so shared corners pass.
  */
-const pointStrictlyInsidePolygon = (
-  p: PlanePoint,
-  polygon: readonly PlanePoint[],
-): boolean => {
+const pointStrictlyInsidePolygon = (p: PlanePoint, polygon: readonly PlanePoint[]): boolean => {
   let inside = false
   const n = polygon.length
   for (let i = 0, j = n - 1; i < n; j = i++) {
@@ -82,8 +74,7 @@ const pointStrictlyInsidePolygon = (
     const zi = polygon[i].z
     const xj = polygon[j].x
     const zj = polygon[j].z
-    const intersects =
-      zi > p.z !== zj > p.z && p.x < ((xj - xi) * (p.z - zi)) / (zj - zi) + xi
+    const intersects = zi > p.z !== zj > p.z && p.x < ((xj - xi) * (p.z - zi)) / (zj - zi) + xi
     if (intersects) inside = !inside
   }
   return inside
@@ -93,9 +84,7 @@ const pointStrictlyInsidePolygon = (
  * Returns the index of the first edge in the open polyline `vertices[0..n-1]`
  * that crosses another non-adjacent edge, or null if the polyline is simple.
  */
-export const openPolylineSelfIntersection = (
-  vertices: readonly PlanePoint[],
-): number | null => {
+export const openPolylineSelfIntersection = (vertices: readonly PlanePoint[]): number | null => {
   const n = vertices.length
   if (n < 4) return null
   for (let i = 0; i < n - 1; i++) {
@@ -112,9 +101,7 @@ export const openPolylineSelfIntersection = (
  * Returns true if closing the polyline (drawing an edge from `vertices[n-1]`
  * back to `vertices[0]`) would cross any non-adjacent existing edge.
  */
-export const closingEdgeIntersectsPolyline = (
-  vertices: readonly PlanePoint[],
-): boolean => {
+export const closingEdgeIntersectsPolyline = (vertices: readonly PlanePoint[]): boolean => {
   const n = vertices.length
   if (n < 4) return false
   const closingStart = vertices[n - 1]
@@ -142,10 +129,7 @@ export const closingEdgeIntersectsPolyline = (
  *    B (or vice versa), at least one vertex of the contained polygon is
  *    strictly inside the container. We test both directions.
  */
-const polygonsInteriorOverlap = (
-  a: readonly PlanePoint[],
-  b: readonly PlanePoint[],
-): boolean => {
+const polygonsInteriorOverlap = (a: readonly PlanePoint[], b: readonly PlanePoint[]): boolean => {
   // 1. Proper edge crossings.
   for (let i = 0; i < a.length; i++) {
     const a1 = a[i]

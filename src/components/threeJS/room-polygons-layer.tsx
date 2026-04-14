@@ -5,22 +5,28 @@ import { useQuery } from "@tanstack/react-query"
 import { useCallback, useMemo, useRef } from "react"
 import * as THREE from "three"
 
-import { useIsLoggedIn } from "#/lib/auth-hooks"
 import { useMap } from "#/lib/map-context"
+import { getRoomTypeMeta, getRoomTypeOutline } from "#/lib/room-types"
 import { getAllRoomsData } from "#/server/room.functions"
+
+import { useCanvasPointer } from "../hooks/use-canvas-pointer"
 
 import { DRAWING_LIFT, FLOOR_HEIGHT } from "./constants"
 import { EdgePreview } from "./draw-primitives"
-import { getRoomTypeStyle } from "./room-type-styles"
-import { useCanvasPointer } from "./use-canvas-pointer"
 
 import type { PersistedRoom, RoomVertex } from "#/server/room.server"
 
-const ROOM_FILL_OPACITY = 0.45
-const SELECTED_FILL_OPACITY = 0.7
+const ROOM_FILL_OPACITY = 0.6
+const SELECTED_FILL_OPACITY = 0.8
 const OUTLINE_WIDTH = 5
 /** Tiny extra Y offset above DRAWING_LIFT for the outline so it doesn't z-fight the fill mesh. */
 const OUTLINE_LIFT = 0.002
+/**
+ * Render after FloorPlane (which sets renderOrder=1 on the active floor).
+ * Without this, the floor texture paints over the polygon fill because
+ * `depthWrite={false}` on the polygon material lets later draws cover it.
+ */
+const ROOM_RENDER_ORDER = 2
 
 const buildPolygonGeometry = (vertices: RoomVertex[]): THREE.BufferGeometry => {
   // Triangulate the (x, z) ring with earcut (wrapped by THREE.ShapeUtils).
@@ -90,7 +96,8 @@ const RoomPolygon = ({
   const materialRef = useRef<THREE.MeshBasicMaterial>(null)
 
   const geometry = useMemo(() => buildPolygonGeometry(room.vertices), [room.vertices])
-  const styles = useMemo(() => getRoomTypeStyle(room.type), [room.type])
+  const fillColor = useMemo(() => getRoomTypeMeta(room.type).color, [room.type])
+  const outlineColor = useMemo(() => getRoomTypeOutline(room.type), [room.type])
   const centroid = useMemo(() => computeCentroid(room.vertices), [room.vertices])
 
   const yFill = room.floor * FLOOR_HEIGHT + DRAWING_LIFT
@@ -132,26 +139,27 @@ const RoomPolygon = ({
 
   return (
     <>
-      <mesh ref={meshRef} geometry={geometry} position={[0, yFill, 0]} {...pointerHandlers}>
+      <mesh
+        ref={meshRef}
+        geometry={geometry}
+        position={[0, yFill, 0]}
+        renderOrder={ROOM_RENDER_ORDER}
+        {...pointerHandlers}
+      >
         <meshBasicMaterial
           ref={materialRef}
-          color={styles.fill}
+          color={fillColor}
           transparent
           opacity={baseOpacity}
           side={THREE.DoubleSide}
           depthWrite={false}
         />
       </mesh>
-      <EdgePreview
-        points={outlinePoints}
-        color={styles.outline}
-        lineWidth={OUTLINE_WIDTH}
-        closed
-      />
+      <EdgePreview points={outlinePoints} color={outlineColor} lineWidth={OUTLINE_WIDTH} closed />
       {active && (
         <Html position={[centroid.x, yOutline, centroid.z]} center>
           <div className="pointer-events-none rounded bg-black/60 px-1.5 py-0.5 text-xs font-semibold text-white whitespace-nowrap">
-            {room.roomNumber}
+            {room.roomNumber + " : " + room.displayName}
           </div>
         </Html>
       )}
@@ -172,17 +180,21 @@ interface RoomPolygonsLayerProps {
  *   camera tilt, mirroring how `floor-plane.tsx` already fades non-active
  *   floor rasters via `neighbourOpacityRef`.
  *
- * Labels (room number) only render on the active floor to avoid clutter.
- *
- * Click-to-edit: editing is the **default** for admins. As long as a
- * logged-in user is not currently drawing a new polygon, every room on
- * the active floor is clickable and calls `setEditingRoomId(room.id)` on
- * a real click. Non-admin clicks are inert and reserved for the future
- * user-facing room card.
+ * Click behavior branches on the active tool:
+ * - `activeTool === "edit-room"` (admin): opens the edit metadata panel.
+ * - `activeTool === null` (any user): opens the end-user info drawer.
+ * - Any drawing tool: rooms are inert so the drawing layer owns clicks.
  */
 export const RoomPolygonsLayer = ({ neighbourOpacityRef }: RoomPolygonsLayerProps) => {
-  const { renderMode, currentFloor, activeTool, editingRoomId, setEditingRoomId } = useMap()
-  const { isLoggedIn } = useIsLoggedIn()
+  const {
+    renderMode,
+    currentFloor,
+    activeTool,
+    editingRoomId,
+    setEditingRoomId,
+    viewingRoomId,
+    setViewingRoomId,
+  } = useMap()
 
   const { data: rooms = [] } = useQuery({
     queryKey: ["rooms"],
@@ -196,10 +208,17 @@ export const RoomPolygonsLayer = ({ neighbourOpacityRef }: RoomPolygonsLayerProp
     return rooms
   }, [rooms, renderMode, currentFloor])
 
-  // Editing is the default for admins outside of draw mode. Click-vs-drag
-  // disambiguation in `useCanvasPointer` keeps OrbitControls drag-to-pan
-  // from accidentally selecting a room.
-  const canEditRooms = isLoggedIn && activeTool !== "draw-room"
+  const isEditing = activeTool === "edit-room"
+  const isIdle = activeTool === null
+  const roomsAreClickable = isEditing || isIdle
+
+  const handleSelect = (id: string) => {
+    if (isEditing) {
+      setEditingRoomId(id)
+    } else {
+      setViewingRoomId(id)
+    }
+  }
 
   return (
     <>
@@ -208,10 +227,10 @@ export const RoomPolygonsLayer = ({ neighbourOpacityRef }: RoomPolygonsLayerProp
           key={room.id}
           room={room}
           active={room.floor === currentFloor}
-          selected={room.id === editingRoomId}
-          editable={canEditRooms && room.floor === currentFloor}
+          selected={room.id === editingRoomId || room.id === viewingRoomId}
+          editable={roomsAreClickable && room.floor === currentFloor}
           onSelect={() => {
-            setEditingRoomId(room.id)
+            handleSelect(room.id)
           }}
           neighbourOpacityRef={neighbourOpacityRef}
         />

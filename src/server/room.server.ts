@@ -216,7 +216,9 @@ export interface UpdateRoomMetadataInput {
  * Uses the typed Prisma client (no raw SQL) since none of the updated fields
  * are PostGIS-typed.
  */
-export const updateRoomMetadata = async (input: UpdateRoomMetadataInput): Promise<{ id: string }> => {
+export const updateRoomMetadata = async (
+  input: UpdateRoomMetadataInput,
+): Promise<{ id: string }> => {
   await prisma.room.update({
     where: { id: input.id },
     data: {

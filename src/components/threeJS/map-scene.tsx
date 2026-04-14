@@ -5,17 +5,21 @@ import * as THREE from "three"
 
 import { useMap } from "#/lib/map-context"
 
+import { AdaptiveGrid } from "./adaptive-grid"
 import { CameraRig } from "./camera-rig"
 import { FLOOR_HEIGHT, MAX_POLAR_ANGLE, TOP_DOWN_POLAR } from "./constants"
-import { DrawingLayer } from "./drawing-layer"
 import { CursorCoordinates } from "./cursor-coordinates"
+import { DrawingLayer } from "./drawing-layer"
 import { FloorPlane } from "./floor-plane"
 import { RoomPolygonsLayer } from "./room-polygons-layer"
 
+/** Tools whose workflow benefits from seeing the grid. */
+const GRID_TOOLS = new Set(["draw-room", "draw-node", "connect-edge"])
+
 export const MapScene = () => {
-  const { floors, currentFloor, renderMode, activeTool } = useMap()
+  const { floors, currentFloor, renderMode, activeTool, controlsRef, debugMode } = useMap()
+  const showGrid = debugMode || (activeTool !== null && GRID_TOOLS.has(activeTool))
   const activeFloorPlan = floors.find((f) => f.floor === currentFloor) ?? null
-  const controlsRef = useRef(null)
   const neighbourOpacityRef = useRef(0)
 
   const activeFloor = currentFloor ?? 0
@@ -65,6 +69,7 @@ export const MapScene = () => {
           />
         ))}
 
+        <AdaptiveGrid visible={showGrid} />
         <CursorCoordinates />
         <RoomPolygonsLayer neighbourOpacityRef={neighbourOpacityRef} />
         {activeTool === "draw-room" && activeFloorPlan && <DrawingLayer floor={activeFloorPlan} />}

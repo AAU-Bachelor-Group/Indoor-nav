@@ -2,15 +2,16 @@ import { useQuery } from "@tanstack/react-query"
 import { useCallback, useMemo, useState } from "react"
 import * as THREE from "three"
 
+import { MIN_POLYGON_VERTICES } from "#/components/hooks/use-room-drawing-state"
 import { useMap } from "#/lib/map-context"
-import { MIN_POLYGON_VERTICES } from "#/lib/use-room-drawing-state"
 import { getAllRoomsData } from "#/server/room.functions"
+
+import { useCanvasPointer } from "../hooks/use-canvas-pointer"
+import { useSnapToExisting } from "../hooks/use-snap-to-existing"
 
 import { DRAWING_LIFT, FLOOR_HEIGHT, SNAP_RADIUS_METERS } from "./constants"
 import { EdgePreview, VertexMarker } from "./draw-primitives"
 import { RaycastPlane } from "./raycast-plane"
-import { useCanvasPointer } from "./use-canvas-pointer"
-import { useSnapToExisting } from "./use-snap-to-existing"
 
 import type { FloorPlan } from "#/types/floor-plan"
 
@@ -56,13 +57,35 @@ const samePosition = (a: THREE.Vector3, b: THREE.Vector3): boolean => a.x === b.
  * and added to the snap target list, so adjacent rooms can share walls by
  * placing new vertices exactly at the existing corners.
  */
+/** Snap a world point to the nearest intersection of a grid with given spacing. */
+const snapPointToGrid = (point: THREE.Vector3, spacing: number, floorY: number): THREE.Vector3 =>
+  new THREE.Vector3(
+    Math.round(point.x / spacing) * spacing,
+    floorY,
+    Math.round(point.z / spacing) * spacing,
+  )
+
 export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
-  const { drawing } = useMap()
+  const { drawing, snapToGrid, gridSpacingRef } = useMap()
   const { vertices, closed, validationError, addVertex, finish } = drawing
 
   const [cursor, setCursor] = useState<THREE.Vector3 | null>(null)
 
   const floorY = floor.floor * FLOOR_HEIGHT
+
+  /**
+   * Apply grid snap if enabled AND the grid has a known spacing. Returns the
+   * input unchanged otherwise, so callers can use it unconditionally.
+   */
+  const applyGridSnap = useCallback(
+    (point: THREE.Vector3): THREE.Vector3 => {
+      if (!snapToGrid) return point
+      const spacing = gridSpacingRef.current
+      if (!spacing) return point
+      return snapPointToGrid(point, spacing, floorY)
+    },
+    [snapToGrid, gridSpacingRef, floorY],
+  )
 
   // Existing rooms on this floor — same React Query key as RoomPolygonsLayer,
   // so the request is deduped.
@@ -122,9 +145,11 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
         addVertex(snapped)
         return
       }
-      addVertex(point)
+      // Grid snap is a fallback: vertex/corner snap always wins so users
+      // can still share edges with existing rooms even when grid snap is on.
+      addVertex(applyGridSnap(point))
     },
-    [closed, snap, canClose, vertices, addVertex, finish],
+    [closed, snap, canClose, vertices, addVertex, finish, applyGridSnap],
   )
 
   const handleMove = useCallback((point: THREE.Vector3) => {
@@ -140,13 +165,18 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
   const polylinePoints = useMemo<[number, number, number][]>(() => vertices.map(lift), [vertices])
 
   // Cursor preview: segment from the last placed vertex to the cursor (or to
-  // the snap target if one is in range).
+  // the snap target if one is in range, or to the grid-snapped cursor when
+  // grid snap is on). Mirrors the click-time precedence. applyGridSnap reads
+  // gridSpacingRef.current at call time, which is fine here because the preview
+  // only needs to reflect the current spacing on the next cursor move (and
+  // cursor moves already trigger a re-render).
   const previewPoints = useMemo<[number, number, number][] | null>(() => {
     if (closed || vertices.length === 0 || !cursor) return null
     const lastVertex = vertices[vertices.length - 1]
-    const tip = snapTarget ?? cursor
+    // eslint-disable-next-line react-hooks/refs
+    const tip = snapTarget ?? applyGridSnap(cursor)
     return [lift(lastVertex), lift(tip)]
-  }, [closed, vertices, cursor, snapTarget])
+  }, [closed, vertices, cursor, snapTarget, applyGridSnap])
 
   // Polygon outline turns red while validation is failing so the user can
   // see exactly which configuration is invalid before attempting to close.
@@ -158,6 +188,17 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
   const cursorOnCloseTarget =
     snapTarget !== null && vertices.length > 0 && samePosition(snapTarget, vertices[0])
   const cursorSnapHighlight = snapTarget && !cursorOnCloseTarget ? snapTarget : null
+
+  // Grid-snap indicator: if the cursor is about to drop on a grid intersection
+  // (because grid snap is on and no vertex/corner snap is in range), show a
+  // halo there. This makes the initial vertex placement and subsequent hops
+  // feel the same as vertex snap — the user always knows where the click lands.
+  const gridSnapHighlight = useMemo<THREE.Vector3 | null>(() => {
+    if (closed || !cursor || snapTarget) return null
+    // eslint-disable-next-line react-hooks/refs
+    const snapped = applyGridSnap(cursor)
+    return snapped === cursor ? null : snapped
+  }, [closed, cursor, snapTarget, applyGridSnap])
 
   return (
     <>
@@ -215,6 +256,18 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
       {cursorSnapHighlight && (
         <VertexMarker
           position={lift(cursorSnapHighlight)}
+          color={SNAP_COLOR}
+          radius={CLOSE_TARGET_RADIUS}
+        />
+      )}
+
+      {/*
+        Grid-snap indicator. Same amber halo as vertex snap so the UX feels
+        uniform — if you see the halo, that's where the click will land.
+      */}
+      {gridSnapHighlight && (
+        <VertexMarker
+          position={lift(gridSnapHighlight)}
           color={SNAP_COLOR}
           radius={CLOSE_TARGET_RADIUS}
         />

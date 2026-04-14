@@ -6,6 +6,7 @@ import { useState } from "react"
 import { Button } from "#/components/ui/button"
 import { Input } from "#/components/ui/input"
 import { Label } from "#/components/ui/label"
+import { RoomTypeBadge } from "#/components/ui/room-type-badge"
 import {
   Select,
   SelectContent,
@@ -14,6 +15,7 @@ import {
   SelectValue,
 } from "#/components/ui/select"
 import { useMap } from "#/lib/map-context"
+import { ROOM_TYPES } from "#/lib/room-types"
 import { cn } from "#/lib/utils"
 import {
   createRoomData,
@@ -22,27 +24,9 @@ import {
   updateRoomMetadataData,
 } from "#/server/room.functions"
 
+import type { RoomType } from "#/generated/prisma/enums"
 import type { PersistedRoom } from "#/server/room.server"
 import type { ReactNode } from "react"
-
-const ROOM_TYPES = [
-  "DEFAULT",
-  "CLASSROOM",
-  "MEETING_ROOM",
-  "OFFICE",
-  "STUDY_SPACE",
-  "AUDITORIUM",
-  "LIBRARY",
-  "FOOD_DRINK",
-  "FACILITY",
-] as const
-type RoomTypeValue = (typeof ROOM_TYPES)[number]
-
-const formatRoomTypeLabel = (value: string): string =>
-  value
-    .replaceAll("_", " ")
-    .toLowerCase()
-    .replaceAll(/\b\w/g, (c) => c.toUpperCase())
 
 const requiredString = (label: string) => (value: string) =>
   value.trim() === "" ? `${label} is required` : undefined
@@ -50,7 +34,7 @@ const requiredString = (label: string) => (value: string) =>
 interface FormValues {
   roomNumber: string
   displayName: string
-  type: RoomTypeValue
+  type: RoomType
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -140,7 +124,7 @@ const RoomCreateForm = () => {
     defaultValues: {
       roomNumber: "",
       displayName: "",
-      type: "DEFAULT" as RoomTypeValue,
+      type: "DEFAULT" as RoomType,
     },
     onSubmit: async ({ value }) => {
       await mutation.mutateAsync(value)
@@ -233,12 +217,18 @@ const RoomCreateForm = () => {
                 }}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue />
+                  <SelectValue>
+                    {(value) =>
+                      typeof value === "string" && value !== "" ? (
+                        <RoomTypeBadge type={value as RoomType} />
+                      ) : null
+                    }
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {ROOM_TYPES.map((t) => (
                     <SelectItem key={t} value={t}>
-                      {formatRoomTypeLabel(t)}
+                      <RoomTypeBadge type={t} />
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -315,7 +305,7 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
     defaultValues: {
       roomNumber: room.roomNumber,
       displayName: room.displayName,
-      type: room.type as RoomTypeValue,
+      type: room.type,
     },
     onSubmit: async ({ value }) => {
       await updateMutation.mutateAsync(value)
@@ -411,12 +401,18 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
                 }}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue />
+                  <SelectValue>
+                    {(value) =>
+                      typeof value === "string" && value !== "" ? (
+                        <RoomTypeBadge type={value as RoomType} />
+                      ) : null
+                    }
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {ROOM_TYPES.map((t) => (
                     <SelectItem key={t} value={t}>
-                      {formatRoomTypeLabel(t)}
+                      <RoomTypeBadge type={t} />
                     </SelectItem>
                   ))}
                 </SelectContent>

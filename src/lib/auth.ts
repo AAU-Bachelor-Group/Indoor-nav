@@ -58,7 +58,6 @@ async function seedAdmin() {
         },
       })
     }
-
   } catch (error) {
     console.error("Failed to seed admin user:", error)
   }
