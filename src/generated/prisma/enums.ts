@@ -17,7 +17,15 @@ export type NodeType = (typeof NodeType)[keyof typeof NodeType]
 
 
 export const RoomType = {
-  DEFAULT: 'DEFAULT'
+  DEFAULT: 'DEFAULT',
+  CLASSROOM: 'CLASSROOM',
+  MEETING_ROOM: 'MEETING_ROOM',
+  OFFICE: 'OFFICE',
+  STUDY_SPACE: 'STUDY_SPACE',
+  AUDITORIUM: 'AUDITORIUM',
+  LIBRARY: 'LIBRARY',
+  FOOD_DRINK: 'FOOD_DRINK',
+  FACILITY: 'FACILITY'
 } as const
 
 export type RoomType = (typeof RoomType)[keyof typeof RoomType]

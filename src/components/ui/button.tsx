@@ -18,6 +18,22 @@ const buttonVariants = cva(
         destructive:
           "font-bold bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
+        /**
+         * Button that floats over the map surface. Dark fill, white text,
+         * elevated shadow. Toggle state is driven by the ARIA attribute:
+         * pass `aria-pressed` to get the active styling, no extra classes
+         * needed. Used by the tool palette, compass, render-mode/debug
+         * toggles, and floor selector.
+         */
+        floating:
+          "bg-primary text-white hover:bg-primary/80 backdrop-blur-sm shadow-xl border border-slate-700/50 rounded-2xl aria-pressed:bg-secondary aria-pressed:ring-2 aria-pressed:ring-white/70",
+        /**
+         * Button rendered inside a container (e.g. the bottom action-bar
+         * pill). Transparent by default so buttons visually belong to their
+         * parent; highlights on hover; aria-pressed for toggles.
+         */
+        toolbar:
+          "text-white hover:bg-secondary rounded-full aria-pressed:bg-secondary aria-pressed:ring-2 aria-pressed:ring-white/50",
       },
       size: {
         default:
@@ -31,6 +47,10 @@ const buttonVariants = cva(
         "icon-sm":
           "size-8 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-md",
         "icon-lg": "size-10",
+        /** 56×56, for the map's floating buttons. */
+        "icon-xl": "size-14",
+        /** 44×44, for round buttons inside a toolbar/pill container. */
+        "icon-round": "size-11",
       },
     },
     defaultVariants: {

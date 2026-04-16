@@ -1189,12 +1189,15 @@ export type SectionScalarFieldEnum = (typeof SectionScalarFieldEnum)[keyof typeo
 
 export const RoomScalarFieldEnum = {
   id: 'id',
+  roomNumber: 'roomNumber',
+  displayName: 'displayName',
   isActivated: 'isActivated',
   semanticNames: 'semanticNames',
   type: 'type',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  sectionId: 'sectionId'
+  sectionId: 'sectionId',
+  floor: 'floor'
 } as const
 
 export type RoomScalarFieldEnum = (typeof RoomScalarFieldEnum)[keyof typeof RoomScalarFieldEnum]
@@ -1209,7 +1212,8 @@ export const NodeScalarFieldEnum = {
   isActivated: 'isActivated',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  roomId: 'roomId'
+  roomId: 'roomId',
+  floor: 'floor'
 } as const
 
 export type NodeScalarFieldEnum = (typeof NodeScalarFieldEnum)[keyof typeof NodeScalarFieldEnum]
@@ -1322,6 +1326,20 @@ export type ListEnumRoomTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1346,20 +1364,6 @@ export type EnumNodeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'NodeType[]'
  */
 export type ListEnumNodeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NodeType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 /**

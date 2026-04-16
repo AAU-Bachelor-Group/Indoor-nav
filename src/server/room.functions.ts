@@ -1,0 +1,64 @@
+import { createServerFn } from "@tanstack/react-start"
+import { z } from "zod"
+
+import { createRoom, deleteRoom, getAllRooms, updateRoomMetadata } from "./room.server"
+
+const roomTypeEnum = z.enum([
+  "DEFAULT",
+  "CLASSROOM",
+  "MEETING_ROOM",
+  "OFFICE",
+  "STUDY_SPACE",
+  "AUDITORIUM",
+  "LIBRARY",
+  "FOOD_DRINK",
+  "FACILITY",
+])
+
+export const createRoomSchema = z.object({
+  roomNumber: z.string().min(1).max(100),
+  displayName: z.string().min(1).max(200),
+  type: roomTypeEnum,
+  floor: z.number().int(),
+  vertices: z
+    .array(
+      z.object({
+        x: z.number(),
+        z: z.number(),
+      }),
+    )
+    .min(3),
+})
+
+export const updateRoomMetadataSchema = z.object({
+  id: z.string().min(1),
+  roomNumber: z.string().min(1).max(100),
+  displayName: z.string().min(1).max(200),
+  type: roomTypeEnum,
+})
+
+export const deleteRoomSchema = z.object({
+  id: z.string().min(1),
+})
+
+export const createRoomData = createServerFn({ method: "POST" })
+  .inputValidator(createRoomSchema)
+  .handler(async ({ data }) => {
+    return await createRoom(data)
+  })
+
+export const getAllRoomsData = createServerFn({ method: "GET" }).handler(async () => {
+  return await getAllRooms()
+})
+
+export const updateRoomMetadataData = createServerFn({ method: "POST" })
+  .inputValidator(updateRoomMetadataSchema)
+  .handler(async ({ data }) => {
+    return await updateRoomMetadata(data)
+  })
+
+export const deleteRoomData = createServerFn({ method: "POST" })
+  .inputValidator(deleteRoomSchema)
+  .handler(async ({ data }) => {
+    return await deleteRoom(data.id)
+  })
