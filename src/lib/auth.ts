@@ -18,31 +18,46 @@ export const auth = betterAuth({
 
 async function seedAdmin() {
   try {
-    // Delete and recreate to ensure password always matches env.
-    // Use direct Prisma insert instead of signUpEmail to avoid creating a session.
     const ctx = await auth.$context
     const hashedPassword = await ctx.password.hash(env.ADMIN_PASSWORD)
-    const userId = crypto.randomUUID()
 
-    await prisma.user.deleteMany({ where: { username: "admin" } })
-    await prisma.user.create({
-      data: {
-        id: userId,
+    // Upsert the admin user instead of delete+create. Reusing the existing
+    // User row (and its id) is critical: Session.userId has onDelete: Cascade,
+    // so deleting the user wipes every active session and logs everyone out
+    // on every module reload (HMR, dev server restart, etc.).
+    const user = await prisma.user.upsert({
+      where: { username: "admin" },
+      update: {},
+      create: {
+        id: crypto.randomUUID(),
         email: "admin@admin.local",
         name: "Admin",
         username: "admin",
         emailVerified: true,
-        accounts: {
-          create: {
-            id: crypto.randomUUID(),
-            accountId: userId,
-            providerId: "credential",
-            password: hashedPassword,
-          },
-        },
       },
     })
-    console.log("Admin user seeded successfully")
+
+    // Keep the credential account's password in sync with env. This is
+    // idempotent and does not touch the Session table.
+    const existingAccount = await prisma.account.findFirst({
+      where: { userId: user.id, providerId: "credential" },
+    })
+    if (existingAccount) {
+      await prisma.account.update({
+        where: { id: existingAccount.id },
+        data: { password: hashedPassword },
+      })
+    } else {
+      await prisma.account.create({
+        data: {
+          id: crypto.randomUUID(),
+          accountId: user.id,
+          providerId: "credential",
+          userId: user.id,
+          password: hashedPassword,
+        },
+      })
+    }
   } catch (error) {
     console.error("Failed to seed admin user:", error)
   }

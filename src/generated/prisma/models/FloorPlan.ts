@@ -220,6 +220,8 @@ export type FloorPlanWhereInput = {
   calibrationScale?: Prisma.FloatFilter<"FloorPlan"> | number
   createdAt?: Prisma.DateTimeFilter<"FloorPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FloorPlan"> | Date | string
+  rooms?: Prisma.RoomListRelationFilter
+  nodes?: Prisma.NodeListRelationFilter
 }
 
 export type FloorPlanOrderByWithRelationInput = {
@@ -228,6 +230,8 @@ export type FloorPlanOrderByWithRelationInput = {
   calibrationScale?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  rooms?: Prisma.RoomOrderByRelationAggregateInput
+  nodes?: Prisma.NodeOrderByRelationAggregateInput
 }
 
 export type FloorPlanWhereUniqueInput = Prisma.AtLeast<{
@@ -239,6 +243,8 @@ export type FloorPlanWhereUniqueInput = Prisma.AtLeast<{
   calibrationScale?: Prisma.FloatFilter<"FloorPlan"> | number
   createdAt?: Prisma.DateTimeFilter<"FloorPlan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FloorPlan"> | Date | string
+  rooms?: Prisma.RoomListRelationFilter
+  nodes?: Prisma.NodeListRelationFilter
 }, "floor" | "floor">
 
 export type FloorPlanOrderByWithAggregationInput = {
@@ -271,6 +277,8 @@ export type FloorPlanCreateInput = {
   calibrationScale?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  rooms?: Prisma.RoomCreateNestedManyWithoutFloorPlanInput
+  nodes?: Prisma.NodeCreateNestedManyWithoutFloorPlanInput
 }
 
 export type FloorPlanUncheckedCreateInput = {
@@ -279,6 +287,8 @@ export type FloorPlanUncheckedCreateInput = {
   calibrationScale?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutFloorPlanInput
+  nodes?: Prisma.NodeUncheckedCreateNestedManyWithoutFloorPlanInput
 }
 
 export type FloorPlanUpdateInput = {
@@ -287,6 +297,8 @@ export type FloorPlanUpdateInput = {
   calibrationScale?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rooms?: Prisma.RoomUpdateManyWithoutFloorPlanNestedInput
+  nodes?: Prisma.NodeUpdateManyWithoutFloorPlanNestedInput
 }
 
 export type FloorPlanUncheckedUpdateInput = {
@@ -295,6 +307,8 @@ export type FloorPlanUncheckedUpdateInput = {
   calibrationScale?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutFloorPlanNestedInput
+  nodes?: Prisma.NodeUncheckedUpdateManyWithoutFloorPlanNestedInput
 }
 
 export type FloorPlanCreateManyInput = {
@@ -319,6 +333,11 @@ export type FloorPlanUncheckedUpdateManyInput = {
   calibrationScale?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FloorPlanScalarRelationFilter = {
+  is?: Prisma.FloorPlanWhereInput
+  isNot?: Prisma.FloorPlanWhereInput
 }
 
 export type FloorPlanCountOrderByAggregateInput = {
@@ -355,14 +374,176 @@ export type FloorPlanSumOrderByAggregateInput = {
   calibrationScale?: Prisma.SortOrder
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type FloorPlanCreateNestedOneWithoutRoomsInput = {
+  create?: Prisma.XOR<Prisma.FloorPlanCreateWithoutRoomsInput, Prisma.FloorPlanUncheckedCreateWithoutRoomsInput>
+  connectOrCreate?: Prisma.FloorPlanCreateOrConnectWithoutRoomsInput
+  connect?: Prisma.FloorPlanWhereUniqueInput
 }
 
+export type FloorPlanUpdateOneRequiredWithoutRoomsNestedInput = {
+  create?: Prisma.XOR<Prisma.FloorPlanCreateWithoutRoomsInput, Prisma.FloorPlanUncheckedCreateWithoutRoomsInput>
+  connectOrCreate?: Prisma.FloorPlanCreateOrConnectWithoutRoomsInput
+  upsert?: Prisma.FloorPlanUpsertWithoutRoomsInput
+  connect?: Prisma.FloorPlanWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FloorPlanUpdateToOneWithWhereWithoutRoomsInput, Prisma.FloorPlanUpdateWithoutRoomsInput>, Prisma.FloorPlanUncheckedUpdateWithoutRoomsInput>
+}
+
+export type FloorPlanCreateNestedOneWithoutNodesInput = {
+  create?: Prisma.XOR<Prisma.FloorPlanCreateWithoutNodesInput, Prisma.FloorPlanUncheckedCreateWithoutNodesInput>
+  connectOrCreate?: Prisma.FloorPlanCreateOrConnectWithoutNodesInput
+  connect?: Prisma.FloorPlanWhereUniqueInput
+}
+
+export type FloorPlanUpdateOneRequiredWithoutNodesNestedInput = {
+  create?: Prisma.XOR<Prisma.FloorPlanCreateWithoutNodesInput, Prisma.FloorPlanUncheckedCreateWithoutNodesInput>
+  connectOrCreate?: Prisma.FloorPlanCreateOrConnectWithoutNodesInput
+  upsert?: Prisma.FloorPlanUpsertWithoutNodesInput
+  connect?: Prisma.FloorPlanWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FloorPlanUpdateToOneWithWhereWithoutNodesInput, Prisma.FloorPlanUpdateWithoutNodesInput>, Prisma.FloorPlanUncheckedUpdateWithoutNodesInput>
+}
+
+export type FloorPlanCreateWithoutRoomsInput = {
+  floor: number
+  path: string
+  calibrationScale?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  nodes?: Prisma.NodeCreateNestedManyWithoutFloorPlanInput
+}
+
+export type FloorPlanUncheckedCreateWithoutRoomsInput = {
+  floor: number
+  path: string
+  calibrationScale?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  nodes?: Prisma.NodeUncheckedCreateNestedManyWithoutFloorPlanInput
+}
+
+export type FloorPlanCreateOrConnectWithoutRoomsInput = {
+  where: Prisma.FloorPlanWhereUniqueInput
+  create: Prisma.XOR<Prisma.FloorPlanCreateWithoutRoomsInput, Prisma.FloorPlanUncheckedCreateWithoutRoomsInput>
+}
+
+export type FloorPlanUpsertWithoutRoomsInput = {
+  update: Prisma.XOR<Prisma.FloorPlanUpdateWithoutRoomsInput, Prisma.FloorPlanUncheckedUpdateWithoutRoomsInput>
+  create: Prisma.XOR<Prisma.FloorPlanCreateWithoutRoomsInput, Prisma.FloorPlanUncheckedCreateWithoutRoomsInput>
+  where?: Prisma.FloorPlanWhereInput
+}
+
+export type FloorPlanUpdateToOneWithWhereWithoutRoomsInput = {
+  where?: Prisma.FloorPlanWhereInput
+  data: Prisma.XOR<Prisma.FloorPlanUpdateWithoutRoomsInput, Prisma.FloorPlanUncheckedUpdateWithoutRoomsInput>
+}
+
+export type FloorPlanUpdateWithoutRoomsInput = {
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  calibrationScale?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nodes?: Prisma.NodeUpdateManyWithoutFloorPlanNestedInput
+}
+
+export type FloorPlanUncheckedUpdateWithoutRoomsInput = {
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  calibrationScale?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nodes?: Prisma.NodeUncheckedUpdateManyWithoutFloorPlanNestedInput
+}
+
+export type FloorPlanCreateWithoutNodesInput = {
+  floor: number
+  path: string
+  calibrationScale?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rooms?: Prisma.RoomCreateNestedManyWithoutFloorPlanInput
+}
+
+export type FloorPlanUncheckedCreateWithoutNodesInput = {
+  floor: number
+  path: string
+  calibrationScale?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutFloorPlanInput
+}
+
+export type FloorPlanCreateOrConnectWithoutNodesInput = {
+  where: Prisma.FloorPlanWhereUniqueInput
+  create: Prisma.XOR<Prisma.FloorPlanCreateWithoutNodesInput, Prisma.FloorPlanUncheckedCreateWithoutNodesInput>
+}
+
+export type FloorPlanUpsertWithoutNodesInput = {
+  update: Prisma.XOR<Prisma.FloorPlanUpdateWithoutNodesInput, Prisma.FloorPlanUncheckedUpdateWithoutNodesInput>
+  create: Prisma.XOR<Prisma.FloorPlanCreateWithoutNodesInput, Prisma.FloorPlanUncheckedCreateWithoutNodesInput>
+  where?: Prisma.FloorPlanWhereInput
+}
+
+export type FloorPlanUpdateToOneWithWhereWithoutNodesInput = {
+  where?: Prisma.FloorPlanWhereInput
+  data: Prisma.XOR<Prisma.FloorPlanUpdateWithoutNodesInput, Prisma.FloorPlanUncheckedUpdateWithoutNodesInput>
+}
+
+export type FloorPlanUpdateWithoutNodesInput = {
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  calibrationScale?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rooms?: Prisma.RoomUpdateManyWithoutFloorPlanNestedInput
+}
+
+export type FloorPlanUncheckedUpdateWithoutNodesInput = {
+  floor?: Prisma.IntFieldUpdateOperationsInput | number
+  path?: Prisma.StringFieldUpdateOperationsInput | string
+  calibrationScale?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rooms?: Prisma.RoomUncheckedUpdateManyWithoutFloorPlanNestedInput
+}
+
+
+/**
+ * Count Type FloorPlanCountOutputType
+ */
+
+export type FloorPlanCountOutputType = {
+  rooms: number
+  nodes: number
+}
+
+export type FloorPlanCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  rooms?: boolean | FloorPlanCountOutputTypeCountRoomsArgs
+  nodes?: boolean | FloorPlanCountOutputTypeCountNodesArgs
+}
+
+/**
+ * FloorPlanCountOutputType without action
+ */
+export type FloorPlanCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FloorPlanCountOutputType
+   */
+  select?: Prisma.FloorPlanCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * FloorPlanCountOutputType without action
+ */
+export type FloorPlanCountOutputTypeCountRoomsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RoomWhereInput
+}
+
+/**
+ * FloorPlanCountOutputType without action
+ */
+export type FloorPlanCountOutputTypeCountNodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NodeWhereInput
+}
 
 
 export type FloorPlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -371,6 +552,9 @@ export type FloorPlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   calibrationScale?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  rooms?: boolean | Prisma.FloorPlan$roomsArgs<ExtArgs>
+  nodes?: boolean | Prisma.FloorPlan$nodesArgs<ExtArgs>
+  _count?: boolean | Prisma.FloorPlanCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["floorPlan"]>
 
 export type FloorPlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -398,10 +582,20 @@ export type FloorPlanSelectScalar = {
 }
 
 export type FloorPlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"floor" | "path" | "calibrationScale" | "createdAt" | "updatedAt", ExtArgs["result"]["floorPlan"]>
+export type FloorPlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  rooms?: boolean | Prisma.FloorPlan$roomsArgs<ExtArgs>
+  nodes?: boolean | Prisma.FloorPlan$nodesArgs<ExtArgs>
+  _count?: boolean | Prisma.FloorPlanCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type FloorPlanIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type FloorPlanIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $FloorPlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FloorPlan"
-  objects: {}
+  objects: {
+    rooms: Prisma.$RoomPayload<ExtArgs>[]
+    nodes: Prisma.$NodePayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     floor: number
     path: string
@@ -802,6 +996,8 @@ readonly fields: FloorPlanFieldRefs;
  */
 export interface Prisma__FloorPlanClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  rooms<T extends Prisma.FloorPlan$roomsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloorPlan$roomsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  nodes<T extends Prisma.FloorPlan$nodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloorPlan$nodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -853,6 +1049,10 @@ export type FloorPlanFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
+  /**
    * Filter, which FloorPlan to fetch.
    */
   where: Prisma.FloorPlanWhereUniqueInput
@@ -871,6 +1071,10 @@ export type FloorPlanFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
+  /**
    * Filter, which FloorPlan to fetch.
    */
   where: Prisma.FloorPlanWhereUniqueInput
@@ -888,6 +1092,10 @@ export type FloorPlanFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the FloorPlan
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
   /**
    * Filter, which FloorPlan to fetch.
    */
@@ -937,6 +1145,10 @@ export type FloorPlanFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
+  /**
    * Filter, which FloorPlan to fetch.
    */
   where?: Prisma.FloorPlanWhereInput
@@ -984,6 +1196,10 @@ export type FloorPlanFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the FloorPlan
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
   /**
    * Filter, which FloorPlans to fetch.
    */
@@ -1033,6 +1249,10 @@ export type FloorPlanCreateArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
+  /**
    * The data needed to create a FloorPlan.
    */
   data: Prisma.XOR<Prisma.FloorPlanCreateInput, Prisma.FloorPlanUncheckedCreateInput>
@@ -1080,6 +1300,10 @@ export type FloorPlanUpdateArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the FloorPlan
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
   /**
    * The data needed to update a FloorPlan.
    */
@@ -1147,6 +1371,10 @@ export type FloorPlanUpsertArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
+  /**
    * The filter to search for the FloorPlan to update in case it exists.
    */
   where: Prisma.FloorPlanWhereUniqueInput
@@ -1173,6 +1401,10 @@ export type FloorPlanDeleteArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
+  /**
    * Filter which FloorPlan to delete.
    */
   where: Prisma.FloorPlanWhereUniqueInput
@@ -1193,6 +1425,54 @@ export type FloorPlanDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
+ * FloorPlan.rooms
+ */
+export type FloorPlan$roomsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Room
+   */
+  select?: Prisma.RoomSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Room
+   */
+  omit?: Prisma.RoomOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
+  where?: Prisma.RoomWhereInput
+  orderBy?: Prisma.RoomOrderByWithRelationInput | Prisma.RoomOrderByWithRelationInput[]
+  cursor?: Prisma.RoomWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RoomScalarFieldEnum | Prisma.RoomScalarFieldEnum[]
+}
+
+/**
+ * FloorPlan.nodes
+ */
+export type FloorPlan$nodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Node
+   */
+  select?: Prisma.NodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Node
+   */
+  omit?: Prisma.NodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NodeInclude<ExtArgs> | null
+  where?: Prisma.NodeWhereInput
+  orderBy?: Prisma.NodeOrderByWithRelationInput | Prisma.NodeOrderByWithRelationInput[]
+  cursor?: Prisma.NodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NodeScalarFieldEnum | Prisma.NodeScalarFieldEnum[]
+}
+
+/**
  * FloorPlan without action
  */
 export type FloorPlanDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1204,4 +1484,8 @@ export type FloorPlanDefaultArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the FloorPlan
    */
   omit?: Prisma.FloorPlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FloorPlanInclude<ExtArgs> | null
 }

@@ -21,3 +21,14 @@ export const TOP_DOWN_POLAR = 0.001
 
 /** Maximum allowed polar angle (prevents viewing from below the floor) */
 export const MAX_POLAR_ANGLE = Math.PI / 2.2
+
+/** Snap-to-vertex radius for room polygon drawing, in meters. */
+export const SNAP_RADIUS_METERS = 0.5
+
+/**
+ * Vertical offset (in world units / meters) used when rendering drawing
+ * primitives above a floor plane, to keep them from z-fighting with the
+ * floor texture and to clearly sit above the plane in 3D oblique views.
+ * Storage is unaffected - only rendering positions are lifted by this amount.
+ */
+export const DRAWING_LIFT = 0.05
