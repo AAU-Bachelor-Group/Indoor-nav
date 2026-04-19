@@ -16,4 +16,9 @@ todos.json
 .claude
 *.webp
 *.pdf
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.ico
 *.zip
