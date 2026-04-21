@@ -18,7 +18,7 @@ const GRID_TOOLS = new Set(["draw-room", "draw-node", "connect-edge"])
 
 export const MapScene = () => {
   const { floors, currentFloor, renderMode, activeTool, controlsRef, debugMode } = useMap()
-  const showGrid = debugMode || (activeTool !== null && GRID_TOOLS.has(activeTool))
+  const showGrid = debugMode || (activeTool !== "default" && GRID_TOOLS.has(activeTool))
   const activeFloorPlan = floors.find((f) => f.floor === currentFloor) ?? null
   const neighbourOpacityRef = useRef(0)
 
@@ -36,7 +36,7 @@ export const MapScene = () => {
       style={{
         width: "100%",
         height: "100%",
-        cursor: activeTool === null ? "default" : "crosshair",
+        cursor: activeTool === "default" ? "default" : "crosshair",
       }}
       orthographic={renderMode === "2d"}
     >

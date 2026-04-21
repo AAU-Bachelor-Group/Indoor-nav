@@ -209,7 +209,7 @@ export const RoomPolygonsLayer = ({ neighbourOpacityRef }: RoomPolygonsLayerProp
   }, [rooms, renderMode, currentFloor])
 
   const isEditing = activeTool === "edit-room"
-  const isIdle = activeTool === null
+  const isIdle = activeTool === "default"
   const roomsAreClickable = isEditing || isIdle
 
   const handleSelect = (id: string) => {

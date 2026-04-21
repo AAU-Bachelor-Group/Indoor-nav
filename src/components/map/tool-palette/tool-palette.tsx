@@ -15,12 +15,13 @@ interface ToolPaletteProps {
  * (e.g. `connect-edge`) that aren't wired yet — drop an id in here once its
  * implementation lands.
  */
-const VISIBLE_TOOLS: ToolId[] = ["draw-room", "edit-room", "draw-node"]
+const VISIBLE_TOOLS: ToolId[] = ["default", "draw-room", "edit-room", "draw-node"]
 
 /**
  * Vertical tool palette on the left edge of the map. Exactly one tool can be
- * active at a time; clicking the active tool deactivates it. Contextual
- * actions for the active tool live in the `ActionBar` at the bottom-center.
+ * active at a time; clicking the active tool reverts to the default tool.
+ * Contextual actions for the active tool live in the `ActionBar` at the
+ * bottom-center.
  */
 export const ToolPalette = ({ className }: ToolPaletteProps) => {
   const { activeTool, setActiveTool } = useMap()
@@ -35,14 +36,17 @@ export const ToolPalette = ({ className }: ToolPaletteProps) => {
     >
       {visibleTools.map((tool) => {
         const Icon = tool.icon
+        const isActive = activeTool === tool.id
+        const displayLabel = isActive && tool.id === "default" ? tool.activeLabel : tool.label
         return (
           <ToolButton
             key={tool.id}
             icon={<Icon className="size-6 text-white" />}
-            label={tool.label}
-            active={activeTool === tool.id}
+            label={displayLabel}
+            active={isActive}
+            isDefault={tool.id === "default"}
             onClick={() => {
-              setActiveTool(activeTool === tool.id ? null : tool.id)
+              setActiveTool(isActive ? "default" : tool.id)
             }}
           />
         )
