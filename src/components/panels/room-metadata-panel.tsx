@@ -169,7 +169,7 @@ const RoomCreateForm = () => {
             >
               <Input
                 id={field.name}
-                className="bg-white text-black focus:ring-offset-2"
+                className="bg-background text-black focus:ring-offset-2"
                 placeholder="2.01"
                 value={field.state.value}
                 onChange={(e) => {
@@ -195,7 +195,7 @@ const RoomCreateForm = () => {
             >
               <Input
                 id={field.name}
-                className="bg-white text-black focus:ring-offset-2"
+                className="bg-background text-black focus:ring-offset-2"
                 placeholder="Project Lab"
                 value={field.state.value}
                 onChange={(e) => {
@@ -218,7 +218,7 @@ const RoomCreateForm = () => {
                   if (v !== null) field.handleChange(v)
                 }}
               >
-                <SelectTrigger className="w-full bg-white text-black">
+                <SelectTrigger className="w-full bg-background text-black">
                   <SelectValue>
                     {(value) =>
                       typeof value === "string" && value !== "" ? (
@@ -227,9 +227,13 @@ const RoomCreateForm = () => {
                     }
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-white text-black">
+                <SelectContent className="bg-background text-black">
                   {ROOM_TYPES.map((t) => (
-                    <SelectItem className="focus:bg-blue-500 cursor-pointer" key={t} value={t}>
+                    <SelectItem
+                      className="focus:bg-sidebar-primary/40 cursor-pointer"
+                      key={t}
+                      value={t}
+                    >
                       <RoomTypeBadge type={t} />
                     </SelectItem>
                   ))}
@@ -360,7 +364,7 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
             >
               <Input
                 id={field.name}
-                className="bg-white text-black focus:ring-offset-2"
+                className="bg-background text-black focus:ring-offset-2"
                 placeholder="2.01"
                 value={field.state.value}
                 onChange={(e) => {
@@ -386,7 +390,7 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
             >
               <Input
                 id={field.name}
-                className="bg-white text-black focus:ring-offset-2"
+                className="bg-background text-black focus:ring-offset-2"
                 placeholder="Project Lab"
                 value={field.state.value}
                 onChange={(e) => {
@@ -409,7 +413,7 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
                   if (v !== null) field.handleChange(v)
                 }}
               >
-                <SelectTrigger className="w-full bg-white text-black">
+                <SelectTrigger className="w-full bg-background text-black">
                   <SelectValue>
                     {(value) =>
                       typeof value === "string" && value !== "" ? (
@@ -418,9 +422,13 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
                     }
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-white text-black">
+                <SelectContent className="bg-background text-black">
                   {ROOM_TYPES.map((t) => (
-                    <SelectItem className="focus:bg-blue-500 cursor-pointer" key={t} value={t}>
+                    <SelectItem
+                      className="focus:bg-sidebar-primary/40 cursor-pointer"
+                      key={t}
+                      value={t}
+                    >
                       <RoomTypeBadge type={t} />
                     </SelectItem>
                   ))}
