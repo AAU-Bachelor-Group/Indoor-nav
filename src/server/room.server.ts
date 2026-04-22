@@ -119,7 +119,6 @@ export const createRoom = async (input: CreateRoomInput): Promise<{ id: string }
       floor,
       polygon,
       "isActivated",
-      "semanticNames",
       "createdAt",
       "updatedAt"
     )
