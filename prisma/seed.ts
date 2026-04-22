@@ -25,42 +25,42 @@ async function main() {
       {
         floor: -1,
         path: "/floorplans/floor_-1_plan.png",
-        calibrationScale: 0.05,
+        calibrationScale: 0.07174,
       },
       {
         floor: 0,
         path: "/floorplans/floor_0_plan.png",
-        calibrationScale: 0.05,
+        calibrationScale: 0.07174,
       },
       {
         floor: 1,
         path: "/floorplans/floor_1_plan.png",
-        calibrationScale: 0.05,
+        calibrationScale: 0.07174,
       },
       {
         floor: 2,
         path: "/floorplans/floor_2_plan.png",
-        calibrationScale: 0.05,
+        calibrationScale: 0.07174,
       },
       {
         floor: 3,
         path: "/floorplans/floor_3_plan.png",
-        calibrationScale: 0.05,
+        calibrationScale: 0.07174,
       },
       {
         floor: 4,
         path: "/floorplans/floor_4_plan.png",
-        calibrationScale: 0.05,
+        calibrationScale: 0.07174,
       },
       {
         floor: 5,
         path: "/floorplans/floor_5_plan.png",
-        calibrationScale: 0.05,
+        calibrationScale: 0.07174,
       },
       {
         floor: 6,
         path: "/floorplans/floor_6_plan.png",
-        calibrationScale: 0.05,
+        calibrationScale: 0.07174,
       },
     ],
   })
