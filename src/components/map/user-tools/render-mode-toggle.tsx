@@ -8,7 +8,7 @@ interface RenderModeToggleProps {
 
 export const RenderModeToggle = ({ className }: RenderModeToggleProps) => {
   const { renderMode, setRenderMode, activeTool, isSelectingFloor } = useMap()
-  const locked = activeTool !== null
+  const locked = activeTool !== "default"
 
   if (isSelectingFloor) return null
 

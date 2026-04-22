@@ -1,4 +1,4 @@
-import { MousePointer2, Pencil, Waypoints } from "lucide-react"
+import { SquareMousePointer, MousePointer2, Pencil, Waypoints } from "lucide-react"
 
 import type { ActiveTool } from "#/lib/map-context"
 import type { LucideIcon } from "lucide-react"
@@ -21,8 +21,9 @@ export interface ToolMeta {
  * new tool = add an entry here, implement its actions component, done.
  */
 export const TOOL_REGISTRY: ToolMeta[] = [
+  { id: "default", label: "Map view", activeLabel: "Viewing map", icon: MousePointer2 },
   { id: "draw-room", label: "Draw room", activeLabel: "Drawing room", icon: Pencil },
-  { id: "edit-room", label: "Edit rooms", activeLabel: "Editing rooms", icon: MousePointer2 },
+  { id: "edit-room", label: "Edit rooms", activeLabel: "Editing rooms", icon: SquareMousePointer },
   { id: "draw-node", label: "Edit nodes", activeLabel: "Editing nodes", icon: Waypoints },
   {
     id: "connect-edge",
@@ -31,7 +32,6 @@ export const TOOL_REGISTRY: ToolMeta[] = [
     icon: Waypoints,
   },
 ]
-
 const toolById = new Map(TOOL_REGISTRY.map((t) => [t.id, t]))
 
 export const getToolMeta = (id: ToolId): ToolMeta => {

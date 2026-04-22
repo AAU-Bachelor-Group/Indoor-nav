@@ -26,7 +26,7 @@ interface ActionBarProps {
 export const ActionBar = ({ className }: ActionBarProps) => {
   const { activeTool, drawing, setActiveTool } = useMap()
 
-  if (activeTool === null) return null
+  if (activeTool === "default") return null
 
   const { icon: Icon, activeLabel } = getToolMeta(activeTool)
   const validationError = activeTool === "draw-room" ? drawing.validationError : null
@@ -65,7 +65,7 @@ export const ActionBar = ({ className }: ActionBarProps) => {
           icon={<LogOut className="size-4" />}
           label="Exit mode"
           onClick={() => {
-            setActiveTool(null)
+            setActiveTool("default")
           }}
         />
       </div>

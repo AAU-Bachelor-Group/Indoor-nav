@@ -9,6 +9,7 @@ interface ToolButtonProps {
   active?: boolean
   disabled?: boolean
   onClick: () => void
+  isDefault?: boolean
 }
 
 /**
@@ -18,7 +19,14 @@ interface ToolButtonProps {
  * which tool is on and how to leave it. Active styling comes from the
  * `floating` button variant's `aria-pressed:` rules — no className toggling.
  */
-export const ToolButton = ({ icon, label, active, disabled, onClick }: ToolButtonProps) => (
+export const ToolButton = ({
+  icon,
+  label,
+  active,
+  disabled,
+  onClick,
+  isDefault,
+}: ToolButtonProps) => (
   <Tooltip>
     <TooltipTrigger
       render={
@@ -42,6 +50,8 @@ export const ToolButton = ({ icon, label, active, disabled, onClick }: ToolButto
         </Button>
       }
     />
-    <TooltipContent side="right">{active ? `Exit ${label.toLowerCase()}` : label}</TooltipContent>
+    <TooltipContent side="right">
+      {active && !isDefault ? `Exit ${label.toLowerCase()}` : label}
+    </TooltipContent>
   </Tooltip>
 )

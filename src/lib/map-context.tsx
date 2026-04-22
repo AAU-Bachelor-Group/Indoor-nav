@@ -20,7 +20,7 @@ type RenderMode = "2d" | "3d"
  * are reserved for the next PBI (node + edge editing) so the union doesn't
  * have to change again.
  */
-export type ActiveTool = "draw-room" | "edit-room" | "draw-node" | "connect-edge" | null
+export type ActiveTool = "default" | "draw-room" | "edit-room" | "draw-node" | "connect-edge"
 
 interface MapContextValue {
   floors: FloorPlan[]
@@ -111,7 +111,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
 
   const [debugMode, setDebugMode] = useState(false)
   const [snapToGrid, setSnapToGrid] = useState(false)
-  const [activeTool, setActiveTool] = useState<ActiveTool>(null)
+  const [activeTool, setActiveTool] = useState<ActiveTool>("default")
   const [editingRoomId, setEditingRoomId] = useState<string | null>(null)
   const [viewingRoomId, setViewingRoomId] = useState<string | null>(null)
   const previousRenderModeRef = useRef<RenderMode | null>(null)
@@ -123,12 +123,12 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
   const handleSetActiveTool = useCallback(
     (tool: ActiveTool) => {
       setActiveTool((current) => {
-        if (current === null && tool !== null) {
+        if (current === "default" && tool !== "default") {
           // Activating: remember the current mode and lock to 2D for vertex placement.
           previousRenderModeRef.current = renderMode
           setRenderMode("2d")
-        } else if (current !== null && tool === null) {
-          // Deactivating: restore the remembered mode (if any).
+        } else if (current !== "default" && tool === "default") {
+          // Returning to the default view: restore the remembered mode.
           const previous = previousRenderModeRef.current
           previousRenderModeRef.current = null
           if (previous !== null) {
