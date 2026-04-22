@@ -32,7 +32,7 @@ const App = () => {
         id: r.item.id,
         icon: <Building2 className="w-5 h-5" />,
         title: "TEST",
-        semantic: "TOAST",
+        type: "TEST",
       }))
 
   return (

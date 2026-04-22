@@ -130,7 +130,6 @@ export const createRoom = async (input: CreateRoomInput): Promise<{ id: string }
       ${floor},
       ST_GeomFromText(${wkt}, 0),
       true,
-      ARRAY[]::TEXT[],
       NOW(),
       NOW()
     )
@@ -142,7 +141,7 @@ export const createRoom = async (input: CreateRoomInput): Promise<{ id: string }
 interface RoomGeoJsonRow {
   id: string
   roomNumber: string
-  displayName: string
+  displayName?: string
   type: RoomType
   floor: number
   polygonJson: string

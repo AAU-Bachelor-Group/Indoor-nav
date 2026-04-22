@@ -63,7 +63,6 @@ export type RoomCountAggregateOutputType = {
   roomNumber: number
   displayName: number
   isActivated: number
-  semanticNames: number
   type: number
   createdAt: number
   updatedAt: number
@@ -110,7 +109,6 @@ export type RoomCountAggregateInputType = {
   roomNumber?: true
   displayName?: true
   isActivated?: true
-  semanticNames?: true
   type?: true
   createdAt?: true
   updatedAt?: true
@@ -210,7 +208,6 @@ export type RoomGroupByOutputType = {
   roomNumber: string
   displayName: string | null
   isActivated: boolean
-  semanticNames: string[]
   type: $Enums.RoomType
   createdAt: Date
   updatedAt: Date
@@ -246,7 +243,6 @@ export type RoomWhereInput = {
   roomNumber?: Prisma.StringFilter<"Room"> | string
   displayName?: Prisma.StringNullableFilter<"Room"> | string | null
   isActivated?: Prisma.BoolFilter<"Room"> | boolean
-  semanticNames?: Prisma.StringNullableListFilter<"Room">
   type?: Prisma.EnumRoomTypeFilter<"Room"> | $Enums.RoomType
   createdAt?: Prisma.DateTimeFilter<"Room"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Room"> | Date | string
@@ -262,7 +258,6 @@ export type RoomOrderByWithRelationInput = {
   roomNumber?: Prisma.SortOrder
   displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   isActivated?: Prisma.SortOrder
-  semanticNames?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -281,7 +276,6 @@ export type RoomWhereUniqueInput = Prisma.AtLeast<{
   roomNumber?: Prisma.StringFilter<"Room"> | string
   displayName?: Prisma.StringNullableFilter<"Room"> | string | null
   isActivated?: Prisma.BoolFilter<"Room"> | boolean
-  semanticNames?: Prisma.StringNullableListFilter<"Room">
   type?: Prisma.EnumRoomTypeFilter<"Room"> | $Enums.RoomType
   createdAt?: Prisma.DateTimeFilter<"Room"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Room"> | Date | string
@@ -297,7 +291,6 @@ export type RoomOrderByWithAggregationInput = {
   roomNumber?: Prisma.SortOrder
   displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   isActivated?: Prisma.SortOrder
-  semanticNames?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -318,7 +311,6 @@ export type RoomScalarWhereWithAggregatesInput = {
   roomNumber?: Prisma.StringWithAggregatesFilter<"Room"> | string
   displayName?: Prisma.StringNullableWithAggregatesFilter<"Room"> | string | null
   isActivated?: Prisma.BoolWithAggregatesFilter<"Room"> | boolean
-  semanticNames?: Prisma.StringNullableListFilter<"Room">
   type?: Prisma.EnumRoomTypeWithAggregatesFilter<"Room"> | $Enums.RoomType
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Room"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Room"> | Date | string
@@ -331,7 +323,6 @@ export type RoomCreateInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -345,7 +336,6 @@ export type RoomUncheckedCreateInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -359,7 +349,6 @@ export type RoomUpdateInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -373,7 +362,6 @@ export type RoomUncheckedUpdateInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -387,7 +375,6 @@ export type RoomCreateManyInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -400,7 +387,6 @@ export type RoomUpdateManyMutationInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -411,7 +397,6 @@ export type RoomUncheckedUpdateManyInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -429,20 +414,11 @@ export type RoomOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type StringNullableListFilter<$PrismaModel = never> = {
-  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
-  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
-  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
-}
-
 export type RoomCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   roomNumber?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   isActivated?: Prisma.SortOrder
-  semanticNames?: Prisma.SortOrder
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -529,15 +505,6 @@ export type RoomUncheckedUpdateManyWithoutSectionNestedInput = {
   deleteMany?: Prisma.RoomScalarWhereInput | Prisma.RoomScalarWhereInput[]
 }
 
-export type RoomCreatesemanticNamesInput = {
-  set: string[]
-}
-
-export type RoomUpdatesemanticNamesInput = {
-  set?: string[]
-  push?: string | string[]
-}
-
 export type EnumRoomTypeFieldUpdateOperationsInput = {
   set?: $Enums.RoomType
 }
@@ -613,7 +580,6 @@ export type RoomCreateWithoutSectionInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -626,7 +592,6 @@ export type RoomUncheckedCreateWithoutSectionInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -668,7 +633,6 @@ export type RoomScalarWhereInput = {
   roomNumber?: Prisma.StringFilter<"Room"> | string
   displayName?: Prisma.StringNullableFilter<"Room"> | string | null
   isActivated?: Prisma.BoolFilter<"Room"> | boolean
-  semanticNames?: Prisma.StringNullableListFilter<"Room">
   type?: Prisma.EnumRoomTypeFilter<"Room"> | $Enums.RoomType
   createdAt?: Prisma.DateTimeFilter<"Room"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Room"> | Date | string
@@ -681,7 +645,6 @@ export type RoomCreateWithoutNodesInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -694,7 +657,6 @@ export type RoomUncheckedCreateWithoutNodesInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -723,7 +685,6 @@ export type RoomUpdateWithoutNodesInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -736,7 +697,6 @@ export type RoomUncheckedUpdateWithoutNodesInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -749,7 +709,6 @@ export type RoomCreateWithoutFloorPlanInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -762,7 +721,6 @@ export type RoomUncheckedCreateWithoutFloorPlanInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -801,7 +759,6 @@ export type RoomCreateManySectionInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -813,7 +770,6 @@ export type RoomUpdateWithoutSectionInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -826,7 +782,6 @@ export type RoomUncheckedUpdateWithoutSectionInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -839,7 +794,6 @@ export type RoomUncheckedUpdateManyWithoutSectionInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -851,7 +805,6 @@ export type RoomCreateManyFloorPlanInput = {
   roomNumber: string
   displayName?: string | null
   isActivated?: boolean
-  semanticNames?: Prisma.RoomCreatesemanticNamesInput | string[]
   type: $Enums.RoomType
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -863,7 +816,6 @@ export type RoomUpdateWithoutFloorPlanInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -876,7 +828,6 @@ export type RoomUncheckedUpdateWithoutFloorPlanInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -889,7 +840,6 @@ export type RoomUncheckedUpdateManyWithoutFloorPlanInput = {
   roomNumber?: Prisma.StringFieldUpdateOperationsInput | string
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  semanticNames?: Prisma.RoomUpdatesemanticNamesInput | string[]
   type?: Prisma.EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -932,7 +882,6 @@ export type RoomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   roomNumber?: boolean
   displayName?: boolean
   isActivated?: boolean
-  semanticNames?: boolean
   type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -949,7 +898,6 @@ export type RoomSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   roomNumber?: boolean
   displayName?: boolean
   isActivated?: boolean
-  semanticNames?: boolean
   type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -964,7 +912,6 @@ export type RoomSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   roomNumber?: boolean
   displayName?: boolean
   isActivated?: boolean
-  semanticNames?: boolean
   type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -979,7 +926,6 @@ export type RoomSelectScalar = {
   roomNumber?: boolean
   displayName?: boolean
   isActivated?: boolean
-  semanticNames?: boolean
   type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -987,7 +933,7 @@ export type RoomSelectScalar = {
   floor?: boolean
 }
 
-export type RoomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "roomNumber" | "displayName" | "isActivated" | "semanticNames" | "type" | "createdAt" | "updatedAt" | "sectionId" | "floor", ExtArgs["result"]["room"]>
+export type RoomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "roomNumber" | "displayName" | "isActivated" | "type" | "createdAt" | "updatedAt" | "sectionId" | "floor", ExtArgs["result"]["room"]>
 export type RoomInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   section?: boolean | Prisma.Room$sectionArgs<ExtArgs>
   floorPlan?: boolean | Prisma.FloorPlanDefaultArgs<ExtArgs>
@@ -1019,7 +965,6 @@ export type $RoomPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     roomNumber: string
     displayName: string | null
     isActivated: boolean
-    semanticNames: string[]
     type: $Enums.RoomType
     createdAt: Date
     updatedAt: Date
@@ -1458,7 +1403,6 @@ export interface RoomFieldRefs {
   readonly roomNumber: Prisma.FieldRef<"Room", 'String'>
   readonly displayName: Prisma.FieldRef<"Room", 'String'>
   readonly isActivated: Prisma.FieldRef<"Room", 'Boolean'>
-  readonly semanticNames: Prisma.FieldRef<"Room", 'String[]'>
   readonly type: Prisma.FieldRef<"Room", 'RoomType'>
   readonly createdAt: Prisma.FieldRef<"Room", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Room", 'DateTime'>
