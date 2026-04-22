@@ -100,14 +100,25 @@ export const ROOM_TYPE_META: Record<RoomType, RoomTypeMeta> = {
 
 export const ROOM_TYPES = Object.keys(ROOM_TYPE_META) as RoomType[]
 
-export const getRoomTypeMeta = (type: RoomType): RoomTypeMeta => ROOM_TYPE_META[type]
+export const withOpacity = (hex: string, opacity = 0.5): string => {
+  const num = Number.parseInt(hex.slice(1), 16)
+  const r = (num >> 16) & 0xff
+  const g = (num >> 8) & 0xff
+  const b = num & 0xff
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`
+}
+
+export const getRoomTypeMeta = (type: RoomType): RoomTypeMeta => ({
+  ...ROOM_TYPE_META[type],
+  color: withOpacity(ROOM_TYPE_META[type].color),
+})
 
 /**
  * Scales each RGB channel toward black. `amount` is the fraction of the
  * channel to remove (0 = unchanged, 1 = black). Used to derive a room's
  * outline color from its fill.
  */
-export const darkenHex = (hex: string, amount = 0.55): string => {
+export const darkenHex = (hex: string, amount = 0.5): string => {
   const num = Number.parseInt(hex.slice(1), 16)
   const factor = 1 - amount
   const r = Math.round(((num >> 16) & 0xff) * factor)

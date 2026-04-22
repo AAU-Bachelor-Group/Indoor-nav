@@ -1,61 +1,35 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { Building2, MapPin, GraduationCap, Coffee, Train } from "lucide-react"
 import * as React from "react"
 
 import { Button } from "#/components/ui/button"
 import { Input } from "#/components/ui/input"
+import { RoomTypeBadge } from "#/components/ui/room-type-badge"
+import { RoomType } from "#/generated/prisma/enums"
+import { getRoomTypeMeta, getRoomTypeOutline } from "#/lib/room-types"
+import { getAllRoomsData } from "#/server/room.functions"
 
 import { SearchBar } from "../components/ui/search-bar"
 import { SearchResultList, type SearchResultItem } from "../components/ui/search-result-list"
 
 // ─── Demo data ────────────────────────────────────────────────────────────────
 
-const ALL_RESULTS: SearchResultItem[] = [
-  {
-    id: "lecture-hall",
-    icon: <GraduationCap className="w-5 h-5" />,
-    title: "Building 101",
-    semantic: "Software lecture room",
-  },
-  {
-    id: "library",
-    icon: <Building2 className="w-5 h-5" />,
-    title: "Main Library",
-    semantic: "University library",
-  },
-  {
-    id: "station",
-    icon: <Train className="w-5 h-5" />,
-    title: "Central Station",
-    semantic: "Train station",
-  },
-  {
-    id: "coffee",
-    icon: <Coffee className="w-5 h-5" />,
-    title: "Campus Coffee",
-    semantic: "Coffee shop",
-  },
-]
+const makeItem = (id: string, title: string, roomType: RoomType): SearchResultItem => {
+  const meta = getRoomTypeMeta(roomType)
+  const outline = getRoomTypeOutline(roomType)
+  const Icon = meta.icon
+  return {
+    id,
+    icon: <Icon className="w-5 h-5" style={{ color: outline }} />,
+    iconBgStyle: { backgroundColor: meta.color, outline: `2px solid ${outline}` },
+    title,
+    type: meta.label,
+  }
+}
 
 const NEARBY_RESULTS: SearchResultItem[] = [
-  {
-    id: "auditorium",
-    icon: <Building2 className="w-5 h-5" />,
-    title: "Auditorium A",
-    semantic: "Main auditorium",
-  },
-  {
-    id: "canteen",
-    icon: <MapPin className="w-5 h-5" />,
-    title: "Student Canteen",
-    semantic: "Cafeteria",
-  },
-  {
-    id: "parking",
-    icon: <MapPin className="w-5 h-5" />,
-    title: "Parking Lot B",
-    semantic: "Parking area",
-  },
+  makeItem("5.00", "Auditorium A", RoomType.MEETING_ROOM),
+  makeItem("4.00", "Student Canteen", RoomType.CANTEEN),
+  makeItem("3.00", "Parking Lot B", RoomType.COVERED_AREA),
 ]
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -63,15 +37,38 @@ const NEARBY_RESULTS: SearchResultItem[] = [
 const DemoPage = () => {
   const [standaloneQuery, setStandaloneQuery] = React.useState("")
   const [integratedQuery, setIntegratedQuery] = React.useState("")
+  const [allResults, setAllResults] = React.useState<SearchResultItem[]>([])
+
+  React.useEffect(() => {
+    void getAllRoomsData().then((rooms) => {
+      setAllResults(
+        rooms.map((room) => {
+          const meta = getRoomTypeMeta(room.type)
+          const outlineColor = getRoomTypeOutline(room.type)
+          const Icon = meta.icon
+          return {
+            id: room.roomNumber,
+            icon: <Icon className="w-5 h-5" style={{ color: outlineColor }} />,
+            iconBgStyle: {
+              backgroundColor: meta.color,
+              outline: `2px solid ${outlineColor}`,
+            },
+            title: room.displayName,
+            type: `${meta.label} · Floor ${room.floor}`,
+          }
+        }),
+      )
+    })
+  }, [])
 
   // Filter results by query for the integrated bar
   const filteredResults = integratedQuery
-    ? ALL_RESULTS.filter(
+    ? allResults.filter(
         (r) =>
           r.title.toLowerCase().includes(integratedQuery.toLowerCase()) ||
-          r.semantic?.toLowerCase().includes(integratedQuery.toLowerCase()),
+          r.type.toLowerCase().includes(integratedQuery.toLowerCase()),
       )
-    : ALL_RESULTS
+    : allResults
 
   return (
     <main className="min-h-screen bg-background font-sans">
@@ -175,6 +172,20 @@ const DemoPage = () => {
               <Button variant="outline">Outline</Button>
               <Button variant="ghost">Ghost</Button>
               <Button variant="destructive">Destructive</Button>
+            </div>
+
+            {/* Badge */}
+            <div className="mt-10 flex-col">
+              <h2
+                id="shadcn-heading"
+                className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3"
+              >
+                Room type badge
+              </h2>
+              <RoomTypeBadge type="DEFAULT" variant="search" />
+              <RoomTypeBadge type="OFFICE" variant="search" className="ml-5" />
+              <RoomTypeBadge type="MEETING_ROOM" variant="search" className="ml-5" />
+              <RoomTypeBadge type="CANTEEN" variant="search" className="ml-5" />
             </div>
           </div>
         </section>

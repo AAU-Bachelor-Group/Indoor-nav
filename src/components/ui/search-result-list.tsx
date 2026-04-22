@@ -9,10 +9,12 @@ export interface SearchResultItem {
   icon: React.ReactNode
   /** Background colour of the icon circle (Tailwind class or CSS variable) */
   iconBg?: string
+  /** Inline style applied to the icon circle — use for dynamic colours (e.g. hex) */
+  iconBgStyle?: React.CSSProperties
   /** Primary label */
   title: string
-  /** Semantic description – e.g. "Software lecture room", "Metro station" */
-  semantic?: string
+  /** Type label – e.g. "Lecture room", "Station" */
+  type: string
 }
 
 export interface SearchResultListProps {
@@ -50,8 +52,9 @@ function ResultRow({
         <span
           className={cn(
             "shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center",
-            item.iconBg ?? "bg-primary",
+            item.iconBgStyle ? undefined : (item.iconBg ?? "bg-primary"),
           )}
+          style={item.iconBgStyle}
           aria-hidden="true"
         >
           <span className="text-white w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
@@ -62,11 +65,11 @@ function ResultRow({
         {/* Text block */}
         <span className="flex-1 min-w-0">
           <span className="block font-medium text-foreground text-sm leading-snug truncate">
-            {item.title}
+            {item.id} &nbsp; • &nbsp; {item.title}
           </span>
-          {item.semantic && (
+          {item.type && (
             <span className="block text-xs text-muted-foreground leading-snug truncate mt-0.5">
-              {item.semantic}
+              {item.type}
             </span>
           )}
         </span>

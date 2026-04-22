@@ -32,7 +32,7 @@ const App = () => {
         id: r.item.id,
         icon: <Building2 className="w-5 h-5" />,
         title: r.item.semanticNames[0],
-        semantic: r.item.semanticNames.slice(1).join(", "),
+        type: r.item.semanticNames.slice(1).join(", "),
       }))
 
   return (

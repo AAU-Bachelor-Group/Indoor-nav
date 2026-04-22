@@ -1,5 +1,6 @@
-import { getRoomTypeMeta } from "#/lib/room-types"
+import { getRoomTypeMeta, getRoomTypeOutline } from "#/lib/room-types"
 import { cn } from "#/lib/utils"
+import { Badge } from "./badge"
 
 import type { RoomType } from "#/generated/prisma/enums"
 
@@ -10,8 +11,9 @@ interface RoomTypeBadgeProps {
    *   form primitives (Select items) that provide their own chrome.
    * - `pill`: wrapped in a rounded pill with subtle background and ring,
    *   so it reads as a standalone badge against a dark panel.
+   * - `search`: compact shadcn-style badge for search result labels.
    */
-  variant?: "bare" | "pill"
+  variant?: "bare" | "pill" | "search"
   className?: string
 }
 
@@ -21,6 +23,27 @@ interface RoomTypeBadgeProps {
  */
 export const RoomTypeBadge = ({ type, variant = "bare", className }: RoomTypeBadgeProps) => {
   const { label, color, icon: Icon } = getRoomTypeMeta(type)
+  const outline = getRoomTypeOutline(type)
+
+  if (variant === "search") {
+    const badgeStyle = {
+      backgroundColor: `${color}`,
+      borderColor: `${outline}`,
+      outline,
+    }
+
+    return (
+      <Badge
+        variant="outline"
+        className={cn("gap-1.5 border", "px-2 py-0.5 text-[11px] font-medium", className)}
+        style={badgeStyle}
+      >
+        <Icon className="size-3.5" />
+        {label}
+      </Badge>
+    )
+  }
+
   return (
     <span
       className={cn(
