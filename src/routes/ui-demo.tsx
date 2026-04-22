@@ -11,7 +11,6 @@ import { getAllRoomsData } from "#/server/room.functions"
 import { SearchBar } from "../components/ui/search-bar"
 import { SearchResultList, type SearchResultItem } from "../components/ui/search-result-list"
 
-
 // ─── Demo data ────────────────────────────────────────────────────────────────
 
 const makeItem = (id: string, title: string, roomType: RoomType): SearchResultItem => {
@@ -41,7 +40,7 @@ const DemoPage = () => {
   const [allResults, setAllResults] = React.useState<SearchResultItem[]>([])
 
   React.useEffect(() => {
-    getAllRoomsData().then((rooms) => {
+    void getAllRoomsData().then((rooms) => {
       setAllResults(
         rooms.map((room) => {
           const meta = getRoomTypeMeta(room.type)
