@@ -101,7 +101,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
     selectedFloor !== null && floors.some((f) => f.floor === selectedFloor)
       ? selectedFloor
       : floors.some((f) => f.floor === 0)
-        ? 0
+        ? 1
         : floors.length > 0
           ? Math.min(...floors.map((f) => f.floor))
           : null
