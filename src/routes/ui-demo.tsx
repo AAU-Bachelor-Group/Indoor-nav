@@ -3,13 +3,14 @@ import * as React from "react"
 
 import { Button } from "#/components/ui/button"
 import { Input } from "#/components/ui/input"
-import { getRoomTypeMeta, getRoomTypeOutline } from "#/lib/room-types"
+import { RoomTypeBadge } from "#/components/ui/room-type-badge"
 import { RoomType } from "#/generated/prisma/enums"
+import { getRoomTypeMeta, getRoomTypeOutline } from "#/lib/room-types"
 import { getAllRoomsData } from "#/server/room.functions"
 
 import { SearchBar } from "../components/ui/search-bar"
 import { SearchResultList, type SearchResultItem } from "../components/ui/search-result-list"
-import { RoomTypeBadge } from "#/components/ui/room-type-badge"
+
 
 // ─── Demo data ────────────────────────────────────────────────────────────────
 
@@ -66,7 +67,7 @@ const DemoPage = () => {
     ? allResults.filter(
         (r) =>
           r.title.toLowerCase().includes(integratedQuery.toLowerCase()) ||
-          r.type?.toLowerCase().includes(integratedQuery.toLowerCase()),
+          r.type.toLowerCase().includes(integratedQuery.toLowerCase()),
       )
     : allResults
 
