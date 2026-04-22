@@ -169,6 +169,7 @@ const RoomCreateForm = () => {
             >
               <Input
                 id={field.name}
+                className="bg-background text-black focus:ring-offset-2"
                 placeholder="2.01"
                 value={field.state.value}
                 onChange={(e) => {
@@ -194,6 +195,7 @@ const RoomCreateForm = () => {
             >
               <Input
                 id={field.name}
+                className="bg-background text-black focus:ring-offset-2"
                 placeholder="Project Lab"
                 value={field.state.value}
                 onChange={(e) => {
@@ -216,7 +218,7 @@ const RoomCreateForm = () => {
                   if (v !== null) field.handleChange(v)
                 }}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full bg-background text-black">
                   <SelectValue>
                     {(value) =>
                       typeof value === "string" && value !== "" ? (
@@ -225,9 +227,13 @@ const RoomCreateForm = () => {
                     }
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background text-black">
                   {ROOM_TYPES.map((t) => (
-                    <SelectItem key={t} value={t}>
+                    <SelectItem
+                      className="focus:bg-sidebar-primary/40 cursor-pointer"
+                      key={t}
+                      value={t}
+                    >
                       <RoomTypeBadge type={t} />
                     </SelectItem>
                   ))}
@@ -249,13 +255,18 @@ const RoomCreateForm = () => {
           {({ canSubmit, isSubmitting }) => {
             const busy = isSubmitting || mutation.isPending
             return (
-              <Button type="submit" disabled={!canSubmit || busy}>
+              <Button
+                className="hover:bg-slate-300"
+                variant="outline"
+                type="submit"
+                disabled={!canSubmit || busy}
+              >
                 {busy ? "Saving…" : "Save"}
               </Button>
             )
           }}
         </form.Subscribe>
-        <Button type="button" variant="outline" onClick={handleRevert}>
+        <Button type="button" variant="destructive" onClick={handleRevert}>
           Revert to drawing
         </Button>
       </footer>
@@ -353,6 +364,7 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
             >
               <Input
                 id={field.name}
+                className="bg-background text-black focus:ring-offset-2"
                 placeholder="2.01"
                 value={field.state.value}
                 onChange={(e) => {
@@ -378,6 +390,7 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
             >
               <Input
                 id={field.name}
+                className="bg-background text-black focus:ring-offset-2"
                 placeholder="Project Lab"
                 value={field.state.value}
                 onChange={(e) => {
@@ -400,7 +413,7 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
                   if (v !== null) field.handleChange(v)
                 }}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full bg-background text-black">
                   <SelectValue>
                     {(value) =>
                       typeof value === "string" && value !== "" ? (
@@ -409,9 +422,13 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
                     }
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background text-black">
                   {ROOM_TYPES.map((t) => (
-                    <SelectItem key={t} value={t}>
+                    <SelectItem
+                      className="focus:bg-sidebar-primary/40 cursor-pointer"
+                      key={t}
+                      value={t}
+                    >
                       <RoomTypeBadge type={t} />
                     </SelectItem>
                   ))}
@@ -463,7 +480,12 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
               {({ canSubmit, isSubmitting }) => {
                 const busy = isSubmitting || isBusy
                 return (
-                  <Button type="submit" disabled={!canSubmit || busy}>
+                  <Button
+                    className="hover:bg-slate-300"
+                    variant="outline"
+                    type="submit"
+                    disabled={!canSubmit || busy}
+                  >
                     {busy ? "Saving…" : "Save changes"}
                   </Button>
                 )
