@@ -96,13 +96,15 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
 
   const [selectedFloor, setSelectedFloor] = useState<number | null>(null)
 
-  // Use explicit selection, or default to the lowest floor
+  // Use explicit selection, or default to floor 0 (falling back to the lowest floor)
   const currentFloor =
     selectedFloor !== null && floors.some((f) => f.floor === selectedFloor)
       ? selectedFloor
-      : floors.length > 0
-        ? Math.min(...floors.map((f) => f.floor))
-        : null
+      : floors.some((f) => f.floor === 0)
+        ? 1
+        : floors.length > 0
+          ? Math.min(...floors.map((f) => f.floor))
+          : null
 
   const [isSelectingFloor, setIsSelectingFloor] = useState(false)
   const [renderMode, setRenderMode] = useState<RenderMode>("2d")

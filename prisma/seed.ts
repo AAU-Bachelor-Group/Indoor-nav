@@ -24,43 +24,43 @@ async function main() {
     data: [
       {
         floor: -1,
-        path: "/floorplans/floor_-1_ACM15_Kælder-1.png",
-        calibrationScale: 1.0,
+        path: "/floorplans/floor_-1_plan.png",
+        calibrationScale: 0.05,
       },
       {
         floor: 0,
-        path: "/floorplans/floor_0_ACM15_Stue-1.png",
-        calibrationScale: 1.0,
+        path: "/floorplans/floor_0_plan.png",
+        calibrationScale: 0.05,
       },
       {
         floor: 1,
-        path: "/floorplans/floor_1_ACM15_1.Sal-1.png",
-        calibrationScale: 1.0,
+        path: "/floorplans/floor_1_plan.png",
+        calibrationScale: 0.05,
       },
       {
         floor: 2,
-        path: "/floorplans/floor_2_ACM15_2.Sal-1.png",
-        calibrationScale: 1.0,
+        path: "/floorplans/floor_2_plan.png",
+        calibrationScale: 0.05,
       },
       {
         floor: 3,
-        path: "/floorplans/floor_3_ACM15_3.Sal-1.png",
-        calibrationScale: 1.0,
+        path: "/floorplans/floor_3_plan.png",
+        calibrationScale: 0.05,
       },
       {
         floor: 4,
-        path: "/floorplans/floor_4_ACM15_4.Sal-1.png",
-        calibrationScale: 1.0,
+        path: "/floorplans/floor_4_plan.png",
+        calibrationScale: 0.05,
       },
       {
         floor: 5,
-        path: "/floorplans/floor_5_ACM15_5.Sal-1.png",
-        calibrationScale: 1.0,
+        path: "/floorplans/floor_5_plan.png",
+        calibrationScale: 0.05,
       },
       {
         floor: 6,
-        path: "/floorplans/floor_6_ACM15_6.Sal-1.png",
-        calibrationScale: 1.0,
+        path: "/floorplans/floor_6_plan.png",
+        calibrationScale: 0.05,
       },
     ],
   })
@@ -74,27 +74,6 @@ async function main() {
     },
   })
   console.log(`Created section: ${section.name}`)
-
-  await prisma.room.createMany({
-    data: [
-      {
-        id: "room-101",
-        isActivated: true,
-        semanticNames: ["Room 101", "Lecture Hall", "Main Auditorium"],
-        type: "DEFAULT",
-        sectionId: section.id,
-      },
-      {
-        id: "room-102",
-        isActivated: true,
-        semanticNames: ["Room 102", "Computer Lab", "IT Lab"],
-        type: "DEFAULT",
-        sectionId: section.id,
-      },
-    ],
-  })
-
-  console.log("Created 2 rooms: room-101, room-102")
 
   // Create example nodes (this should be deleted later!!!)
   await prisma.node.createMany({

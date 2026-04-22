@@ -32,7 +32,7 @@ export const MapScene = () => {
     <Canvas
       gl={{ antialias: true }}
       scene={{ background: new THREE.Color("#333") }}
-      camera={{ fov: 60, near: 0.1, far: 1000, position: [0, 50, 0], zoom: 20 }}
+      camera={{ fov: 60, near: 0.1, far: 1000, position: [0, 50, 0], zoom: 5 }}
       style={{
         width: "100%",
         height: "100%",
