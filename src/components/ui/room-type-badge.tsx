@@ -1,4 +1,4 @@
-import { getRoomTypeMeta } from "#/lib/room-types"
+import { getRoomTypeMeta, getRoomTypeOutline } from "#/lib/room-types"
 import { cn } from "#/lib/utils"
 import { Badge } from "./badge"
 
@@ -23,12 +23,13 @@ interface RoomTypeBadgeProps {
  */
 export const RoomTypeBadge = ({ type, variant = "bare", className }: RoomTypeBadgeProps) => {
   const { label, color, icon: Icon } = getRoomTypeMeta(type)
+  const outline = getRoomTypeOutline(type)
 
   if (variant === "search") {
     const badgeStyle = {
-      backgroundColor: `${color}26`,
-      borderColor: `${color}80`,
-      color,
+      backgroundColor: `${color}`,
+      borderColor: `${outline}`,
+      outline,
     }
 
     return (

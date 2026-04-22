@@ -27,7 +27,7 @@ const makeItem = (id: string, title: string, roomType: RoomType): SearchResultIt
 }
 
 const NEARBY_RESULTS: SearchResultItem[] = [
-  makeItem("5.00", "Auditorium A", RoomType.AUDITORIUM),
+  makeItem("5.00", "Auditorium A", RoomType.MEETING_ROOM),
   makeItem("4.00", "Student Canteen", RoomType.CANTEEN),
   makeItem("3.00", "Parking Lot B", RoomType.COVERED_AREA),
 ]
