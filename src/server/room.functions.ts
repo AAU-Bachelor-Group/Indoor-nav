@@ -1,19 +1,11 @@
 import { createServerFn } from "@tanstack/react-start"
 import { z } from "zod"
 
+import { ROOM_TYPES } from "../lib/room-types"
+
 import { createRoom, deleteRoom, getAllRooms, updateRoomMetadata } from "./room.server"
 
-const roomTypeEnum = z.enum([
-  "DEFAULT",
-  "CLASSROOM",
-  "MEETING_ROOM",
-  "OFFICE",
-  "STUDY_SPACE",
-  "AUDITORIUM",
-  "LIBRARY",
-  "FOOD_DRINK",
-  "FACILITY",
-])
+const roomTypeEnum = z.enum(ROOM_TYPES)
 
 export const createRoomSchema = z.object({
   roomNumber: z.string().min(1).max(100),
