@@ -79,7 +79,7 @@ model Section {
 model Room {
   id            String    @id
   roomNumber    String
-  displayName   String
+  displayName   String?
   isActivated   Boolean   @default(true)
   semanticNames String[]
   type          RoomType

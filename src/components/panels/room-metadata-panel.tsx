@@ -185,12 +185,11 @@ const RoomCreateForm = () => {
 
         <form.Field
           name="displayName"
-          validators={{ onChange: ({ value }) => requiredString("Display name")(value) }}
         >
           {(field) => (
             <FieldWrapper
               htmlFor={field.name}
-              label="Display name"
+              label="Display name (optional)"
               error={field.state.meta.errors[0]}
             >
               <Input
@@ -380,12 +379,11 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
 
         <form.Field
           name="displayName"
-          validators={{ onChange: ({ value }) => requiredString("Display name")(value) }}
         >
           {(field) => (
             <FieldWrapper
               htmlFor={field.name}
-              label="Display name"
+              label="Display name (optional)"
               error={field.state.meta.errors[0]}
             >
               <Input
