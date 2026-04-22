@@ -192,7 +192,7 @@ export const getAllRooms = async (): Promise<PersistedRoom[]> => {
     return {
       id: row.id,
       roomNumber: row.roomNumber,
-      displayName: row.displayName,
+      displayName: row.displayName ?? "",
       type: row.type,
       floor: row.floor,
       vertices: open.map(([x, z]) => ({ x, z })),

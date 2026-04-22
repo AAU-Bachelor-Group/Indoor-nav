@@ -183,9 +183,7 @@ const RoomCreateForm = () => {
           )}
         </form.Field>
 
-        <form.Field
-          name="displayName"
-        >
+        <form.Field name="displayName">
           {(field) => (
             <FieldWrapper
               htmlFor={field.name}
@@ -377,9 +375,7 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
           )}
         </form.Field>
 
-        <form.Field
-          name="displayName"
-        >
+        <form.Field name="displayName">
           {(field) => (
             <FieldWrapper
               htmlFor={field.name}

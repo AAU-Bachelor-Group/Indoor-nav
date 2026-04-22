@@ -31,8 +31,8 @@ const App = () => {
     : results.map((r) => ({
         id: r.item.id,
         icon: <Building2 className="w-5 h-5" />,
-        title: "TEST",
-        type: "TEST",
+        title: "TODO",
+        type: "TODO",
       }))
 
   return (
