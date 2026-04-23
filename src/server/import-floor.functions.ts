@@ -25,7 +25,10 @@ export const uploadImage = createServerFn({ method: "POST" })
 export const getFloorImage = createServerFn({ method: "GET" })
   .inputValidator(getFloorImageSchema)
   .handler(async ({ data }) => {
-    const uploadDir = path.join(process.cwd(), "public", "floorplans")
+    const uploadDir =
+      process.env.NODE_ENV === "production"
+        ? path.join(process.cwd(), ".output", "public", "floorplans")
+        : path.join(process.cwd(), "public", "floorplans")
 
     let files: string[]
     try {

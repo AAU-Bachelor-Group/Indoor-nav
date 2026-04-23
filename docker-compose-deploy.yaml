@@ -36,6 +36,8 @@ services:
       - "traefik.http.routers.${TRAEFIK_SERVICE}-https.service=${TRAEFIK_SERVICE}"
     networks:
       - navNet
+    volumes:
+      - floorplans:/server/.output/public/floorplans
     depends_on:
       postgres:
         condition: service_started
@@ -58,6 +60,8 @@ services:
 
 volumes:
   postgres-data:
+    driver: local
+  floorplans:
     driver: local
 
 networks:

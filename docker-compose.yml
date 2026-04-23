@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
+      target: production
       network: host
     develop:
       watch:
@@ -16,7 +16,7 @@ services:
         - action: rebuild
           path: package.json
     ports:
-      - "3001:3000"
+      - "3000:3000"
     environment:
       - NODE_ENV=production
     env_file:

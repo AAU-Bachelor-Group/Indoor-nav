@@ -8,7 +8,10 @@ export const saveImageToServer = async (
   filename: string,
   floor: string,
 ): Promise<{ filepath: string }> => {
-  const uploadDir = path.join(process.cwd(), "public", "floorplans")
+  const uploadDir =
+    process.env.NODE_ENV === "production"
+      ? path.join(process.cwd(), ".output", "public", "floorplans")
+      : path.join(process.cwd(), "public", "floorplans")
 
   await fs.mkdir(uploadDir, { recursive: true })
 
