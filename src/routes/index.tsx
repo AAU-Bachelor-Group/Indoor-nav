@@ -21,6 +21,7 @@ import { MapProvider } from "#/lib/map-context"
 
 import type { SearchResultItem } from "#/components/ui/search-result-list"
 import { getRoomTypeMeta, getRoomTypeOutline } from "#/lib/room-types"
+import { FuzzySearchBar } from "#/components/map/search/fuzzy-search-bar"
 
 const App = () => {
   const { isLoggedIn, isPending } = useIsLoggedIn()
@@ -63,7 +64,7 @@ const App = () => {
                 <NodeMetadataPanel />
               </>
             ) : null)}
-          <SearchBar
+{/*           <SearchBar
             className="absolute top-4 left-30 z-10 w-90"
             type="integrated"
             placeholder="Search locations..."
@@ -77,7 +78,8 @@ const App = () => {
               console.log("Selected:", item.title)
             }}
             showResultsWhenEmpty={true}
-          />
+          /> */}
+          <FuzzySearchBar />
           <MapScene />
           <RoomInfoPanel />
           <div className="absolute flex flex-col gap-2 bottom-6 right-6 z-10">
