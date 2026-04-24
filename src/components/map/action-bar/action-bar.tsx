@@ -4,6 +4,7 @@ import { useMap } from "#/lib/map-context"
 import { getToolMeta } from "#/lib/tool-registry"
 import { cn } from "@/lib/utils"
 
+import { DrawNodeActions } from "./draw-node-actions"
 import { DrawRoomActions } from "./draw-room-actions"
 import { PillButton, PillDivider } from "./pill-button"
 
@@ -30,7 +31,12 @@ export const ActionBar = ({ className }: ActionBarProps) => {
 
   const { icon: Icon, activeLabel } = getToolMeta(activeTool)
   const validationError = activeTool === "draw-room" ? drawing.validationError : null
-  const toolActions = activeTool === "draw-room" ? <DrawRoomActions drawing={drawing} /> : null
+  const toolActions =
+    activeTool === "draw-room" ? (
+      <DrawRoomActions drawing={drawing} />
+    ) : activeTool === "draw-node" ? (
+      <DrawNodeActions />
+    ) : null
 
   return (
     <div className={cn("flex flex-col items-center gap-2", className)}>

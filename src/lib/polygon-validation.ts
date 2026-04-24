@@ -66,7 +66,10 @@ const segmentsCross = (a: PlanePoint, b: PlanePoint, c: PlanePoint, d: PlanePoin
  * doesn't flip and the parity stays even, so the point is classified as
  * outside. That's the behavior we need so shared corners pass.
  */
-const pointStrictlyInsidePolygon = (p: PlanePoint, polygon: readonly PlanePoint[]): boolean => {
+export const pointStrictlyInsidePolygon = (
+  p: PlanePoint,
+  polygon: readonly PlanePoint[],
+): boolean => {
   let inside = false
   const n = polygon.length
   for (let i = 0, j = n - 1; i < n; j = i++) {

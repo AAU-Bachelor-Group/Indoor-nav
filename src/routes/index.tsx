@@ -9,6 +9,7 @@ import { Compass } from "#/components/map/user-tools/compass"
 import { DebugToggle } from "#/components/map/user-tools/debug-toggle"
 import { FloorSelector } from "#/components/map/user-tools/floor-selector"
 import { RenderModeToggle } from "#/components/map/user-tools/render-mode-toggle"
+import { NodeMetadataPanel } from "#/components/panels/node-metadata-panel"
 import { RoomInfoPanel } from "#/components/panels/room-info-panel"
 import { RoomMetadataPanel } from "#/components/panels/room-metadata-panel"
 import { MapScene } from "#/components/threeJS/map-scene"
@@ -51,6 +52,7 @@ const App = () => {
                 <ToolPalette className="absolute left-6 top-1/2 -translate-y-1/2 z-10" />
                 <ActionBar className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10" />
                 <RoomMetadataPanel />
+                <NodeMetadataPanel />
               </>
             ) : null)}
           <SearchBar

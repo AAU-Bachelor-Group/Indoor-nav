@@ -22,6 +22,14 @@ type RenderMode = "2d" | "3d"
  */
 export type ActiveTool = "default" | "draw-room" | "edit-room" | "draw-node" | "connect-edge"
 
+export interface PendingNode {
+  x: number
+  y: number
+  z: number
+  floor: number
+  roomId?: string
+}
+
 interface MapContextValue {
   floors: FloorPlan[]
   currentFloor: number | null
@@ -56,6 +64,11 @@ interface MapContextValue {
    */
   editingRoomId: string | null
   setEditingRoomId: (id: string | null) => void
+  editingNodeId: string | null
+  setEditingNodeId: (id: string | null) => void
+  pendingNode: PendingNode | null
+  setPendingNode: (node: PendingNode | null) => void
+
   /**
    * The room currently being viewed in the end-user info drawer, or null.
    * Set when a user clicks a room outside of any editing tool. Mutually
@@ -114,6 +127,8 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
   const [activeTool, setActiveTool] = useState<ActiveTool>("default")
   const [editingRoomId, setEditingRoomId] = useState<string | null>(null)
   const [viewingRoomId, setViewingRoomId] = useState<string | null>(null)
+  const [editingNodeId, setEditingNodeId] = useState<string | null>(null)
+  const [pendingNode, setPendingNode] = useState<PendingNode | null>(null)
   const previousRenderModeRef = useRef<RenderMode | null>(null)
   const controlsRef = useRef<OrbitControlsHandle | null>(null)
   const gridSpacingRef = useRef<number | null>(null)
@@ -141,6 +156,8 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
       // the panel doesn't linger when the user moves between draw and edit.
       setEditingRoomId(null)
       setViewingRoomId(null)
+      setEditingNodeId(null)
+      setPendingNode(null)
     },
     [renderMode],
   )
@@ -153,6 +170,15 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
   const handleSetViewingRoomId = useCallback((id: string | null) => {
     setViewingRoomId(id)
     if (id !== null) setEditingRoomId(null)
+  }, [])
+
+  const handleSetEditingNodeId = useCallback((id: string | null) => {
+    setEditingNodeId(id)
+    if (id !== null) {
+      setPendingNode(null)
+      setEditingRoomId(null)
+      setViewingRoomId(null)
+    }
   }, [])
 
   const value = useMemo<MapContextValue>(
@@ -178,6 +204,10 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
       setSnapToGrid,
       gridSpacingRef,
       controlsRef,
+      editingNodeId,
+      setEditingNodeId: handleSetEditingNodeId,
+      pendingNode,
+      setPendingNode,
     }),
     [
       floors,
@@ -197,6 +227,8 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
       handleSetEditingRoomId,
       viewingRoomId,
       handleSetViewingRoomId,
+      editingNodeId,
+      pendingNode,
       snapToGrid,
     ],
   )

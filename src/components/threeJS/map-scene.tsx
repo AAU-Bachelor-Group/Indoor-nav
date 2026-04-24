@@ -11,6 +11,7 @@ import { FLOOR_HEIGHT, MAX_POLAR_ANGLE, TOP_DOWN_POLAR } from "./constants"
 import { CursorCoordinates } from "./cursor-coordinates"
 import { DrawingLayer } from "./drawing-layer"
 import { FloorPlane } from "./floor-plane"
+import { GraphLayer } from "./graph-layer"
 import { RoomPolygonsLayer } from "./room-polygons-layer"
 
 /** Tools whose workflow benefits from seeing the grid. */
@@ -73,6 +74,7 @@ export const MapScene = () => {
         <CursorCoordinates />
         <RoomPolygonsLayer neighbourOpacityRef={neighbourOpacityRef} />
         {activeTool === "draw-room" && activeFloorPlan && <DrawingLayer floor={activeFloorPlan} />}
+        {activeTool === "draw-node" && activeFloorPlan && <GraphLayer floor={activeFloorPlan} />}
       </Suspense>
     </Canvas>
   )

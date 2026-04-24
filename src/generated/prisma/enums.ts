@@ -10,7 +10,11 @@
 */
 
 export const NodeType = {
-  DEFAULT: 'DEFAULT'
+  DEFAULT: 'DEFAULT',
+  DOOR: 'DOOR',
+  STAIR: 'STAIR',
+  ELEVATOR: 'ELEVATOR',
+  ENDPOINT: 'ENDPOINT'
 } as const
 
 export type NodeType = (typeof NodeType)[keyof typeof NodeType]

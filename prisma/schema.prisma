@@ -8,17 +8,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id              String    @id
+  name            String
+  email           String    @unique
+  emailVerified   Boolean   @default(false)
+  image           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   username        String?   @unique
   displayUsername String?
-  sessions      Session[]
-  accounts      Account[]
+  sessions        Session[]
+  accounts        Account[]
 
   @@map("user")
 }
@@ -73,34 +73,34 @@ model Section {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  rooms     Room[]
+  rooms Room[]
 }
 
 model Room {
-  id            String    @id
+  id            String   @id
   roomNumber    String
   displayName   String?
   isActivated   Boolean   @default(true)
   type          RoomType
 
   /// PostGIS geometry columns (SRID 0 - local Cartesian meters in the floor frame)
-  pointZ        Unsupported("geometry(PointZ, 0)")?
-  polygon       Unsupported("geometry(Polygon, 0)")?
-  multiPolygon  Unsupported("geometry(MultiPolygon, 0)")?
+  pointZ       Unsupported("geometry(PointZ, 0)")?
+  polygon      Unsupported("geometry(Polygon, 0)")?
+  multiPolygon Unsupported("geometry(MultiPolygon, 0)")?
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  sectionId     String?
-  section       Section?  @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  sectionId String?
+  section   Section? @relation(fields: [sectionId], references: [id], onDelete: SetNull)
 
   /// Floor this room lives on. Coordinates are in this floor's local frame.
-  floor         Int
-  floorPlan     FloorPlan @relation(fields: [floor], references: [floor], onDelete: Cascade)
+  floor     Int
+  floorPlan FloorPlan @relation(fields: [floor], references: [floor], onDelete: Cascade)
 
   /// A room can have many nodes.
   /// A node may optionally belong to a room.
-  nodes         Node[]
+  nodes Node[]
 
   @@index([sectionId])
   @@index([type])
@@ -109,24 +109,24 @@ model Room {
 }
 
 model Node {
-  id            String    @id @default(cuid())
-  x             Float
-  y             Float
-  z             Float
-  type          NodeType
-  isActivated   Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          String   @id @default(cuid())
+  x           Float
+  y           Float
+  z           Float
+  type        NodeType
+  isActivated Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  roomId        String?
-  room          Room?     @relation(fields: [roomId], references: [id], onDelete: SetNull)
+  roomId String?
+  room   Room?   @relation(fields: [roomId], references: [id], onDelete: SetNull)
 
   /// Floor this node lives on. Coordinates are in this floor's local frame.
-  floor         Int
-  floorPlan     FloorPlan @relation(fields: [floor], references: [floor], onDelete: Cascade)
+  floor     Int
+  floorPlan FloorPlan @relation(fields: [floor], references: [floor], onDelete: Cascade)
 
-  edgesFrom     Edge[]    @relation("EdgeFromNode")
-  edgesTo       Edge[]    @relation("EdgeToNode")
+  edgesFrom Edge[] @relation("EdgeFromNode")
+  edgesTo   Edge[] @relation("EdgeToNode")
 
   @@index([roomId])
   @@index([type])
@@ -147,11 +147,11 @@ model Edge {
 
   /// Undirected edge stored as two node references.
   /// Normalize ordering in backend logic before insert.
-  fromNodeId  String
-  toNodeId    String
+  fromNodeId String
+  toNodeId   String
 
-  fromNode    Node     @relation("EdgeFromNode", fields: [fromNodeId], references: [id], onDelete: Cascade)
-  toNode      Node     @relation("EdgeToNode", fields: [toNodeId], references: [id], onDelete: Cascade)
+  fromNode Node @relation("EdgeFromNode", fields: [fromNodeId], references: [id], onDelete: Cascade)
+  toNode   Node @relation("EdgeToNode", fields: [toNodeId], references: [id], onDelete: Cascade)
 
   @@unique([fromNodeId, toNodeId])
   @@index([fromNodeId])
@@ -161,6 +161,10 @@ model Edge {
 
 enum NodeType {
   DEFAULT
+  DOOR
+  STAIR
+  ELEVATOR
+  ENDPOINT
 }
 
 enum RoomType {
@@ -213,12 +217,12 @@ enum RoomType {
 }
 
 model FloorPlan {
-  floor                Int     @id @unique
-  path                 String
-  calibrationScale     Float   @default(1.0)
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  floor            Int      @id @unique
+  path             String
+  calibrationScale Float    @default(1.0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
-  rooms                Room[]
-  nodes                Node[]
+  rooms Room[]
+  nodes Node[]
 }

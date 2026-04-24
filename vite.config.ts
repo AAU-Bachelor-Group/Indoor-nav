@@ -12,7 +12,14 @@ const config = defineConfig({
     tsconfigPaths: true,
   },
   plugins: [
-    devtools(),
+    devtools({
+      injectSource: {
+        enabled: true,
+        ignore: {
+          files: [/components\/threeJS/],
+        },
+      },
+    }),
     nitro({ rollupConfig: { external: [/^@sentry\//] } }),
     tailwindcss(),
     tanstackStart(),

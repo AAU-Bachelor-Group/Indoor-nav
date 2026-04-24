@@ -177,6 +177,39 @@ export const getGraph = async (): Promise<Graph> => {
 // ----------------------------- //
 
 // Node db operations
+export const getAllNodesInDb = async () => {
+  return await prisma.node.findMany()
+}
+
+export const updateNodeTypeInDb = async (nodeId: string, type: string) => {
+  const updated = await prisma.node.update({
+    where: { id: nodeId },
+    data: { type: type as Node["type"] },
+  })
+  const g = await getGraph()
+  const node = g.nodes.get(nodeId)
+  if (node) node.type = updated.type
+  return updated
+}
+
+export const updateNodeInDb = async (
+  nodeId: string,
+  data: { type: string; x: number; y: number },
+) => {
+  const updated = await prisma.node.update({
+    where: { id: nodeId },
+    data: { type: data.type as Node["type"], x: data.x, y: data.y },
+  })
+  const g = await getGraph()
+  const node = g.nodes.get(nodeId)
+  if (node) {
+    node.type = updated.type
+    node.x = updated.x
+    node.y = updated.y
+  }
+  return updated
+}
+
 export const addNodeInDb = async (node: NodeCreateInput) => {
   const created = await prisma.node.create({
     data: node,
