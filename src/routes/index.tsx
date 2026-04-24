@@ -30,10 +30,10 @@ const App = () => {
   const fuzzyResults: SearchResultItem[] = isLoading
     ? []
     : results.map((r) => ({
-        id: r.item.id,
+        id: r.item.roomNumber,
         icon: <Building2 className="w-5 h-5" />,
-        title: "TODO",
-        type: "TODO",
+        title: r.item.roomNumber,
+        type: r.item.type,
       }))
 
   return (

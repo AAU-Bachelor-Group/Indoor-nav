@@ -26,7 +26,10 @@ export const useFuzzySearch = (searchTerm: string) => {
   })
 
   const fuse = new Fuse(allRooms ?? [], {
-    keys: [{ name: "id", weight: 0.7 }],
+    keys: [
+      { name: "roomNumber", weight: 0.7 },
+      { name: "type", weight: 0.3 },
+    ],
     threshold: 0.4,
   })
 
