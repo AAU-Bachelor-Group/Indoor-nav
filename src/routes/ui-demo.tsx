@@ -53,7 +53,7 @@ const DemoPage = () => {
               backgroundColor: meta.color,
               outline: `2px solid ${outlineColor}`,
             },
-            title: room.displayName,
+            title: room.displayName ?? room.type,
             type: `${meta.label} · Floor ${room.floor}`,
           }
         }),

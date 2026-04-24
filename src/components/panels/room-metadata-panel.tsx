@@ -33,7 +33,7 @@ const requiredString = (label: string) => (value: string) =>
 
 interface FormValues {
   roomNumber: string
-  displayName: string
+  displayName: string | undefined
   type: RoomType
 }
 
@@ -183,14 +183,11 @@ const RoomCreateForm = () => {
           )}
         </form.Field>
 
-        <form.Field
-          name="displayName"
-          validators={{ onChange: ({ value }) => requiredString("Display name")(value) }}
-        >
+        <form.Field name="displayName">
           {(field) => (
             <FieldWrapper
               htmlFor={field.name}
-              label="Display name"
+              label="Display name (optional)"
               error={field.state.meta.errors[0]}
             >
               <Input
@@ -378,14 +375,11 @@ const RoomEditForm = ({ room }: RoomEditFormProps) => {
           )}
         </form.Field>
 
-        <form.Field
-          name="displayName"
-          validators={{ onChange: ({ value }) => requiredString("Display name")(value) }}
-        >
+        <form.Field name="displayName">
           {(field) => (
             <FieldWrapper
               htmlFor={field.name}
-              label="Display name"
+              label="Display name (optional)"
               error={field.state.meta.errors[0]}
             >
               <Input

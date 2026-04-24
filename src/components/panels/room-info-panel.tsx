@@ -98,10 +98,7 @@ export const RoomInfoPanel = () => {
     queryFn: () => getAllRoomsData(),
     enabled: viewingRoomId !== null,
   })
-  const room = (viewingRoomId ? rooms.find((r) => r.id === viewingRoomId) : null) as
-    | RoomView
-    | null
-    | undefined
+  const room = viewingRoomId ? (rooms.find((r) => r.id === viewingRoomId) as RoomView) : null
 
   const open = room != null
 

@@ -9,7 +9,7 @@ const roomTypeEnum = z.enum(ROOM_TYPES)
 
 export const createRoomSchema = z.object({
   roomNumber: z.string().min(1).max(100),
-  displayName: z.string().min(1).max(200),
+  displayName: z.string().max(200).optional(),
   type: roomTypeEnum,
   floor: z.number().int(),
   vertices: z
@@ -25,7 +25,7 @@ export const createRoomSchema = z.object({
 export const updateRoomMetadataSchema = z.object({
   id: z.string().min(1),
   roomNumber: z.string().min(1).max(100),
-  displayName: z.string().min(1).max(200),
+  displayName: z.string().max(200).optional(),
   type: roomTypeEnum,
 })
 

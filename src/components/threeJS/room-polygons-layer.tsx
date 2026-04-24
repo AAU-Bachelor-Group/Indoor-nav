@@ -159,7 +159,7 @@ const RoomPolygon = ({
       {active && (
         <Html position={[centroid.x, yOutline, centroid.z]} center>
           <div className="pointer-events-none rounded bg-black/60 px-1.5 py-0.5 text-xs font-semibold text-white whitespace-nowrap">
-            {room.roomNumber + " : " + room.displayName}
+            {room.displayName || room.type.replace("_", " ")}
           </div>
         </Html>
       )}

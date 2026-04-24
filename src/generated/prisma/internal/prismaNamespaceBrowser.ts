@@ -153,7 +153,6 @@ export const RoomScalarFieldEnum = {
   roomNumber: 'roomNumber',
   displayName: 'displayName',
   isActivated: 'isActivated',
-  semanticNames: 'semanticNames',
   type: 'type',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

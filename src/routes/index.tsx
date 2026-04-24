@@ -31,8 +31,8 @@ const App = () => {
     : results.map((r) => ({
         id: r.item.id,
         icon: <Building2 className="w-5 h-5" />,
-        title: r.item.semanticNames[0],
-        type: r.item.semanticNames.slice(1).join(", "),
+        title: "TODO",
+        type: "TODO",
       }))
 
   return (
