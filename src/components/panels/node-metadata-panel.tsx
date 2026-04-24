@@ -220,7 +220,7 @@ const NodeCreateForm = () => {
                 value={field.state.value}
                 onValueChange={(v) => {
                   if (v) {
-                    field.handleChange(v as NodeType)
+                    field.handleChange(v)
                     mutation.reset()
                   }
                 }}
@@ -451,7 +451,7 @@ const NodeEditForm = ({ nodeId }: { nodeId: string }) => {
                 value={field.state.value}
                 onValueChange={(v) => {
                   if (v) {
-                    field.handleChange(v as NodeType)
+                    field.handleChange(v)
                     updateMutation.reset()
                   }
                 }}
