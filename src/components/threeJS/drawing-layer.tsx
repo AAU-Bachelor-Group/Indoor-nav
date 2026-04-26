@@ -204,9 +204,9 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
     <>
       <RaycastPlane floor={floor} {...handlers} />
 
-      {externalCorners.map((corner) => (
+      {externalCorners.map((corner, index) => (
         <VertexMarker
-          key={String(corner.x) + "-" + String(corner.z)}
+          key={String(corner.x) + "-" + String(corner.z) + "-" + String(index)}
           position={lift(corner)}
           color={EXTERNAL_CORNER_COLOR}
           radius={EXTERNAL_CORNER_RADIUS}
@@ -226,9 +226,9 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
         <EdgePreview points={previewPoints} color={polylineColor} lineWidth={PREVIEW_WIDTH} />
       )}
 
-      {vertices.map((v) => (
+      {vertices.map((v, index) => (
         <VertexMarker
-          key={String(v.x) + "-" + String(v.y) + "-" + String(v.z)}
+          key={String(v.x) + "-" + String(v.y) + "-" + String(v.z) + "-" + String(index)}
           position={lift(v)}
           color={validationError === null ? VERTEX_COLOR : INVALID_COLOR}
           radius={VERTEX_RADIUS}
