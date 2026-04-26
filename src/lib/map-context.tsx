@@ -12,6 +12,7 @@ import type { ComponentRef, ReactNode, RefObject } from "react"
 export type OrbitControlsHandle = ComponentRef<typeof DreiOrbitControls>
 
 type RenderMode = "2d" | "3d"
+type RoomDrawMode = "polygon" | "rectangle"
 
 /**
  * The currently active map-editing tool, or null if none.
@@ -85,6 +86,8 @@ interface MapContextValue {
    */
   snapToGrid: boolean
   setSnapToGrid: (snap: boolean) => void
+  roomDrawMode: RoomDrawMode
+  setRoomDrawMode: (mode: RoomDrawMode) => void
   /**
    * Current grid spacing in world units, written every frame by the adaptive
    * grid. Ref (not state) so the per-frame writes don't re-render consumers.
@@ -124,6 +127,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
 
   const [debugMode, setDebugMode] = useState(false)
   const [snapToGrid, setSnapToGrid] = useState(false)
+  const [roomDrawMode, setRoomDrawMode] = useState<RoomDrawMode>("polygon")
   const [activeTool, setActiveTool] = useState<ActiveTool>("default")
   const [editingRoomId, setEditingRoomId] = useState<string | null>(null)
   const [viewingRoomId, setViewingRoomId] = useState<string | null>(null)
@@ -202,6 +206,8 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
       setViewingRoomId: handleSetViewingRoomId,
       snapToGrid,
       setSnapToGrid,
+      roomDrawMode,
+      setRoomDrawMode,
       gridSpacingRef,
       controlsRef,
       editingNodeId,
@@ -230,6 +236,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
       editingNodeId,
       pendingNode,
       snapToGrid,
+      roomDrawMode,
     ],
   )
 

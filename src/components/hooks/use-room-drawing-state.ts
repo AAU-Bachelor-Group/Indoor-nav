@@ -28,6 +28,8 @@ export interface RoomDrawingState {
   addVertex: (point: THREE.Vector3) => void
   /** Pop the most recent vertex. No-op if there are none. */
   undo: () => void
+  /** Replace all vertices in one shot (used by shape tools). */
+  setPolygon: (points: THREE.Vector3[], close?: boolean) => void
   /**
    * Close the polygon if there are at least MIN_POLYGON_VERTICES vertices
    * and the polygon passes client-side validation. No-op otherwise.
@@ -104,6 +106,24 @@ export const useRoomDrawingState = (
     [vertices, obstacles],
   )
 
+  const setPolygon = useCallback(
+    (points: THREE.Vector3[], close = false) => {
+      const next = points.map((point) => point.clone())
+      setVertices(next)
+      if (!close) {
+        setClosed(false)
+        return
+      }
+      if (next.length < MIN_POLYGON_VERTICES) {
+        setClosed(false)
+        return
+      }
+      const invalidReason = validateInProgressPolygon(next, obstacles)
+      setClosed(invalidReason === null)
+    },
+    [obstacles],
+  )
+
   const finish = useCallback(() => {
     if (vertices.length < MIN_POLYGON_VERTICES) return
     if (validationError !== null) return
@@ -126,10 +146,11 @@ export const useRoomDrawingState = (
       validationError,
       addVertex,
       undo,
+      setPolygon,
       finish,
       reset,
       reopen,
     }),
-    [vertices, closed, validationError, addVertex, undo, finish, reset, reopen],
+    [vertices, closed, validationError, addVertex, undo, setPolygon, finish, reset, reopen],
   )
 }

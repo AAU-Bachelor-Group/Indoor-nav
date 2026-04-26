@@ -65,9 +65,23 @@ const snapPointToGrid = (point: THREE.Vector3, spacing: number, floorY: number):
     Math.round(point.z / spacing) * spacing,
   )
 
+const buildAxisAlignedRectangle = (
+  anchor: THREE.Vector3,
+  opposite: THREE.Vector3,
+  floorY: number,
+): THREE.Vector3[] => {
+  if (anchor.x === opposite.x || anchor.z === opposite.z) return []
+  return [
+    new THREE.Vector3(anchor.x, floorY, anchor.z),
+    new THREE.Vector3(opposite.x, floorY, anchor.z),
+    new THREE.Vector3(opposite.x, floorY, opposite.z),
+    new THREE.Vector3(anchor.x, floorY, opposite.z),
+  ]
+}
+
 export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
-  const { drawing, snapToGrid, gridSpacingRef } = useMap()
-  const { vertices, closed, validationError, addVertex, finish } = drawing
+  const { drawing, snapToGrid, gridSpacingRef, roomDrawMode } = useMap()
+  const { vertices, closed, validationError, addVertex, setPolygon, finish } = drawing
 
   const [cursor, setCursor] = useState<THREE.Vector3 | null>(null)
 
@@ -130,6 +144,19 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
     (point: THREE.Vector3) => {
       if (closed) return
       const snapped = snap(point)
+      const landed = snapped ?? applyGridSnap(point)
+
+      if (roomDrawMode === "rectangle") {
+        if (vertices.length === 0) {
+          addVertex(landed)
+          return
+        }
+        const rectangle = buildAxisAlignedRectangle(vertices[0], landed, floorY)
+        if (rectangle.length === 0) return
+        setPolygon(rectangle, true)
+        return
+      }
+
       if (snapped) {
         // Compare by POSITION rather than reference identity. When the user
         // has previously snapped vertices[0] to an existing corner, the
@@ -147,9 +174,9 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
       }
       // Grid snap is a fallback: vertex/corner snap always wins so users
       // can still share edges with existing rooms even when grid snap is on.
-      addVertex(applyGridSnap(point))
+      addVertex(landed)
     },
-    [closed, snap, canClose, vertices, addVertex, finish, applyGridSnap],
+    [closed, snap, canClose, vertices, addVertex, setPolygon, finish, applyGridSnap, roomDrawMode, floorY],
   )
 
   const handleMove = useCallback((point: THREE.Vector3) => {
@@ -172,11 +199,16 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
   // cursor moves already trigger a re-render).
   const previewPoints = useMemo<[number, number, number][] | null>(() => {
     if (closed || vertices.length === 0 || !cursor) return null
-    const lastVertex = vertices[vertices.length - 1]
     // eslint-disable-next-line react-hooks/refs
     const tip = snapTarget ?? applyGridSnap(cursor)
+    if (roomDrawMode === "rectangle") {
+      const rectangle = buildAxisAlignedRectangle(vertices[0], tip, floorY)
+      if (rectangle.length >= 3) return rectangle.map(lift)
+      return null
+    }
+    const lastVertex = vertices[vertices.length - 1]
     return [lift(lastVertex), lift(tip)]
-  }, [closed, vertices, cursor, snapTarget, applyGridSnap])
+  }, [closed, vertices, cursor, snapTarget, applyGridSnap, roomDrawMode, floorY])
 
   // Polygon outline turns red while validation is failing so the user can
   // see exactly which configuration is invalid before attempting to close.
@@ -204,9 +236,9 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
     <>
       <RaycastPlane floor={floor} {...handlers} />
 
-      {externalCorners.map((corner) => (
+      {externalCorners.map((corner, index) => (
         <VertexMarker
-          key={String(corner.x) + "-" + String(corner.z)}
+          key={String(corner.x) + "-" + String(corner.z) + "-" + String(index)}
           position={lift(corner)}
           color={EXTERNAL_CORNER_COLOR}
           radius={EXTERNAL_CORNER_RADIUS}
@@ -223,12 +255,17 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
       )}
 
       {previewPoints && (
-        <EdgePreview points={previewPoints} color={polylineColor} lineWidth={PREVIEW_WIDTH} />
+        <EdgePreview
+          points={previewPoints}
+          color={polylineColor}
+          lineWidth={PREVIEW_WIDTH}
+          closed={roomDrawMode === "rectangle"}
+        />
       )}
 
-      {vertices.map((v) => (
+      {vertices.map((v, index) => (
         <VertexMarker
-          key={String(v.x) + "-" + String(v.y) + "-" + String(v.z)}
+          key={String(v.x) + "-" + String(v.y) + "-" + String(v.z) + "-" + String(index)}
           position={lift(v)}
           color={validationError === null ? VERTEX_COLOR : INVALID_COLOR}
           radius={VERTEX_RADIUS}
