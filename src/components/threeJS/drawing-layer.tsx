@@ -176,7 +176,18 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
       // can still share edges with existing rooms even when grid snap is on.
       addVertex(landed)
     },
-    [closed, snap, canClose, vertices, addVertex, setPolygon, finish, applyGridSnap, roomDrawMode, floorY],
+    [
+      closed,
+      snap,
+      canClose,
+      vertices,
+      addVertex,
+      setPolygon,
+      finish,
+      applyGridSnap,
+      roomDrawMode,
+      floorY,
+    ],
   )
 
   const handleMove = useCallback((point: THREE.Vector3) => {
