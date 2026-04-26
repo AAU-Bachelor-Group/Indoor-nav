@@ -42,9 +42,7 @@ const EdgePanel = ({ edgeId }: { edgeId: string }) => {
       <header className="flex items-start justify-between gap-2 p-4">
         <div>
           <h2 className="text-lg font-semibold">Edge</h2>
-          <p className="text-sm text-muted-foreground">
-            {edge.distance.toFixed(2)} m
-          </p>
+          <p className="text-sm text-muted-foreground">{edge.distance.toFixed(2)} m</p>
         </div>
         <Button
           type="button"
@@ -61,7 +59,9 @@ const EdgePanel = ({ edgeId }: { edgeId: string }) => {
         <div className="flex flex-col gap-3 rounded-lg border border-border p-3 text-sm">
           <div className="flex flex-col gap-1">
             <span className="text-xs text-muted-foreground">From</span>
-            <span>{fromNode ? nodeLabel(fromNode.floor, fromNode.x, fromNode.y) : edge.fromNodeId}</span>
+            <span>
+              {fromNode ? nodeLabel(fromNode.floor, fromNode.x, fromNode.y) : edge.fromNodeId}
+            </span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-xs text-muted-foreground">To</span>
@@ -94,15 +94,11 @@ const EdgePanel = ({ edgeId }: { edgeId: string }) => {
               type="button"
               variant="destructive"
               disabled={deleteMutation.isPending}
-              onClick={() => deleteMutation.mutate()}
+              onClick={() => { deleteMutation.mutate(); }}
             >
               {deleteMutation.isPending ? "Deleting…" : "Confirm delete"}
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setConfirmingDelete(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => { setConfirmingDelete(false); }}>
               Cancel
             </Button>
           </>
@@ -111,7 +107,7 @@ const EdgePanel = ({ edgeId }: { edgeId: string }) => {
             type="button"
             variant="destructive"
             disabled={deleteMutation.isPending}
-            onClick={() => setConfirmingDelete(true)}
+            onClick={() => { setConfirmingDelete(true); }}
           >
             <Trash2 className="size-4" />
             Delete edge
