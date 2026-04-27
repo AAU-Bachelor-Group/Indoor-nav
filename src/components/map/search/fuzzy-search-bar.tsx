@@ -46,7 +46,7 @@ export const FuzzySearchBar = () => {
 
   return (
     <SearchBar
-      className="absolute top-4 left-30 z-10 w-90"
+      className="absolute top-4 left-4 right-4 w-auto z-10 sm:left-30 sm:right-auto sm:w-90"
       type="integrated"
       placeholder="Search locations..."
       value={query}
