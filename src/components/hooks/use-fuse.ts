@@ -45,7 +45,7 @@ export const useFuzzySearch = (searchTerm: string) => {
     threshold: debouncedTerm.length <= 3 ? 0.6 : 0.4,
   })
 
-  const results = useMemo(() => fuse.search(debouncedTerm), [fuse, debouncedTerm])
+  const results = useMemo(() => fuse.search(debouncedTerm, { limit: 6 }), [fuse, debouncedTerm])
 
   return { results, isLoading, isError }
 }
