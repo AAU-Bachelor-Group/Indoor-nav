@@ -42,7 +42,7 @@ export const useFuzzySearch = (searchTerm: string) => {
       { name: "type", weight: 0.3 },
       { name: "room_type_alt", weight: 0.3 },
     ],
-    threshold: 0.4,
+    threshold: debouncedTerm.length <= 3 ? 0.6 : 0.4,
   })
 
   const results = useMemo(() => fuse.search(debouncedTerm), [fuse, debouncedTerm])
