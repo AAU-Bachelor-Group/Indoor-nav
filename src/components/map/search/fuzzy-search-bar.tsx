@@ -1,4 +1,3 @@
-import { Search } from "lucide-react"
 import { useState } from "react"
 
 import { useFuzzySearch } from "#/components/hooks/use-fuse"
@@ -37,9 +36,9 @@ export const FuzzySearchBar = () => {
     ? [
         {
           id: "No results found",
-          title: "No locations found",
+          title: "",
           type: "",
-          icon: <Search className="w-5 h-5" style={{ color: "gray" }} />,
+          icon: "",
           iconBgStyle: { backgroundColor: "transparent" },
         },
       ]
