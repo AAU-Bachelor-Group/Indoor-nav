@@ -117,7 +117,6 @@ const RoomCreateForm = () => {
       drawing.reset()
       form.reset()
       void queryClient.invalidateQueries({ queryKey: ["rooms"] })
-      void queryClient.invalidateQueries({ queryKey: ["getAllRooms"] })
     },
   })
 
