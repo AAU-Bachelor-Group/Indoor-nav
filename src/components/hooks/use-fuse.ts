@@ -3,7 +3,7 @@ import Fuse from "fuse.js"
 import { useState, useMemo, useEffect } from "react"
 
 import { ROOM_TYPE_ALT } from "#/lib/room-types"
-import { getAllRoomsFunction } from "#/server/search.functions"
+import { getAllRoomsData } from "#/server/room.functions"
 
 export const useFuzzySearch = (searchTerm: string) => {
   const [debouncedTerm, setDebouncedTerm] = useState(searchTerm)
@@ -23,7 +23,7 @@ export const useFuzzySearch = (searchTerm: string) => {
     isError,
   } = useQuery({
     queryKey: ["rooms"],
-    queryFn: getAllRoomsFunction,
+    queryFn: getAllRoomsData,
   })
 
   const allRoomsWithAlts = useMemo(
