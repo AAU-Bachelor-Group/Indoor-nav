@@ -7,6 +7,7 @@ import { Compass } from "#/components/map/user-tools/compass"
 import { DebugToggle } from "#/components/map/user-tools/debug-toggle"
 import { FloorSelector } from "#/components/map/user-tools/floor-selector"
 import { RenderModeToggle } from "#/components/map/user-tools/render-mode-toggle"
+import { RoomOverlayToggle } from "#/components/map/user-tools/room-overlay-toggle"
 import { EdgeMetadataPanel } from "#/components/panels/edge-metadata-panel"
 import { NodeMetadataPanel } from "#/components/panels/node-metadata-panel"
 import { RoomInfoPanel } from "#/components/panels/room-info-panel"
@@ -45,6 +46,7 @@ const App = () => {
           <RoomInfoPanel />
           <div className="absolute flex flex-col gap-2 bottom-6 right-6 z-10">
             {isLoggedIn && <DebugToggle />}
+            <RoomOverlayToggle />
             <RenderModeToggle />
             <Compass />
             <FloorSelector />

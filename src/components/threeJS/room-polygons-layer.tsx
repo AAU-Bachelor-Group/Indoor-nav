@@ -92,11 +92,13 @@ const RoomPolygon = ({
   onSelect,
   neighbourOpacityRef,
 }: RoomPolygonProps) => {
+  const { roomOverlayMode } = useMap()
   const meshRef = useRef<THREE.Mesh>(null)
   const materialRef = useRef<THREE.MeshBasicMaterial>(null)
 
   const geometry = useMemo(() => buildPolygonGeometry(room.vertices), [room.vertices])
   const fillColor = useMemo(() => getRoomTypeMeta(room.type).color, [room.type])
+  const TypeIcon = useMemo(() => getRoomTypeMeta(room.type).icon, [room.type])
   const outlineColor = useMemo(() => getRoomTypeOutline(room.type), [room.type])
   const centroid = useMemo(() => computeCentroid(room.vertices), [room.vertices])
 
@@ -156,10 +158,10 @@ const RoomPolygon = ({
         />
       </mesh>
       <EdgePreview points={outlinePoints} color={outlineColor} lineWidth={OUTLINE_WIDTH} closed />
-      {active && (
+      {active && roomOverlayMode === "icon" && (
         <Html position={[centroid.x, yOutline, centroid.z]} center zIndexRange={[0, 0]}>
-          <div className="pointer-events-none rounded bg-black/60 px-1.5 py-0.5 text-xs font-semibold text-white whitespace-nowrap">
-            {room.displayName || room.type.replace("_", " ")}
+          <div className="pointer-events-none rounded-full bg-black/60 p-1.5 text-white">
+            <TypeIcon className="size-4" />
           </div>
         </Html>
       )}
