@@ -8,6 +8,7 @@ import { useMap } from "#/lib/map-context"
 import { AdaptiveGrid } from "./adaptive-grid"
 import { CameraRig } from "./camera-rig"
 import { ConnectEdgeLayer } from "./connect-edge-layer"
+import { ConnectFloorEdgeLayer } from "./connect-floor-edge-layer"
 import { FLOOR_HEIGHT, MAX_POLAR_ANGLE, TOP_DOWN_POLAR } from "./constants"
 import { CursorCoordinates } from "./cursor-coordinates"
 import { DrawingLayer } from "./drawing-layer"
@@ -19,7 +20,8 @@ import { RoomPolygonsLayer } from "./room-polygons-layer"
 const GRID_TOOLS = new Set(["draw-room", "draw-node", "connect-edge"])
 
 export const MapScene = () => {
-  const { floors, currentFloor, renderMode, activeTool, controlsRef, debugMode } = useMap()
+  const { floors, currentFloor, renderMode, activeTool, connectEdgeMode, controlsRef, debugMode } =
+    useMap()
   const showGrid = debugMode || (activeTool !== "default" && GRID_TOOLS.has(activeTool))
   const activeFloorPlan = floors.find((f) => f.floor === currentFloor) ?? null
   const neighbourOpacityRef = useRef(0)
@@ -76,8 +78,11 @@ export const MapScene = () => {
         <RoomPolygonsLayer neighbourOpacityRef={neighbourOpacityRef} />
         {activeTool === "draw-room" && activeFloorPlan && <DrawingLayer floor={activeFloorPlan} />}
         {activeTool === "draw-node" && activeFloorPlan && <GraphLayer floor={activeFloorPlan} />}
-        {activeTool === "connect-edge" && activeFloorPlan && (
+        {activeTool === "connect-edge" && activeFloorPlan && connectEdgeMode === "same-floor" && (
           <ConnectEdgeLayer floor={activeFloorPlan} />
+        )}
+        {activeTool === "connect-edge" && activeFloorPlan && connectEdgeMode === "cross-floor" && (
+          <ConnectFloorEdgeLayer floor={activeFloorPlan} />
         )}
       </Suspense>
     </Canvas>

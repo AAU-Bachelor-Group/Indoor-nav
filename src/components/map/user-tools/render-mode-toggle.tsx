@@ -7,13 +7,15 @@ interface RenderModeToggleProps {
 }
 
 export const RenderModeToggle = ({ className }: RenderModeToggleProps) => {
-  const { renderMode, setRenderMode, activeTool, isSelectingFloor } = useMap()
-  const locked = activeTool !== "default"
+  const { renderMode, setRenderMode, activeTool, connectEdgeMode, isSelectingFloor } = useMap()
+  const locked =
+    activeTool !== "default" &&
+    !(activeTool === "connect-edge" && connectEdgeMode === "cross-floor")
 
   if (isSelectingFloor) return null
 
   const tooltipLabel = locked
-    ? "Locked to 2D while a tool is active"
+    ? "Locked to 2D while editing"
     : renderMode === "2d"
       ? "Switch to 3D"
       : "Switch to 2D"

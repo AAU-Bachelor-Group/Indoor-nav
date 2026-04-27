@@ -23,6 +23,9 @@ type RoomDrawMode = "polygon" | "rectangle"
  */
 export type ActiveTool = "default" | "draw-room" | "edit-room" | "draw-node" | "connect-edge"
 
+/** Sub-mode within connect-edge: cross-floor connection via stairs/elevators. */
+export type ConnectEdgeMode = "same-floor" | "cross-floor"
+
 export interface PendingNode {
   x: number
   y: number
@@ -75,6 +78,9 @@ interface MapContextValue {
   /** The edge currently selected for viewing/deletion in connect-edge mode. */
   editingEdgeId: string | null
   setEditingEdgeId: (id: string | null) => void
+  /** Sub-mode for the connect-edge tool: same-floor (default) or cross-floor. */
+  connectEdgeMode: ConnectEdgeMode
+  setConnectEdgeMode: (mode: ConnectEdgeMode) => void
 
   /**
    * The room currently being viewed in the end-user info drawer, or null.
@@ -141,6 +147,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
   const [pendingNode, setPendingNode] = useState<PendingNode | null>(null)
   const [pendingEdgeFromNodeId, setPendingEdgeFromNodeId] = useState<string | null>(null)
   const [editingEdgeId, setEditingEdgeId] = useState<string | null>(null)
+  const [connectEdgeMode, setConnectEdgeMode] = useState<ConnectEdgeMode>("same-floor")
   const previousRenderModeRef = useRef<RenderMode | null>(null)
   const controlsRef = useRef<OrbitControlsHandle | null>(null)
   const gridSpacingRef = useRef<number | null>(null)
@@ -172,6 +179,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
       setPendingNode(null)
       setPendingEdgeFromNodeId(null)
       setEditingEdgeId(null)
+      setConnectEdgeMode("same-floor")
     },
     [renderMode],
   )
@@ -228,6 +236,8 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
       setPendingEdgeFromNodeId,
       editingEdgeId,
       setEditingEdgeId,
+      connectEdgeMode,
+      setConnectEdgeMode,
     }),
     [
       floors,
@@ -253,6 +263,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
       editingEdgeId,
       snapToGrid,
       roomDrawMode,
+      connectEdgeMode,
     ],
   )
 
