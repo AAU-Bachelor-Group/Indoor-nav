@@ -22,7 +22,7 @@ export const useFuzzySearch = (searchTerm: string) => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["getAllRooms"],
+    queryKey: ["rooms"],
     queryFn: getAllRoomsFunction,
   })
 

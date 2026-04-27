@@ -157,7 +157,7 @@ const RoomPolygon = ({
       </mesh>
       <EdgePreview points={outlinePoints} color={outlineColor} lineWidth={OUTLINE_WIDTH} closed />
       {active && (
-        <Html position={[centroid.x, yOutline, centroid.z]} center>
+        <Html position={[centroid.x, yOutline, centroid.z]} center zIndexRange={[0, 0]}>
           <div className="pointer-events-none rounded bg-black/60 px-1.5 py-0.5 text-xs font-semibold text-white whitespace-nowrap">
             {room.displayName || room.type.replace("_", " ")}
           </div>

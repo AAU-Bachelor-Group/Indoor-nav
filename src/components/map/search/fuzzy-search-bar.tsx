@@ -56,7 +56,7 @@ export const FuzzySearchBar = () => {
       }}
       results={displayResults}
       onResultClick={(item) => {
-        if (item.id === "__no-results__") return
+        if (item.id === "no results found") return
         const { dbId } = item as SearchResultItemWithDbId
         if (activeTool === "default") {
           setViewingRoomId(dbId)
