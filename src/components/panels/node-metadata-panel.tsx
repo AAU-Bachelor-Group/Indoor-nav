@@ -171,7 +171,9 @@ const NodeCreateForm = () => {
       }
     }
     window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
   }, [form])
 
   return (
@@ -378,15 +380,6 @@ const NodeEditForm = ({ nodeId }: { nodeId: string }) => {
     },
   })
 
-  if (!node) return null
-
-  const handleClose = () => {
-    setEditingNodeId(null)
-    setConfirmingDelete(false)
-    updateMutation.reset()
-    deleteMutation.reset()
-  }
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "s") {
@@ -395,8 +388,19 @@ const NodeEditForm = ({ nodeId }: { nodeId: string }) => {
       }
     }
     window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
   }, [form])
+
+  if (!node) return null
+
+  const handleClose = () => {
+    setEditingNodeId(null)
+    setConfirmingDelete(false)
+    updateMutation.reset()
+    deleteMutation.reset()
+  }
 
   const isBusy = updateMutation.isPending || deleteMutation.isPending
 
