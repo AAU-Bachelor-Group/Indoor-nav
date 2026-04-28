@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unknown-property */
 import { Html } from "@react-three/drei"
-import { useFrame } from "@react-three/fiber"
+import { useFrame, useThree } from "@react-three/fiber"
 import { useQuery } from "@tanstack/react-query"
-import { useCallback, useMemo, useRef } from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 
 import { useMap } from "#/lib/map-context"
@@ -21,6 +21,8 @@ const SELECTED_FILL_OPACITY = 0.8
 const OUTLINE_WIDTH = 5
 /** Tiny extra Y offset above DRAWING_LIFT for the outline so it doesn't z-fight the fill mesh. */
 const OUTLINE_LIFT = 0.002
+const ICON_HIDE_ZOOM_THRESHOLD_2D = 10.5
+const ICON_HIDE_DISTANCE_THRESHOLD_3D = 45
 /**
  * Render after FloorPlane (which sets renderOrder=1 on the active floor).
  * Without this, the floor texture paints over the polygon fill because
@@ -92,16 +94,25 @@ const RoomPolygon = ({
   onSelect,
   neighbourOpacityRef,
 }: RoomPolygonProps) => {
+  const { roomOverlayMode } = useMap()
+  const { camera } = useThree()
   const meshRef = useRef<THREE.Mesh>(null)
   const materialRef = useRef<THREE.MeshBasicMaterial>(null)
+  const [iconVisible, setIconVisible] = useState(true)
+  const iconVisibleRef = useRef(true)
 
   const geometry = useMemo(() => buildPolygonGeometry(room.vertices), [room.vertices])
   const fillColor = useMemo(() => getRoomTypeMeta(room.type).color, [room.type])
+  const TypeIcon = useMemo(() => getRoomTypeMeta(room.type).icon, [room.type])
   const outlineColor = useMemo(() => getRoomTypeOutline(room.type), [room.type])
   const centroid = useMemo(() => computeCentroid(room.vertices), [room.vertices])
 
   const yFill = room.floor * FLOOR_HEIGHT + DRAWING_LIFT
   const yOutline = yFill + OUTLINE_LIFT
+  const iconPosition = useMemo(
+    () => new THREE.Vector3(centroid.x, yOutline, centroid.z),
+    [centroid.x, centroid.z, yOutline],
+  )
 
   // Outline points (open ring) projected to 3D at the outline Y level.
   const outlinePoints = useMemo<[number, number, number][]>(
@@ -135,6 +146,20 @@ const RoomPolygon = ({
       material.opacity = fade * baseOpacity
       mesh.visible = fade > 0.01
     }
+
+    let shouldShowIcon = roomOverlayMode === "icon" && active
+    if (shouldShowIcon) {
+      if ((camera as THREE.OrthographicCamera).isOrthographicCamera) {
+        shouldShowIcon = (camera as THREE.OrthographicCamera).zoom >= ICON_HIDE_ZOOM_THRESHOLD_2D
+      } else {
+        shouldShowIcon = camera.position.distanceTo(iconPosition) <= ICON_HIDE_DISTANCE_THRESHOLD_3D
+      }
+    }
+
+    if (shouldShowIcon !== iconVisibleRef.current) {
+      iconVisibleRef.current = shouldShowIcon
+      setIconVisible(shouldShowIcon)
+    }
   })
 
   return (
@@ -156,10 +181,10 @@ const RoomPolygon = ({
         />
       </mesh>
       <EdgePreview points={outlinePoints} color={outlineColor} lineWidth={OUTLINE_WIDTH} closed />
-      {active && (
+      {active && roomOverlayMode === "icon" && iconVisible && (
         <Html position={[centroid.x, yOutline, centroid.z]} center zIndexRange={[0, 0]}>
-          <div className="pointer-events-none rounded bg-black/60 px-1.5 py-0.5 text-xs font-semibold text-white whitespace-nowrap">
-            {room.displayName || room.type.replace("_", " ")}
+          <div className="pointer-events-none rounded-full bg-black/60 p-1.5 text-white">
+            <TypeIcon className="size-4" />
           </div>
         </Html>
       )}
