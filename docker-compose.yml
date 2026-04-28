@@ -35,8 +35,26 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql
+      - ./backup.dump:/tmp/backup.dump
     networks:
       - navNet
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        cat <<EOF > /docker-entrypoint-initdb.d/restore.sh
+        #!/bin/bash
+        set -e
+        if [ ! -f /tmp/backup.dump ]; then
+          echo "WARNING: /tmp/backup.dump not found or is not a file. Skipping restore."
+          exit 0
+        fi
+        echo "Restoring database..."
+        pg_restore -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" -v /tmp/backup.dump
+        EOF
+
+        # Hand over to the official Postgres entrypoint
+        exec /usr/local/bin/docker-entrypoint.sh postgres -c "max_wal_size=4GB"
 
 volumes:
   postgres-data:
