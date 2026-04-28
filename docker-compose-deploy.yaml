@@ -25,12 +25,10 @@ services:
     labels:
       - "kop.bind.ip=${KOP_BIND_IP}"
       - "traefik.enable=true"
-      - "traefik.http.services.${TRAEFIK_SERVICE}.loadbalancer.server.port=${AP\
-        P_HOST_PORT}"
+      - "traefik.http.services.${TRAEFIK_SERVICE}.loadbalancer.server.port=${APP_HOST_PORT}"
       - "traefik.http.routers.${TRAEFIK_SERVICE}-http.rule=Host(`${HOSTNAME}`)"
       - "traefik.http.routers.${TRAEFIK_SERVICE}-http.entrypoints=http"
-      - "traefik.http.routers.${TRAEFIK_SERVICE}-http.middlewares=redirect-to-h\
-        ttps@file"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-http.middlewares=redirect-to-https@file"
       - "traefik.http.routers.${TRAEFIK_SERVICE}-http.service=${TRAEFIK_SERVICE}"
       - "traefik.http.routers.${TRAEFIK_SERVICE}-https.rule=Host(`${HOSTNAME}`)"
       - "traefik.http.routers.${TRAEFIK_SERVICE}-https.entrypoints=https"
