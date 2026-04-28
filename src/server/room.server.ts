@@ -134,7 +134,17 @@ export const createRoom = async (input: CreateRoomInput): Promise<{ id: string }
       NOW()
     )
   `
-
+  await prisma.$executeRaw`
+  UPDATE "Node"
+  SET "roomId" = ${id},
+      "updatedAt" = NOW()
+  WHERE "floor" = ${floor}
+    AND "roomId" IS NULL
+    AND ST_Contains(
+      ST_GeomFromText(${wkt}, 0),
+      ST_MakePoint(x, -y)
+    )
+`
   return { id }
 }
 

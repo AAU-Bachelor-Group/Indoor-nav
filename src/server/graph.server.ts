@@ -213,9 +213,19 @@ export const updateNodeInDb = async (
   nodeId: string,
   data: { type: string; x: number; y: number },
 ) => {
+  const roomMatch = await prisma.$queryRaw<{ id: string }[]>`
+    SELECT r.id FROM "Room" r
+    JOIN "Node" n ON n.id = ${nodeId}
+    WHERE r.floor = n.floor
+      AND r.polygon IS NOT NULL
+      AND ST_Contains(r.polygon, ST_MakePoint(${data.x}, ${-data.y}))
+    LIMIT 1
+  `
+  const roomId = roomMatch[0]?.id ?? null
+
   const updated = await prisma.node.update({
     where: { id: nodeId },
-    data: { type: data.type as Node["type"], x: data.x, y: data.y },
+    data: { type: data.type as Node["type"], x: data.x, y: data.y, roomId },
   })
   const g = await getGraph()
   const node = g.nodes.get(nodeId)
