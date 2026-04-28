@@ -76,7 +76,8 @@ const isPointInPolygon = (point: { x: number; z: number }, vertices: RoomVertex[
     const xj = vertices[j].x
     const zj = vertices[j].z
 
-    const intersects = zi > point.z !== zj > point.z && point.x < ((xj - xi) * (point.z - zi)) / (zj - zi) + xi
+    const intersects =
+      zi > point.z !== zj > point.z && point.x < ((xj - xi) * (point.z - zi)) / (zj - zi) + xi
     if (intersects) inside = !inside
   }
   return inside
@@ -85,7 +86,11 @@ const isPointInPolygon = (point: { x: number; z: number }, vertices: RoomVertex[
 const triangleArea = (a: RoomVertex, b: RoomVertex, c: RoomVertex): number =>
   Math.abs((a.x * (b.z - c.z) + b.x * (c.z - a.z) + c.x * (a.z - b.z)) / 2)
 
-const triangleIncenter = (a: RoomVertex, b: RoomVertex, c: RoomVertex): { x: number; z: number } => {
+const triangleIncenter = (
+  a: RoomVertex,
+  b: RoomVertex,
+  c: RoomVertex,
+): { x: number; z: number } => {
   const sideA = Math.hypot(b.x - c.x, b.z - c.z)
   const sideB = Math.hypot(a.x - c.x, a.z - c.z)
   const sideC = Math.hypot(a.x - b.x, a.z - b.z)
@@ -119,7 +124,10 @@ const pointToSegmentDistance = (
   return Math.hypot(point.x - closestX, point.z - closestZ)
 }
 
-const minDistanceToPolygonEdges = (point: { x: number; z: number }, vertices: RoomVertex[]): number => {
+const minDistanceToPolygonEdges = (
+  point: { x: number; z: number },
+  vertices: RoomVertex[],
+): number => {
   let minDistance = Number.POSITIVE_INFINITY
   for (let i = 0; i < vertices.length; i++) {
     const start = vertices[i]
