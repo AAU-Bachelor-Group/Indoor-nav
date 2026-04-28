@@ -33,6 +33,7 @@ const EXTERNAL_CORNER_RADIUS = 0.09
 const CLOSE_TARGET_RADIUS = 0.18
 const POLYLINE_WIDTH = 4
 const PREVIEW_WIDTH = 3
+const EXTERNAL_CORNER_RENDER_RADIUS_MULTIPLIER = 3
 
 /** Lift a world-space point above the floor plane to avoid z-fighting. */
 const lift = (v: THREE.Vector3): [number, number, number] => [v.x, v.y + DRAWING_LIFT, v.z]
@@ -118,6 +119,14 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
         .flatMap((r) => r.vertices.map((v) => new THREE.Vector3(v.x, floorY, v.z))),
     [allRooms, floor.floor, floorY],
   )
+
+  // Rendering every external corner marker gets expensive on large datasets.
+  // Keep all corners available for snapping, but only draw those near cursor.
+  const visibleExternalCorners = useMemo<THREE.Vector3[]>(() => {
+    if (!cursor) return []
+    const maxDistance = SNAP_RADIUS_METERS * EXTERNAL_CORNER_RENDER_RADIUS_MULTIPLIER
+    return externalCorners.filter((corner) => cursor.distanceTo(corner) <= maxDistance)
+  }, [externalCorners, cursor])
 
   // True once the polygon is closeable: enough vertices placed AND no
   // validation errors. Drives both the click handler and the always-on
@@ -247,7 +256,7 @@ export const DrawingLayer = ({ floor }: DrawingLayerProps) => {
     <>
       <RaycastPlane floor={floor} {...handlers} />
 
-      {externalCorners.map((corner, index) => (
+      {visibleExternalCorners.map((corner, index) => (
         <VertexMarker
           key={String(corner.x) + "-" + String(corner.z) + "-" + String(index)}
           position={lift(corner)}

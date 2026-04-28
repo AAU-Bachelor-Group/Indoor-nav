@@ -46,7 +46,7 @@ export const VertexMarker = ({ position, color = "#ffffff", radius = 0.06 }: Ver
 
   return (
     <mesh ref={meshRef} position={pos}>
-      <sphereGeometry args={[radius, 64, 64]} />
+      <sphereGeometry args={[radius, 10, 10]} />
       <meshBasicMaterial color={color} />
     </mesh>
   )
