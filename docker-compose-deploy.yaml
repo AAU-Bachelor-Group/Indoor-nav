@@ -34,10 +34,8 @@ services:
       - "traefik.http.routers.${TRAEFIK_SERVICE}-http.service=${TRAEFIK_SERVICE}"
       - "traefik.http.routers.${TRAEFIK_SERVICE}-https.rule=Host(`${HOSTNAME}`)"
       - "traefik.http.routers.${TRAEFIK_SERVICE}-https.entrypoints=https"
-      - "traefik.http.routers.${TRAEFIK_SERVICE}-https.middlewares=publicSecuri\
-        tyHeaders@file"
-      - "traefik.http.routers.${TRAEFIK_SERVICE}-https.service=${TRAEFIK_SERVIC\
-        E}"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-https.middlewares=publicSecurityHeaders@file"
+      - "traefik.http.routers.${TRAEFIK_SERVICE}-https.service=${TRAEFIK_SERVICE}"
     networks:
       - navNet
     volumes:
