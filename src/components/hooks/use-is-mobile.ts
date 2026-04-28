@@ -10,22 +10,22 @@ const MOBILE_QUERY = `(max-width: ${MOBILE_BREAKPOINT_PX}px)`
  * render. Updates live as the viewport crosses the breakpoint.
  */
 export const useIsMobile = (): boolean => {
-    const [isMobile, setIsMobile] = useState(() => {
-        if (typeof globalThis.matchMedia !== "function") return false
-        return globalThis.matchMedia(MOBILE_QUERY).matches
-    })
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof globalThis.matchMedia !== "function") return false
+    return globalThis.matchMedia(MOBILE_QUERY).matches
+  })
 
-    useEffect(() => {
-        const mql = globalThis.matchMedia(MOBILE_QUERY)
-        const handleChange = (e: MediaQueryListEvent) => {
-            setIsMobile(e.matches)
-        }
-        setIsMobile(mql.matches)
-        mql.addEventListener("change", handleChange)
-        return () => {
-            mql.removeEventListener("change", handleChange)
-        }
-    }, [])
+  useEffect(() => {
+    const mql = globalThis.matchMedia(MOBILE_QUERY)
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches)
+    }
+    setIsMobile(mql.matches)
+    mql.addEventListener("change", handleChange)
+    return () => {
+      mql.removeEventListener("change", handleChange)
+    }
+  }, [])
 
-    return isMobile
+  return isMobile
 }

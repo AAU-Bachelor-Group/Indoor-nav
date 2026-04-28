@@ -25,7 +25,7 @@ export const FuzzySearchBar = ({ className }: { className?: string }) => {
           id: r.item.roomNumber,
           icon: <Icon className="w-5 h-5" style={{ color: outline }} />,
           iconBgStyle: { backgroundColor: meta.color, outline: `2px solid ${outline}` },
-          title: r.item.displayName || "",
+          title: r.item.displayName ?? "",
           type: meta.label,
           dbId: r.item.id,
         }
