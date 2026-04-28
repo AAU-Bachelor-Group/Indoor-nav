@@ -1,6 +1,6 @@
 import { OrbitControls } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
-import { Suspense, useMemo, useRef } from "react"
+import { Suspense, useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three"
 
 import { useMap } from "#/lib/map-context"
@@ -30,6 +30,36 @@ export const MapScene = () => {
     [activeFloor],
   )
 
+  // Google-Maps-style camera controls: left-drag pans, shift+left-drag rotates.
+  const [shiftHeld, setShiftHeld] = useState(false)
+  useEffect(() => {
+    const onDown = (e: KeyboardEvent) => {
+      if (e.key === "Shift") setShiftHeld(true)
+    }
+    const onUp = (e: KeyboardEvent) => {
+      if (e.key === "Shift") setShiftHeld(false)
+    }
+    const onBlur = () => {
+      setShiftHeld(false)
+    }
+    window.addEventListener("keydown", onDown)
+    window.addEventListener("keyup", onUp)
+    window.addEventListener("blur", onBlur)
+    return () => {
+      window.removeEventListener("keydown", onDown)
+      window.removeEventListener("keyup", onUp)
+      window.removeEventListener("blur", onBlur)
+    }
+  }, [])
+
+  const mouseButtons = useMemo(
+    () => ({
+      LEFT: shiftHeld ? THREE.MOUSE.ROTATE : THREE.MOUSE.PAN,
+      MIDDLE: THREE.MOUSE.DOLLY,
+    }),
+    [shiftHeld],
+  )
+
   return (
     <Canvas
       gl={{ antialias: true }}
@@ -56,7 +86,8 @@ export const MapScene = () => {
         enablePan
         enableZoom
         enableRotate
-        touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
+        mouseButtons={mouseButtons}
+        touches={{ ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE }}
         minPolarAngle={renderMode === "2d" ? TOP_DOWN_POLAR : 0}
         maxPolarAngle={renderMode === "2d" ? TOP_DOWN_POLAR : MAX_POLAR_ANGLE}
       />
