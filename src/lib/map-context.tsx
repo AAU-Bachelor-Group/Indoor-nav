@@ -23,7 +23,6 @@ type RoomDrawMode = "polygon" | "rectangle"
  */
 export type ActiveTool = "default" | "draw-room" | "edit-room" | "draw-node" | "connect-edge"
 
-
 export interface PendingNode {
   x: number
   y: number

@@ -476,15 +476,9 @@ const NodeEditForm = ({ nodeId }: { nodeId: string }) => {
     )
   }, [allNodes, node])
 
-  const groupByFloor = useMemo(
-    () => new Map(groupNodes.map((n) => [n.floor, n])),
-    [groupNodes],
-  )
+  const groupByFloor = useMemo(() => new Map(groupNodes.map((n) => [n.floor, n])), [groupNodes])
 
-  const groupNodeIds = useMemo(
-    () => new Set(groupNodes.map((n) => n.id)),
-    [groupNodes],
-  )
+  const groupNodeIds = useMemo(() => new Set(groupNodes.map((n) => n.id)), [groupNodes])
 
   // Edges that run between co-located nodes only
   const transitEdges = useMemo(
@@ -648,14 +642,17 @@ const NodeEditForm = ({ nodeId }: { nodeId: string }) => {
                 .filter((floor) => floor !== node.floor)
                 .sort((a, b) => a - b)
                 .map((floor) => {
-                  const floorNode = groupByFloor.get(floor)!
+                  const floorNode = groupByFloor.get(floor)
+                  if (!floorNode) return null
                   const isConnected = !!findDirectEdge(node.id, floorNode.id)
                   return (
                     <label
                       key={floor}
                       className={cn(
                         "flex items-center gap-2 text-sm",
-                        transitMutation.isPending ? "cursor-not-allowed opacity-50" : "cursor-pointer",
+                        transitMutation.isPending
+                          ? "cursor-not-allowed opacity-50"
+                          : "cursor-pointer",
                       )}
                     >
                       <input
@@ -667,7 +664,12 @@ const NodeEditForm = ({ nodeId }: { nodeId: string }) => {
                         }}
                       />
                       Floor {floor}
-                      <span className={cn("text-xs", isConnected ? "text-green-500" : "text-muted-foreground")}>
+                      <span
+                        className={cn(
+                          "text-xs",
+                          isConnected ? "text-green-500" : "text-muted-foreground",
+                        )}
+                      >
                         {isConnected ? "— connected" : "— no edge"}
                       </span>
                     </label>

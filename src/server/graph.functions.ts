@@ -168,4 +168,3 @@ export const createTransitNodesData = createServerFn({ method: "POST" })
       roomId: data.roomId,
     })
   })
-

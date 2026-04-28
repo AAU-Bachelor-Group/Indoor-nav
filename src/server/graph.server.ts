@@ -370,4 +370,3 @@ export const createTransitNodesInDb = async (input: {
     edgeIds: createdEdges.map((e) => e.id),
   }
 }
-
