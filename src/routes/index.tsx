@@ -9,10 +9,10 @@ import { DebugToggle } from "#/components/map/user-tools/debug-toggle"
 import { FloorSelector } from "#/components/map/user-tools/floor-selector"
 import { RenderModeToggle } from "#/components/map/user-tools/render-mode-toggle"
 import { RoomOverlayToggle } from "#/components/map/user-tools/room-overlay-toggle"
-import { EdgeMetadataPanel } from "#/components/panels/edge-metadata-panel"
-import { NodeMetadataPanel } from "#/components/panels/node-metadata-panel"
-import { RoomInfoPanel } from "#/components/panels/room-info-panel"
-import { RoomMetadataPanel } from "#/components/panels/room-metadata-panel"
+import { EdgePanel } from "#/components/panels/edge/edge-panel"
+import { NodePanels } from "#/components/panels/node/node-panels"
+import { RoomInfoPanel } from "#/components/panels/room/room-info-panel"
+import { RoomPanels } from "#/components/panels/room/room-panels"
 import { MapScene } from "#/components/threeJS/map-scene"
 import { buttonVariants } from "#/components/ui/button"
 import { TooltipProvider } from "#/components/ui/tooltip"
@@ -70,9 +70,9 @@ const Layout = () => {
 
       {showAdminUI && (
         <>
-          <RoomMetadataPanel />
-          <NodeMetadataPanel />
-          <EdgeMetadataPanel />
+          <RoomPanels />
+          <NodePanels />
+          <EdgePanel />
         </>
       )}
       <RoomInfoPanel />
