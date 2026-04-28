@@ -30,6 +30,14 @@ export const MapScene = () => {
     [activeFloor],
   )
 
+  const mouseButtons = useMemo(
+    () => ({
+      LEFT: THREE.MOUSE.PAN,
+      MIDDLE: THREE.MOUSE.DOLLY,
+    }),
+    [],
+  )
+
   return (
     <Canvas
       gl={{ antialias: true }}
@@ -56,7 +64,8 @@ export const MapScene = () => {
         enablePan
         enableZoom
         enableRotate
-        touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
+        mouseButtons={mouseButtons}
+        touches={{ ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE }}
         minPolarAngle={renderMode === "2d" ? TOP_DOWN_POLAR : 0}
         maxPolarAngle={renderMode === "2d" ? TOP_DOWN_POLAR : MAX_POLAR_ANGLE}
       />

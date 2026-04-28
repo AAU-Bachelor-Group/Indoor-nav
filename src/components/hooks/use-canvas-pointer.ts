@@ -5,7 +5,9 @@ import type { ThreeEvent } from "@react-three/fiber"
 import type * as THREE from "three"
 
 /** Pointer-move distance (px) above which a press-release is treated as a drag, not a click. */
-const DRAG_THRESHOLD_PX = 5
+const DRAG_THRESHOLD_PX_MOUSE = 5
+/** Touch input jitters more than mouse, so the threshold needs to be more forgiving on mobile. */
+const DRAG_THRESHOLD_PX_TOUCH = 12
 
 interface UseCanvasPointerOptions {
   /** Fires on a click that is not part of a camera drag. Receives the world-space hit point. */
@@ -36,7 +38,7 @@ export const useCanvasPointer = ({
   onMove,
   enabled = true,
 }: UseCanvasPointerOptions): CanvasPointerHandlers => {
-  const downPos = useRef<{ x: number; y: number } | null>(null)
+  const downPos = useRef<{ x: number; y: number; pointerType: string } | null>(null)
 
   return useMemo<CanvasPointerHandlers>(() => {
     if (!enabled) {
@@ -45,7 +47,7 @@ export const useCanvasPointer = ({
 
     const handlers: CanvasPointerHandlers = {
       onPointerDown: (e) => {
-        downPos.current = { x: e.clientX, y: e.clientY }
+        downPos.current = { x: e.clientX, y: e.clientY, pointerType: e.pointerType }
       },
       onPointerUp: (e) => {
         const start = downPos.current
@@ -53,7 +55,9 @@ export const useCanvasPointer = ({
         if (!start) return
         const dx = e.clientX - start.x
         const dy = e.clientY - start.y
-        if (Math.hypot(dx, dy) > DRAG_THRESHOLD_PX) return
+        const threshold =
+          start.pointerType === "touch" ? DRAG_THRESHOLD_PX_TOUCH : DRAG_THRESHOLD_PX_MOUSE
+        if (Math.hypot(dx, dy) > threshold) return
         onClick(e.point.clone())
       },
     }
