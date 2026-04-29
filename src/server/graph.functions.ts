@@ -19,7 +19,7 @@ import {
   createTransitNodesInDb,
 } from "./graph.server"
 
-const nodeTypeEnum = z.enum(Object.values(NodeType) as [string, ...string[]])
+export const nodeTypeEnum = z.enum(Object.values(NodeType) as [string, ...string[]])
 
 export const getAllNodesData = createServerFn({ method: "GET" }).handler(async () => {
   return await getAllNodesInDb()

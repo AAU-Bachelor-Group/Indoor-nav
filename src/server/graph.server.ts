@@ -134,6 +134,13 @@ export class Graph {
   }
 
   // ----------------------------- //
+  // Get all nodes on a given floor
+  // ----------------------------- //
+  getNodesByFloor(floor: number): Node[] {
+    return [...this.nodes.values()].filter((n) => n.floor === floor)
+  }
+
+  // ----------------------------- //
   // Get adjacent edges: A -> [A -> B, A -> C ... ]
   // ----------------------------- //
   getNeighbors(id: Node["id"]): Edge[] {
