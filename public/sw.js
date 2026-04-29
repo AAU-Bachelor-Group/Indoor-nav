@@ -1,3 +1,4 @@
+/* eslint-disable */
 const CACHE_NAME = "indoor-nav-v1"
 const PRECACHE_URLS = [
   "/",
