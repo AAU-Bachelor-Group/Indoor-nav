@@ -1,6 +1,7 @@
-import type { AstarInput } from "./astar.functions"
-import type { Edge, Node } from "#/generated/prisma/client"
 import { getGraph } from "./graph.server"
+
+import type { Edge, Node } from "#/generated/prisma/client"
+import type { AstarInput } from "./astar.functions"
 
 const TURN_PENALTY = 1
 const TURN_ANGLE_THRESHOLD = 30 // degrees
@@ -26,10 +27,17 @@ const findClosestNode = async (x: number, y: number, z: number): Promise<Node | 
 
 const reconstructPath = (parent: Map<Node, Node>, t: Node): Node[] => {
   const path: Node[] = [t]
-  while (parent.has(t)) {
-    t = parent.get(t)!
-    path.unshift(t)
+  let current = t
+
+  while (parent.has(current)) {
+    const next = parent.get(current)
+
+    if (!next) break
+
+    current = next
+    path.unshift(current)
   }
+
   return path
 }
 
@@ -124,7 +132,8 @@ export const astar = async (
   insertSorted(open, firstNode, heuristic(firstNode, destinationNode, profile))
 
   while (open.length > 0) {
-    const [current] = open.shift()! // node in open with lowest f-value
+    const current = open.shift()?.[0] // node in open with lowest f-value
+    if (!current) break
 
     if (current.id === destinationNode.id) {
       return reconstructPath(parent, current)
@@ -134,7 +143,7 @@ export const astar = async (
 
     graph.getNeighbors(current.id).forEach((edge) => {
       const neighbor = graph.nodes.get(edge.toNodeId)
-      if (!neighbor || !neighbor.isActivated) return
+      if (!neighbor?.isActivated) return
 
       // g′ ← g[n] + w(n, n′)
       const candidateCost = (g.get(current) ?? Infinity) + edge.distance
