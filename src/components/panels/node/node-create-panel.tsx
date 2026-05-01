@@ -16,6 +16,7 @@ import { Button } from "#/components/ui/button"
 import { Label } from "#/components/ui/label"
 import { Switch } from "#/components/ui/switch"
 import { useMap } from "#/lib/map-context"
+import { formatRoomLabel } from "#/lib/room-format"
 import { cn } from "#/lib/utils"
 import { addNodeData, createTransitNodesData } from "#/server/graph.functions"
 import { getAllRoomsData } from "#/server/room.functions"
@@ -237,7 +238,7 @@ export const NodeCreatePanel = () => {
 
       <DetailRow
         label="Room"
-        value={linkedRoom ? `${linkedRoom.roomNumber} · ${linkedRoom.displayName}` : "None"}
+        value={linkedRoom ? formatRoomLabel(linkedRoom) : "None"}
       />
 
       <form.Field name="isActivated">

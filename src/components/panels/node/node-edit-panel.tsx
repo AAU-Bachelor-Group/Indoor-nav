@@ -18,6 +18,7 @@ import { Button } from "#/components/ui/button"
 import { Label } from "#/components/ui/label"
 import { Switch } from "#/components/ui/switch"
 import { useMap } from "#/lib/map-context"
+import { formatRoomLabel } from "#/lib/room-format"
 import { cn } from "#/lib/utils"
 import {
   activateNodeData,
@@ -328,7 +329,7 @@ export const NodeEditPanel = ({ nodeId }: NodeEditPanelProps) => {
         </div>
         <DetailRow
           label="Room"
-          value={linkedRoom ? `${linkedRoom.roomNumber} · ${linkedRoom.displayName}` : "None"}
+          value={linkedRoom ? formatRoomLabel(linkedRoom) : "None"}
         />
       </div>
 

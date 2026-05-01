@@ -5,6 +5,7 @@ import { Button } from "#/components/ui/button"
 import { Input } from "#/components/ui/input"
 import { RoomTypeBadge } from "#/components/ui/room-type-badge"
 import { RoomType } from "#/generated/prisma/enums"
+import { roomToSearchResultItem } from "#/lib/room-format"
 import { getRoomTypeMeta, getRoomTypeOutline } from "#/lib/room-types"
 import { getAllRoomsData } from "#/server/room.functions"
 
@@ -43,19 +44,9 @@ const DemoPage = () => {
     void getAllRoomsData().then((rooms) => {
       setAllResults(
         rooms.map((room) => {
-          const meta = getRoomTypeMeta(room.type)
-          const outlineColor = getRoomTypeOutline(room.type)
-          const Icon = meta.icon
-          return {
-            id: room.roomNumber,
-            icon: <Icon className="w-5 h-5" style={{ color: outlineColor }} />,
-            iconBgStyle: {
-              backgroundColor: meta.color,
-              outline: `2px solid ${outlineColor}`,
-            },
-            title: room.displayName ?? room.type,
-            type: `${meta.label} · Floor ${room.floor}`,
-          }
+          const item = roomToSearchResultItem(room)
+          // Demo view appends the floor number to the type label.
+          return { ...item, type: `${item.type} · Floor ${room.floor}` }
         }),
       )
     })

@@ -3,11 +3,9 @@ import { useState } from "react"
 import { useFuzzySearch } from "#/components/hooks/use-fuse"
 import { SearchBar } from "#/components/ui/search-bar"
 import { useMap } from "#/lib/map-context"
-import { getRoomTypeMeta, getRoomTypeOutline } from "#/lib/room-types"
+import { roomToSearchResultItem, type RoomSearchResultItem } from "#/lib/room-format"
 
 import type { SearchResultItem } from "#/components/ui/search-result-list"
-
-type SearchResultItemWithDbId = SearchResultItem & { dbId: string }
 
 export const FuzzySearchBar = ({ className }: { className?: string }) => {
   const { setViewingRoomId, setEditingRoomId, activeTool } = useMap()
@@ -15,21 +13,9 @@ export const FuzzySearchBar = ({ className }: { className?: string }) => {
   const { results, isLoading } = useFuzzySearch(query)
   const hasQuery = query.trim().length > 0
 
-  const fuzzyResults: SearchResultItem[] = isLoading
+  const fuzzyResults: RoomSearchResultItem[] = isLoading
     ? []
-    : results.map((r) => {
-        const meta = getRoomTypeMeta(r.item.type)
-        const outline = getRoomTypeOutline(r.item.type)
-        const Icon = meta.icon
-        return {
-          id: r.item.roomNumber,
-          icon: <Icon className="w-5 h-5" style={{ color: outline }} />,
-          iconBgStyle: { backgroundColor: meta.color, outline: `2px solid ${outline}` },
-          title: r.item.displayName ?? "",
-          type: meta.label,
-          dbId: r.item.id,
-        }
-      })
+    : results.map((r) => roomToSearchResultItem(r.item))
   const noResults = hasQuery && !isLoading && fuzzyResults.length === 0
 
   const displayResults: SearchResultItem[] = noResults
@@ -57,7 +43,7 @@ export const FuzzySearchBar = ({ className }: { className?: string }) => {
       results={displayResults}
       onResultClick={(item) => {
         if (item.id === "no results found") return
-        const { dbId } = item as SearchResultItemWithDbId
+        const { dbId } = item as RoomSearchResultItem
         if (activeTool === "default") {
           setViewingRoomId(dbId)
         } else if (["draw-room", "edit-room", "draw-node", "connect-edge"].includes(activeTool)) {
