@@ -339,27 +339,34 @@ export const activateEdgeByIdInDb = async (edgeId: Edge["id"]) => {
 export const createTransitNodesInDb = async (input: {
   x: number
   y: number
-  z: number
   type: "STAIR" | "ELEVATOR"
   floors: number[]
   isActivated: boolean
-  roomId?: string
 }): Promise<{ nodeIds: string[]; edgeIds: string[] }> => {
-  const { x, y, z, type, floors, isActivated, roomId } = input
+  const { x, y, type, floors, isActivated } = input
   const sorted = [...floors].sort((a, b) => a - b)
 
   const createdNodes = await Promise.all(
-    sorted.map((floor) =>
-      addNodeInDb({
+    sorted.map(async (floor) => {
+      const roomMatch = await prisma.$queryRaw<{ id: string }[]>`
+        SELECT r.id FROM "Room" r
+        WHERE r.floor = ${floor}
+          AND r.polygon IS NOT NULL
+          AND ST_Contains(r.polygon, ST_MakePoint(${x}, ${-y}))
+        LIMIT 1
+      `
+      const roomId = roomMatch[0]?.id ?? null
+
+      return addNodeInDb({
         x,
         y,
-        z,
+        z: floor,
         type,
         isActivated,
         floorPlan: { connect: { floor } },
         ...(roomId ? { room: { connect: { id: roomId } } } : {}),
-      }),
-    ),
+      })
+    }),
   )
 
   const createdEdges = await Promise.all(
