@@ -10,7 +10,7 @@ import { deleteEdgeData, getAllEdgesData, getAllNodesData } from "#/server/graph
 const nodeLabel = (floor: number, x: number, y: number) =>
   `Floor ${floor} · (${x.toFixed(2)}, ${y.toFixed(2)})`
 
-export const EdgeMetadataPanel = () => {
+export const EdgePanel = () => {
   const { editingEdgeId, setEditingEdgeId } = useMap()
   const queryClient = useQueryClient()
   const [confirmingDelete, setConfirmingDelete] = useState(false)
