@@ -20,8 +20,8 @@
     "lint": "eslint",
     "format": "prettier --check .",
     "check": "prettier --write . && eslint --fix",
-    "ci": "npm run lint && npm run format && npx tsc --noEmit && npm run build",
-    "knip": "knip"
+    "knip": "knip",
+    "ci": "npm run lint && npm run format && npx tsc --noEmit && npm run build && npm run test"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
