@@ -3,9 +3,11 @@ import { QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools"
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
+import { useEffect } from "react"
 
 import type { QueryClient } from "@tanstack/react-query"
 
+import { registerServiceWorker } from "../lib/register-pwa"
 import { getContext } from "../router"
 import appCss from "../styles.css?url"
 
@@ -14,6 +16,10 @@ interface MyRouterContext {
 }
 
 const RootDocument = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+  useEffect(() => {
+    registerServiceWorker()
+  }, [])
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -53,16 +59,28 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
+        name: "theme-color",
+        content: "#000000",
+      },
+      {
         title: "AAU CPH Nav",
       },
     ],
     links: [
+      {
+        rel: "manifest",
+        href: "/manifest.json",
+      },
       {
         rel: "stylesheet",
         href: appCss,
       },
       {
         rel: "icon",
+        href: "/logo.png",
+      },
+      {
+        rel: "apple-touch-icon",
         href: "/logo.png",
       },
     ],

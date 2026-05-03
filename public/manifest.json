@@ -1,25 +1,42 @@
 {
-  "short_name": "TanStack App",
-  "name": "Create TanStack App Sample",
+  "short_name": "AAU Map",
+  "name": "AAU Copenhagen Indoor Navigation",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "/logoIOS.png",
+      "type": "image/png",
+      "sizes": "180x180"
     },
     {
-      "src": "logo192.png",
+      "src": "/logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "/logo512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "screenshots": [
+    {
+      "src": "/screenshotWide.png",
+      "type": "image/png",
+      "form_factor": "wide",
+      "sizes": "1919x939"
+    },
+    {
+      "src": "/screenshotNarrow.png",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "sizes": "361x784"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
+  "orientation": "portrait",
+  "theme_color": "#2b1f3f",
   "background_color": "#ffffff"
 }
