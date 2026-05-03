@@ -1,9 +1,12 @@
+import { CircleDot } from "lucide-react"
+
 import { useMap } from "#/lib/map-context"
 
 /**
- * Bullseye crosshair shown at viewport center while the user is picking a
- * start coordinate on the map. The accompanying Cancel / Confirm action bar
- * is owned by `<ActionBar />` (admin tools and pick-start share that shell).
+ * Crosshair shown at viewport center while the user is picking a start
+ * coordinate on the map. Uses the same `CircleDot` icon as the placed
+ * start marker, so the picking and placed states read as the same thing.
+ * The accompanying Cancel / Confirm action bar is owned by `<ActionBar />`.
  */
 export const MapPickOverlay = () => {
   const { pickingStart } = useMap()
@@ -12,11 +15,7 @@ export const MapPickOverlay = () => {
 
   return (
     <div className="pointer-events-none absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/20 ring-2 ring-primary">
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/40 ring-2 ring-primary">
-          <div className="h-2 w-2 rounded-full bg-primary" />
-        </div>
-      </div>
+      <CircleDot className="size-9 text-blue-700 drop-shadow-lg" strokeWidth={2.5} />
     </div>
   )
 }
