@@ -1,6 +1,6 @@
-import { getGraph } from "./graph.server"
-
 import { MinPriorityQueue } from "@datastructures-js/priority-queue"
+
+import { getGraph } from "./graph.server"
 
 import type { Edge, Node } from "#/generated/prisma/client"
 import type { AstarInput } from "./astar.functions"
@@ -89,7 +89,6 @@ const findDestinationNode = (destRoom: AstarInput["dest"], startNode: Node): Nod
   return closest("ENDPOINT") ?? closest("DOOR")
 }
 
-
 // Algorithm based on pseudocode written in the report
 export const astar = async (
   profile: AstarInput["profile"],
@@ -130,7 +129,9 @@ export const astar = async (
   open.enqueue({ node: firstNode, f: heuristic(firstNode, destinationNode, profile) })
 
   while (!open.isEmpty()) {
-    const current = open.dequeue()!.node // node in open with lowest f-value
+    const dequeued = open.dequeue()
+    if (!dequeued) break
+    const current = dequeued.node // node in open with lowest f-value
 
     if (current.id === destinationNode.id) {
       return reconstructPath(parent, current)
