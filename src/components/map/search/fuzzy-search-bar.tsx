@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 
 import { useFuzzySearch } from "#/components/hooks/use-fuse"
 import { RoomTypeBadge } from "#/components/ui/room-type-badge"
