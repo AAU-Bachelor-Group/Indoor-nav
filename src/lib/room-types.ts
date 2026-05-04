@@ -65,7 +65,7 @@ export const ROOM_TYPE_META: Record<RoomType, RoomTypeMeta> = {
   QUIET_ROOM: { label: "Quiet room", color: "#c4b5fd", icon: Moon },
 
   // Common areas
-  CORRIDOR: { label: "Corridor / hallway", color: "#94a3b8", icon: DoorOpen },
+  CORRIDOR: { label: "Corridor / hallway", color: "#ffffff", icon: DoorOpen },
   LOUNGE: { label: "Lounge / common area", color: "#f97316", icon: Sofa },
   KITCHEN: { label: "Kitchen / kitchenette", color: "#fb923c", icon: Coffee },
   CANTEEN: { label: "Canteen / cafeteria", color: "#f59e0b", icon: UtensilsCrossed },
@@ -100,17 +100,17 @@ export const ROOM_TYPE_META: Record<RoomType, RoomTypeMeta> = {
 
 export const ROOM_TYPES = Object.keys(ROOM_TYPE_META) as RoomType[]
 
-export const withOpacity = (hex: string, opacity = 0.5): string => {
+export const hexToRgb = (hex: string): string => {
   const num = Number.parseInt(hex.slice(1), 16)
   const r = (num >> 16) & 0xff
   const g = (num >> 8) & 0xff
   const b = num & 0xff
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`
+  return `rgb(${r}, ${g}, ${b})`
 }
 
 export const getRoomTypeMeta = (type: RoomType): RoomTypeMeta => ({
   ...ROOM_TYPE_META[type],
-  color: withOpacity(ROOM_TYPE_META[type].color),
+  color: hexToRgb(ROOM_TYPE_META[type].color),
 })
 
 /**
