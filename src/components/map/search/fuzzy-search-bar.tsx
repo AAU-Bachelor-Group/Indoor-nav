@@ -85,15 +85,14 @@ export const FuzzySearchBar = ({ className }: { className?: string }) => {
                   handleBadgeClick(type)
                 }}
                 className={cn(
-                  "shrink-0 snap-start rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                  isSelected ? "ring-2 ring-secondary" : "",
+                  "shrink-0 snap-start rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 )}
               >
                 <RoomTypeBadge
                   type={type}
                   variant="search"
                   className={cn(
-                    isSelected ? "border-primary" : "border-border/60",
+                    isSelected ? "border-primary ring-2 ring-secondary" : "border-border/60",
                     "cursor-pointer",
                   )}
                 />
