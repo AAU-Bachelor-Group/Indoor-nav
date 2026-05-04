@@ -108,7 +108,14 @@ export const FuzzySearchBar = ({ className }: { className?: string }) => {
                   isSelected ? "ring-2 ring-secondary" : "",
                 )}
               >
-                <RoomTypeBadge type={type} variant="search" className={cn(isSelected ? "border-primary" : "border-border/60", "cursor-pointer")} />
+                <RoomTypeBadge
+                  type={type}
+                  variant="search"
+                  className={cn(
+                    isSelected ? "border-primary" : "border-border/60",
+                    "cursor-pointer",
+                  )}
+                />
               </button>
             )
           })}
