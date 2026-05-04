@@ -7,7 +7,7 @@ const FLOOR_HEIGHT_METERS = 3.25
 
 let graph: Graph | null = null
 
-class Graph {
+export class Graph {
   nodes: Map<Node["id"], Node>
   adjacency: Map<Node["id"], Edge[]>
 
