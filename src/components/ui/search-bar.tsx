@@ -18,6 +18,8 @@ interface SearchBarBaseProps {
   value?: string
   /** aria-label for the input */
   inputAriaLabel?: string
+  /** Optional ref for the internal search input */
+  inputRef?: React.Ref<HTMLInputElement>
 }
 
 /** Standalone bar – no results dropdown */
