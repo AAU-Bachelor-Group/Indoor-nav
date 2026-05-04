@@ -19,6 +19,37 @@ export const TOP_DOWN_POLAR = 0.001
 /** Maximum allowed polar angle (prevents viewing from below the floor) */
 export const MAX_POLAR_ANGLE = Math.PI / 2.2
 
+/**
+ * Smallest polar tilt allowed in 3D mode. Without this, the user can sit at
+ * exactly top-down (polar = 0) where OrbitControls' spherical theta is
+ * undefined — making the compass needle drift and the reset button produce
+ * random orientations on each press. Users who want true top-down should
+ * use 2D render mode.
+ */
+export const MIN_3D_POLAR_ANGLE = 0.05
+
+/** Hard limits on how close/far the user can dolly in 3D (perspective). */
+export const MIN_CAMERA_DISTANCE = 5
+export const MAX_CAMERA_DISTANCE = 100
+
+/** Hard limits on orthographic zoom (2D top-down). */
+export const MIN_CAMERA_ZOOM = 1
+export const MAX_CAMERA_ZOOM = 60
+
+/**
+ * Reference distance / zoom at which `panSpeed` and `rotateSpeed` are at their
+ * base value. As the user zooms out beyond this, both speeds scale down so far
+ * views feel less twitchy (OrbitControls' built-in distance scaling already
+ * compensates for world-units-per-pixel; this softens damped overshoot and
+ * rotational swing around a distant target).
+ */
+export const REF_3D_DISTANCE = 30
+export const REF_2D_ZOOM = 8
+
+/** Base speeds before per-frame modulation. */
+export const BASE_PAN_SPEED = 1
+export const BASE_ROTATE_SPEED = 0.7
+
 /** Snap-to-vertex radius for room polygon drawing, in meters. */
 export const SNAP_RADIUS_METERS = 0.5
 

@@ -212,7 +212,7 @@ export const RoomPolygonsLayer = ({ neighbourOpacityRef }: RoomPolygonsLayerProp
     setViewingRoomId,
     pickingStart,
   } = useMap()
-  const { activeField, pickRoomForActiveField } = useNavigation()
+  const { activeField, pickRoomForActiveField, destination } = useNavigation()
 
   const { data: rooms = [] } = useQuery({
     queryKey: ["rooms"],
@@ -252,7 +252,9 @@ export const RoomPolygonsLayer = ({ neighbourOpacityRef }: RoomPolygonsLayerProp
           key={room.id}
           room={room}
           active={room.floor === currentFloor}
-          selected={room.id === editingRoomId || room.id === viewingRoomId}
+          selected={
+            room.id === editingRoomId || room.id === viewingRoomId || room.id === destination?.id
+          }
           editable={roomsAreClickable && room.floor === currentFloor}
           onSelect={() => {
             handleSelect(room)

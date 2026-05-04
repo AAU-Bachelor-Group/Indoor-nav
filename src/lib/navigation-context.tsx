@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react"
 
+import { useMap } from "#/lib/map-context"
 import { polygonCentroid } from "#/lib/three-utils"
 
 import type { NavigationStart, RoutePreference } from "#/types/navigation"
@@ -60,6 +61,7 @@ const roomToStartPoint = (room: Room) => {
 }
 
 export const NavigationProvider = ({ children }: { children: React.ReactNode }) => {
+  const { focusTarget } = useMap()
   const [start, setStart] = useState<NavigationRequest["start"] | null>(null)
   const [destination, setDestination] = useState<NavigationRequest["destination"] | null>(null)
   const [preference, setPreference] = useState<NavigationRequest["preference"]>("SIMPLE")
@@ -67,14 +69,33 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
   const [activeField, setActiveField] = useState<FieldKey | null>(null)
   const [navigationPath, setNavigationPath] = useState<Node[] | undefined>(undefined)
 
+  // Wrap setStart / setDestination so every assignment also pans the map to
+  // the chosen target. Covers all entry points: search bar, map click,
+  // QR deep-link, future fuzzy-pick, etc.
+  const handleSetStart = useCallback(
+    (value: NavigationRequest["start"] | null) => {
+      setStart(value)
+      if (value) focusTarget(value)
+    },
+    [focusTarget],
+  )
+
+  const handleSetDestination = useCallback(
+    (value: NavigationRequest["destination"] | null) => {
+      setDestination(value)
+      if (value) focusTarget(value)
+    },
+    [focusTarget],
+  )
+
   const pickRoomForActiveField = useCallback(
     (room: Room) => {
       if (!activeField) return
-      if (activeField === "start") setStart(roomToStartPoint(room))
-      else setDestination(room)
+      if (activeField === "start") handleSetStart(roomToStartPoint(room))
+      else handleSetDestination(room)
       setActiveField(null)
     },
-    [activeField],
+    [activeField, handleSetStart, handleSetDestination],
   )
 
   const value = useMemo(
@@ -85,8 +106,8 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
       navigationPanelOpen,
       activeField,
       navigationPath,
-      setStart,
-      setDestination,
+      setStart: handleSetStart,
+      setDestination: handleSetDestination,
       setPreference,
       setNavigationPanelOpen,
       setActiveField,
@@ -100,6 +121,8 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
       navigationPanelOpen,
       activeField,
       navigationPath,
+      handleSetStart,
+      handleSetDestination,
       pickRoomForActiveField,
     ],
   )

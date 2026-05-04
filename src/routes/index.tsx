@@ -1,5 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
-import { useEffect } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
+import { useEffect, useRef } from "react"
+import { z } from "zod"
 
 import { useIsMobile } from "#/components/hooks/use-is-mobile"
 import { ActionBar } from "#/components/map/action-bar/action-bar"
@@ -22,6 +24,63 @@ import { TooltipProvider } from "#/components/ui/tooltip"
 import { useIsLoggedIn } from "#/lib/auth-hooks"
 import { MapProvider, useMap } from "#/lib/map-context"
 import { NavigationProvider, useNavigation } from "#/lib/navigation-context"
+import { polygonCentroid } from "#/lib/three-utils"
+import { getAllNodesData } from "#/server/graph.functions"
+import { getAllRoomsData } from "#/server/room.functions"
+
+/**
+ * QR-deep-link search params. Admins generate one of these from the room/node
+ * edit panels; scanning the resulting QR code opens the app with the start
+ * location pre-populated. Mutually exclusive — `startNode` wins if both set.
+ */
+const searchSchema = z.object({
+  startNode: z.string().optional(),
+  startRoom: z.string().optional(),
+})
+
+/**
+ * One-shot hydration of the navigation start from URL search params. Runs
+ * once after the rooms / nodes queries land, opens the navigation panel,
+ * and lets the existing `setStart` → `focusTarget` plumbing handle the rest.
+ *
+ * After hydration the params are stripped (replaceState, no history entry)
+ * so the URL reflects actual state — otherwise a later refresh would
+ * teleport the user back to the QR'd location even after they picked a
+ * different start.
+ */
+const useStartParamHydration = () => {
+  const search = Route.useSearch()
+  const navigate = useNavigate({ from: "/" })
+  const { data: rooms = [] } = useQuery({ queryKey: ["rooms"], queryFn: () => getAllRoomsData() })
+  const { data: nodes = [] } = useQuery({ queryKey: ["nodes"], queryFn: () => getAllNodesData() })
+  const { setStart, setNavigationPanelOpen } = useNavigation()
+  const hydratedRef = useRef(false)
+
+  useEffect(() => {
+    if (hydratedRef.current) return
+    const clearParams = () => {
+      void navigate({ search: {}, replace: true })
+    }
+    if (search.startNode) {
+      const node = nodes.find((n) => n.id === search.startNode)
+      if (!node) return
+      hydratedRef.current = true
+      setStart(node)
+      setNavigationPanelOpen(true)
+      clearParams()
+      return
+    }
+    if (search.startRoom) {
+      const room = rooms.find((r) => r.id === search.startRoom)
+      if (!room) return
+      hydratedRef.current = true
+      const c = polygonCentroid(room.vertices)
+      setStart({ x: c.x, y: -c.z, floor: room.floor })
+      setNavigationPanelOpen(true)
+      clearParams()
+    }
+  }, [search, rooms, nodes, setStart, setNavigationPanelOpen, navigate])
+}
 
 /**
  * Layout structure (z-stack from bottom to top):
@@ -43,6 +102,8 @@ const Layout = () => {
   const isMobile = useIsMobile()
   const isAdmin = !isPending && isLoggedIn
   const showAdminUI = isAdmin && (!isMobile || debugMode)
+
+  useStartParamHydration()
 
   // Mutual exclusion: opening the navigation panel exits any admin tool, and
   // activating a tool closes the navigation panel. Two effects with no-op
@@ -116,12 +177,15 @@ const Layout = () => {
 
 const App = () => (
   <TooltipProvider>
-    <NavigationProvider>
-      <MapProvider>
+    <MapProvider>
+      <NavigationProvider>
         <Layout />
-      </MapProvider>
-    </NavigationProvider>
+      </NavigationProvider>
+    </MapProvider>
   </TooltipProvider>
 )
 
-export const Route = createFileRoute("/")({ component: App })
+export const Route = createFileRoute("/")({
+  validateSearch: searchSchema,
+  component: App,
+})

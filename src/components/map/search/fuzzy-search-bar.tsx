@@ -8,7 +8,7 @@ import { roomToSearchResultItem, type RoomSearchResultItem } from "#/lib/room-fo
 import type { SearchResultItem } from "#/components/ui/search-result-list"
 
 export const FuzzySearchBar = ({ className }: { className?: string }) => {
-  const { setViewingRoomId, setEditingRoomId, activeTool } = useMap()
+  const { setViewingRoomId, setEditingRoomId, activeTool, focusTarget } = useMap()
   const [query, setQuery] = useState("")
   const { results, isLoading } = useFuzzySearch(query)
   const hasQuery = query.trim().length > 0
@@ -44,11 +44,13 @@ export const FuzzySearchBar = ({ className }: { className?: string }) => {
       onResultClick={(item) => {
         if (item.id === "no results found") return
         const { dbId } = item as RoomSearchResultItem
+        const room = results.find((r) => r.item.id === dbId)?.item
         if (activeTool === "default") {
           setViewingRoomId(dbId)
         } else if (["draw-room", "edit-room", "draw-node", "connect-edge"].includes(activeTool)) {
           setEditingRoomId(dbId)
         }
+        if (room) focusTarget(room)
       }}
       showResultsWhenEmpty={true}
     />

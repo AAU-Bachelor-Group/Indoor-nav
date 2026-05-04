@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { Trash2 } from "lucide-react"
+import { QrCode, Trash2 } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import {
@@ -14,6 +14,7 @@ import {
   TRANSIT_TYPES,
 } from "#/components/panels/node/node-panel-shared"
 import { Panel } from "#/components/panels/panel"
+import { QRCodeDialog } from "#/components/qr-code-dialog"
 import { Button } from "#/components/ui/button"
 import { Label } from "#/components/ui/label"
 import { Switch } from "#/components/ui/switch"
@@ -57,12 +58,17 @@ interface DefaultFooterProps {
   busy: boolean
   saveBusyText: string
   onAskDelete: () => void
+  onGenerateQr: () => void
 }
 
-const DefaultFooter = ({ busy, saveBusyText, onAskDelete }: DefaultFooterProps) => (
+const DefaultFooter = ({ busy, saveBusyText, onAskDelete, onGenerateQr }: DefaultFooterProps) => (
   <>
     <Button className="hover:bg-slate-300" variant="outline" type="submit" disabled={busy}>
       {saveBusyText}
+    </Button>
+    <Button type="button" variant="outline" disabled={busy} onClick={onGenerateQr}>
+      <QrCode className="size-4" />
+      Generate QR code
     </Button>
     <Button type="button" variant="destructive" disabled={busy} onClick={onAskDelete}>
       <Trash2 className="size-4" />
@@ -149,6 +155,12 @@ export const NodeEditPanel = ({ nodeId }: NodeEditPanelProps) => {
   const { setEditingNodeId } = useMap()
   const queryClient = useQueryClient()
   const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [qrOpen, setQrOpen] = useState(false)
+
+  const qrUrl = useMemo(() => {
+    if (typeof window === "undefined") return ""
+    return `${window.location.origin}/?startNode=${encodeURIComponent(nodeId)}`
+  }, [nodeId])
 
   const { data: allNodes = [] } = useQuery({ queryKey: ["nodes"], queryFn: getAllNodesData })
   const { data: allEdges = [] } = useQuery({ queryKey: ["edges"], queryFn: getAllEdgesData })
@@ -391,6 +403,9 @@ export const NodeEditPanel = ({ nodeId }: NodeEditPanelProps) => {
               onAskDelete={() => {
                 setConfirmingDelete(true)
               }}
+              onGenerateQr={() => {
+                setQrOpen(true)
+              }}
             />
           )}
         </form.Subscribe>
@@ -399,15 +414,25 @@ export const NodeEditPanel = ({ nodeId }: NodeEditPanelProps) => {
   )
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        void form.handleSubmit()
-      }}
-    >
-      <Panel open onClose={handleClose} header={header} footer={footer}>
-        {body}
-      </Panel>
-    </form>
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          void form.handleSubmit()
+        }}
+      >
+        <Panel open onClose={handleClose} header={header} footer={footer}>
+          {body}
+        </Panel>
+      </form>
+      <QRCodeDialog
+        open={qrOpen}
+        onOpenChange={setQrOpen}
+        url={qrUrl}
+        title="QR code · Node"
+        description={`Floor ${node.floor} · ${NODE_TYPE_LABELS[node.type] ?? node.type}. Scanning this opens the navigator with this node as the start location.`}
+        filename={`qr-node-${nodeId}`}
+      />
+    </>
   )
 }

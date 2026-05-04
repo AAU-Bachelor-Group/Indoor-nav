@@ -60,15 +60,10 @@ export const Compass = ({ className }: CompassProps) => {
   const resetRotation = () => {
     const controls = controlsRef.current
     if (!controls) return
-    const camera = controls.object
-    const offset = camera.position.clone().sub(controls.target)
-    const spherical = new THREE.Spherical().setFromVector3(offset)
-    spherical.theta = 0
-    offset.setFromSpherical(spherical)
-    camera.position.copy(controls.target).add(offset)
-    camera.up.set(0, 1, 0)
-    camera.lookAt(controls.target)
-    controls.update()
+    // Polar is clamped well off the pole in both modes (2D: TOP_DOWN_POLAR;
+    // 3D: MIN_3D_POLAR_ANGLE), so OrbitControls' cached spherical theta is
+    // well-defined and `setAzimuthalAngle` produces a clean north-up snap.
+    controls.setAzimuthalAngle(0)
   }
 
   if (isSelectingFloor) return null

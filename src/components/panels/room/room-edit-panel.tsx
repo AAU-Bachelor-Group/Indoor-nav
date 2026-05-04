@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Trash2 } from "lucide-react"
-import { useState } from "react"
+import { QrCode, Trash2 } from "lucide-react"
+import { useMemo, useState } from "react"
 
 import { Panel } from "#/components/panels/panel"
 import {
@@ -13,6 +13,7 @@ import {
   RoomTypeField,
   requiredString,
 } from "#/components/panels/room/room-panel-shared"
+import { QRCodeDialog } from "#/components/qr-code-dialog"
 import { Button } from "#/components/ui/button"
 import { useMap } from "#/lib/map-context"
 import { deleteRoomData, updateRoomMetadataData } from "#/server/room.functions"
@@ -32,6 +33,12 @@ export const RoomEditPanel = ({ room }: RoomEditPanelProps) => {
   const { setEditingRoomId } = useMap()
   const queryClient = useQueryClient()
   const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [qrOpen, setQrOpen] = useState(false)
+
+  const qrUrl = useMemo(() => {
+    if (typeof window === "undefined") return ""
+    return `${window.location.origin}/?startRoom=${encodeURIComponent(room.id)}`
+  }, [room.id])
 
   const updateMutation = useMutation({
     mutationFn: async (values: FormValues) => {
@@ -139,6 +146,17 @@ export const RoomEditPanel = ({ room }: RoomEditPanelProps) => {
           </form.Subscribe>
           <Button
             type="button"
+            variant="outline"
+            disabled={isBusy}
+            onClick={() => {
+              setQrOpen(true)
+            }}
+          >
+            <QrCode className="size-4" />
+            Generate QR code
+          </Button>
+          <Button
+            type="button"
             variant="destructive"
             disabled={isBusy}
             onClick={() => {
@@ -207,15 +225,25 @@ export const RoomEditPanel = ({ room }: RoomEditPanelProps) => {
   )
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        void form.handleSubmit()
-      }}
-    >
-      <Panel open onClose={handleClose} header={header} footer={footer}>
-        {body}
-      </Panel>
-    </form>
+    <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          void form.handleSubmit()
+        }}
+      >
+        <Panel open onClose={handleClose} header={header} footer={footer}>
+          {body}
+        </Panel>
+      </form>
+      <QRCodeDialog
+        open={qrOpen}
+        onOpenChange={setQrOpen}
+        url={qrUrl}
+        title={`QR code · Room ${room.roomNumber}`}
+        description="Scanning this opens the navigator with this room as the start location."
+        filename={`qr-room-${room.roomNumber}`}
+      />
+    </>
   )
 }
