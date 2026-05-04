@@ -1,3 +1,5 @@
+import { MinPriorityQueue } from "@datastructures-js/priority-queue"
+
 import { getGraph } from "./graph.server"
 
 import type { Edge, Node } from "#/generated/prisma/client"
@@ -87,11 +89,6 @@ const findDestinationNode = (destRoom: AstarInput["dest"], startNode: Node): Nod
   return closest("ENDPOINT") ?? closest("DOOR")
 }
 
-const insertSorted = (open: [Node, number][], node: Node, f: number): void => {
-  open.push([node, f])
-  open.sort(([, a], [, b]) => a - b)
-}
-
 // Algorithm based on pseudocode written in the report
 export const astar = async (
   profile: AstarInput["profile"],
@@ -120,7 +117,7 @@ export const astar = async (
   // --------------------------------
 
   // open: priority queue ordered by ascending f-value, where f(v) = g[v] + h(v)
-  const open: [Node, number][] = []
+  const open = new MinPriorityQueue<{ node: Node; f: number }>({ compare: (a, b) => a.f - b.f })
   const closed = new Set<Node>()
   // g: best known cost from start to v, default is infinity
   const g = new Map<Node, number>()
@@ -129,11 +126,12 @@ export const astar = async (
   g.set(firstNode, 0)
 
   // insert s with priority h(s)
-  insertSorted(open, firstNode, heuristic(firstNode, destinationNode, profile))
+  open.enqueue({ node: firstNode, f: heuristic(firstNode, destinationNode, profile) })
 
-  while (open.length > 0) {
-    const current = open.shift()?.[0] // node in open with lowest f-value
-    if (!current) break
+  while (!open.isEmpty()) {
+    const dequeued = open.dequeue()
+    if (!dequeued) break
+    const current = dequeued.node // node in open with lowest f-value
 
     if (current.id === destinationNode.id) {
       return reconstructPath(parent, current)
@@ -149,20 +147,19 @@ export const astar = async (
       const candidateCost = (g.get(current) ?? Infinity) + edge.distance
 
       // case 1: If n′ is new if n′ ∉ closed and n′ ∉ open
-      if (!closed.has(neighbor) && !open.some(([n]) => n.id === neighbor.id)) {
+      if (!closed.has(neighbor) && !open.contains(({ node: n }) => n.id === neighbor.id)) {
         g.set(neighbor, candidateCost) // g[n′] ← g′
         parent.set(neighbor, current) // parent[n′] ← n
 
         // update n′ priority in open to g′ + h(n′)
-        insertSorted(
-          open,
-          neighbor,
-          candidateCost + heuristic(neighbor, destinationNode, profile, edge),
-        )
+        open.enqueue({
+          node: neighbor,
+          f: candidateCost + heuristic(neighbor, destinationNode, profile, edge),
+        })
 
         // case 2: cheaper path via n ... else if n′ ∈ open and g′ < g[n′] then
       } else if (
-        open.some(([n]) => n.id === neighbor.id) &&
+        open.contains(({ node: n }) => n.id === neighbor.id) &&
         candidateCost < (g.get(neighbor) ?? Infinity)
       ) {
         // g[n′] ← g′
@@ -172,10 +169,9 @@ export const astar = async (
         parent.set(neighbor, current)
 
         // update n′ priority in open to g′ + h(n′)
-        const existing = open.findIndex(([n]) => n.id === neighbor.id)
-        if (existing !== -1) open.splice(existing, 1)
+        open.remove(({ node: n }) => n.id === neighbor.id)
         const h2 = heuristic(neighbor, destinationNode, profile, edge)
-        insertSorted(open, neighbor, candidateCost + h2)
+        open.enqueue({ node: neighbor, f: candidateCost + h2 })
       }
     })
   }

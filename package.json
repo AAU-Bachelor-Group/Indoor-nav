@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
+    "@datastructures-js/priority-queue": "^6.3.5",
     "@fontsource-variable/inter": "^5.2.8",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
