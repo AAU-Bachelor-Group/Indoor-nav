@@ -87,8 +87,8 @@ const FloorTransitionMarkers = () => {
     // so the user sees one label per elevator/stair ride, not one per floor.
     const merged: FloorTransition[] = []
     for (const t of raw) {
-      const prev = merged[merged.length - 1]
-      if (prev && prev.nodeType === t.nodeType && prev.toFloor === t.fromFloor) {
+      const prev = merged.at(-1)
+      if (prev?.nodeType === t.nodeType && prev.toFloor === t.fromFloor) {
         prev.toFloor = t.toFloor
       } else {
         merged.push({ ...t })
