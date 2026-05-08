@@ -132,7 +132,9 @@ export const Panel = ({
     if (!isMobile) return
     const height = open ? Math.min(currentHeight, viewportPx * 0.55) : 0
     document.documentElement.style.setProperty("--mobile-panel-height", `${height}px`)
-    return () => { document.documentElement.style.setProperty("--mobile-panel-height", "0px"); }
+    return () => {
+      document.documentElement.style.setProperty("--mobile-panel-height", "0px")
+    }
   }, [isMobile, open, currentHeight, viewportPx])
 
   const handlePointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
