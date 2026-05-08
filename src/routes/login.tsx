@@ -1,7 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { useEffect } from "react"
 
 import { LoginForm } from "#/components/login-form"
+import { buttonVariants } from "#/components/ui/button"
 import { useIsLoggedIn } from "#/lib/auth-hooks"
 
 const LoginPage = () => {
@@ -18,9 +19,16 @@ const LoginPage = () => {
   if (isPending || isLoggedIn) return null
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
-      <LoginForm className="w-full max-w-sm" />
-    </main>
+    <>
+      <div className="absolute left-6 top-7">
+        <Link to="/" className={buttonVariants({ variant: "default" })}>
+          ← Back
+        </Link>
+      </div>
+      <main className="flex min-h-screen items-center justify-center px-4">
+        <LoginForm className="w-full max-w-sm" />
+      </main>
+    </>
   )
 }
 
