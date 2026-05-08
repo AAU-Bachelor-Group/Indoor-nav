@@ -27,6 +27,8 @@ interface PanelProps {
    * header-only minimum either way. Desktop is always full-height.
    */
   fullHeight?: boolean
+  snappedToCollapsed?: boolean
+  bodyRef?: React.RefObject<HTMLDivElement>
 }
 
 /**
@@ -51,12 +53,15 @@ export const Panel = ({
   children,
   onClose,
   fullHeight = false,
+  snappedToCollapsed = false,
+  bodyRef: externalBodyRef
 }: PanelProps) => {
   const isMobile = useIsMobile()
   const handleRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const footerRef = useRef<HTMLDivElement>(null)
-  const bodyRef = useRef<HTMLDivElement>(null)
+  const internalBodyRef = useRef<HTMLDivElement>(null)
+  const bodyRef = externalBodyRef ?? internalBodyRef
 
   const [handlePx, setHandlePx] = useState(0)
   const [headerPx, setHeaderPx] = useState(0)
@@ -110,6 +115,7 @@ export const Panel = ({
   const collapsedPx = handlePx + headerPx + footerPx
   const naturalPx = collapsedPx + contentPx
   const expandedPx = fullHeight ? maxPx : Math.min(naturalPx, maxPx)
+  const minimizePx = handlePx + expandedPx / 2
   const snapMidPx = (collapsedPx + expandedPx) / 2
 
   // On open, clear any drag-locked height so the live default snap (driven
@@ -157,6 +163,12 @@ export const Panel = ({
     setDragging(false)
     setHeightPx(currentHeight > snapMidPx ? expandedPx : collapsedPx)
   }
+
+  useLayoutEffect(() => {
+    if (isMobile && snappedToCollapsed) {
+      setHeightPx(minimizePx)
+    }
+  }, [snappedToCollapsed, isMobile, collapsedPx])
 
   return (
     <aside

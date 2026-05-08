@@ -240,6 +240,7 @@ export const NavigationPanel = () => {
   }
 
   const canStart = start !== null && destination !== null
+  const isMinimized = canStart && activeField === null
 
   const headerText = (() => {
     if (activeField !== null) return `Selecting ${FIELD_LABEL[activeField]} - pick a result below`
@@ -325,6 +326,7 @@ export const NavigationPanel = () => {
       onClose={handleClose}
       header={header}
       footer={footer}
+      snappedToCollapsed={isMinimized}
     >
       <div className="sticky top-0 z-10 flex flex-col gap-1 bg-popover px-4 pb-4">
         {FIELDS.map((field, idx) => (
