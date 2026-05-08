@@ -321,12 +321,22 @@ export const NavigationPanel = () => {
   return (
     <Panel
       open={navigationPanelOpen && !pickingStart}
-      fullHeight
+      // `full` while searching so the result list gets the whole sheet;
+      // `auto` otherwise so the panel hugs its content (just the two
+      // fields and toggle when you're picking, even tighter when you're
+      // ready to start).
+      size={activeField !== null ? "full" : "auto"}
       onClose={handleClose}
       header={header}
       footer={footer}
     >
-      <div className="sticky top-0 z-10 flex flex-col gap-1 bg-popover px-4 pb-4">
+      {/*
+        Direct children of the Panel body, which is itself a flex column.
+        The fields stay fixed (`shrink-0`); the results section, when
+        present, takes the remaining space and is the only thing that
+        scrolls (`flex-1 min-h-0 overflow-y-auto`).
+      */}
+      <div className="shrink-0 flex flex-col gap-1 px-4 pb-4">
         {FIELDS.map((field, idx) => (
           <Fragment key={field.key}>
             {idx > 0 && <DotConnector />}
@@ -334,29 +344,34 @@ export const NavigationPanel = () => {
           </Fragment>
         ))}
 
-        <ToggleGroup
-          aria-label="Routing preference"
-          value={[preference]}
-          onValueChange={(next) => {
-            // Single-select: ignore the empty case (require one selected).
-            const [picked] = next
-            if (picked) setPreference(picked as RoutePreference)
-          }}
-          className="mt-4 w-full [&>button]:flex-1"
-        >
-          {PREFERENCE_OPTIONS.map(({ value, label, icon: Icon }) => (
-            <ToggleGroupItem key={value} value={value} size="sm" aria-label={label}>
-              <Icon className="size-4" />
-              {label}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
+        {/* Hide the route-preference toggle while a search is active so
+            the results section gets that vertical space — particularly
+            valuable on mobile with the keyboard up. */}
+        {activeField === null && (
+          <ToggleGroup
+            aria-label="Routing preference"
+            value={[preference]}
+            onValueChange={(next) => {
+              // Single-select: ignore the empty case (require one selected).
+              const [picked] = next
+              if (picked) setPreference(picked as RoutePreference)
+            }}
+            className="mt-4 w-full [&>button]:flex-1"
+          >
+            {PREFERENCE_OPTIONS.map(({ value, label, icon: Icon }) => (
+              <ToggleGroupItem key={value} value={value} size="sm" aria-label={label}>
+                <Icon className="size-4" />
+                {label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        )}
       </div>
 
       {activeField !== null && (
-        <>
+        <div className="min-h-0 flex-1 overflow-y-auto">
           <Separator className="bg-white mx-4 my-2" />
-          <div className="mx-2">
+          <div className="mx-2 pb-2">
             <div className="py-2 text-xs font-medium uppercase tracking-wide text-primary-foreground">
               Results for {FIELD_LABEL[activeField]}
             </div>
@@ -378,15 +393,13 @@ export const NavigationPanel = () => {
                 items={roomResults}
                 onItemClick={handlePickRoom}
                 bare
-                className="bg-white overflow-y-scroll"
+                className="bg-white"
               />
             ) : (
-              <div className="px-4 py-6 text-sm text-muted-foreground max-h-full">
-                {emptyResultsMessage}
-              </div>
+              <div className="px-4 py-6 text-sm text-muted-foreground">{emptyResultsMessage}</div>
             )}
           </div>
-        </>
+        </div>
       )}
     </Panel>
   )

@@ -177,6 +177,10 @@ export const RoomInfoPanel = () => {
   return (
     <Panel
       open={open}
+      // Chrome-only by default — just the room header and the primary
+      // action. When a route is active, the user drags up to reveal the
+      // distance / time / floor change details.
+      size="min"
       onClose={() => {
         setViewingRoomId(null)
         setNavigationPath?.(undefined)
