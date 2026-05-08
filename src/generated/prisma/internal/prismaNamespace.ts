@@ -1221,9 +1221,6 @@ export type NodeScalarFieldEnum = (typeof NodeScalarFieldEnum)[keyof typeof Node
 export const EdgeScalarFieldEnum = {
   id: 'id',
   distance: 'distance',
-  doors: 'doors',
-  stairs: 'stairs',
-  elevators: 'elevators',
   isActivated: 'isActivated',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

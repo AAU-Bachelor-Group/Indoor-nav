@@ -37,9 +37,6 @@ export type EdgeSumAggregateOutputType = {
 export type EdgeMinAggregateOutputType = {
   id: string | null
   distance: number | null
-  doors: boolean | null
-  stairs: boolean | null
-  elevators: boolean | null
   isActivated: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -50,9 +47,6 @@ export type EdgeMinAggregateOutputType = {
 export type EdgeMaxAggregateOutputType = {
   id: string | null
   distance: number | null
-  doors: boolean | null
-  stairs: boolean | null
-  elevators: boolean | null
   isActivated: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -63,9 +57,6 @@ export type EdgeMaxAggregateOutputType = {
 export type EdgeCountAggregateOutputType = {
   id: number
   distance: number
-  doors: number
-  stairs: number
-  elevators: number
   isActivated: number
   createdAt: number
   updatedAt: number
@@ -86,9 +77,6 @@ export type EdgeSumAggregateInputType = {
 export type EdgeMinAggregateInputType = {
   id?: true
   distance?: true
-  doors?: true
-  stairs?: true
-  elevators?: true
   isActivated?: true
   createdAt?: true
   updatedAt?: true
@@ -99,9 +87,6 @@ export type EdgeMinAggregateInputType = {
 export type EdgeMaxAggregateInputType = {
   id?: true
   distance?: true
-  doors?: true
-  stairs?: true
-  elevators?: true
   isActivated?: true
   createdAt?: true
   updatedAt?: true
@@ -112,9 +97,6 @@ export type EdgeMaxAggregateInputType = {
 export type EdgeCountAggregateInputType = {
   id?: true
   distance?: true
-  doors?: true
-  stairs?: true
-  elevators?: true
   isActivated?: true
   createdAt?: true
   updatedAt?: true
@@ -212,9 +194,6 @@ export type EdgeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type EdgeGroupByOutputType = {
   id: string
   distance: number
-  doors: boolean
-  stairs: boolean
-  elevators: boolean
   isActivated: boolean
   createdAt: Date
   updatedAt: Date
@@ -248,9 +227,6 @@ export type EdgeWhereInput = {
   NOT?: Prisma.EdgeWhereInput | Prisma.EdgeWhereInput[]
   id?: Prisma.StringFilter<"Edge"> | string
   distance?: Prisma.FloatFilter<"Edge"> | number
-  doors?: Prisma.BoolFilter<"Edge"> | boolean
-  stairs?: Prisma.BoolFilter<"Edge"> | boolean
-  elevators?: Prisma.BoolFilter<"Edge"> | boolean
   isActivated?: Prisma.BoolFilter<"Edge"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Edge"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Edge"> | Date | string
@@ -263,9 +239,6 @@ export type EdgeWhereInput = {
 export type EdgeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   distance?: Prisma.SortOrder
-  doors?: Prisma.SortOrder
-  stairs?: Prisma.SortOrder
-  elevators?: Prisma.SortOrder
   isActivated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -282,9 +255,6 @@ export type EdgeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.EdgeWhereInput[]
   NOT?: Prisma.EdgeWhereInput | Prisma.EdgeWhereInput[]
   distance?: Prisma.FloatFilter<"Edge"> | number
-  doors?: Prisma.BoolFilter<"Edge"> | boolean
-  stairs?: Prisma.BoolFilter<"Edge"> | boolean
-  elevators?: Prisma.BoolFilter<"Edge"> | boolean
   isActivated?: Prisma.BoolFilter<"Edge"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Edge"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Edge"> | Date | string
@@ -297,9 +267,6 @@ export type EdgeWhereUniqueInput = Prisma.AtLeast<{
 export type EdgeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   distance?: Prisma.SortOrder
-  doors?: Prisma.SortOrder
-  stairs?: Prisma.SortOrder
-  elevators?: Prisma.SortOrder
   isActivated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -318,9 +285,6 @@ export type EdgeScalarWhereWithAggregatesInput = {
   NOT?: Prisma.EdgeScalarWhereWithAggregatesInput | Prisma.EdgeScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Edge"> | string
   distance?: Prisma.FloatWithAggregatesFilter<"Edge"> | number
-  doors?: Prisma.BoolWithAggregatesFilter<"Edge"> | boolean
-  stairs?: Prisma.BoolWithAggregatesFilter<"Edge"> | boolean
-  elevators?: Prisma.BoolWithAggregatesFilter<"Edge"> | boolean
   isActivated?: Prisma.BoolWithAggregatesFilter<"Edge"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Edge"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Edge"> | Date | string
@@ -331,9 +295,6 @@ export type EdgeScalarWhereWithAggregatesInput = {
 export type EdgeCreateInput = {
   id?: string
   distance: number
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -344,9 +305,6 @@ export type EdgeCreateInput = {
 export type EdgeUncheckedCreateInput = {
   id?: string
   distance: number
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -357,9 +315,6 @@ export type EdgeUncheckedCreateInput = {
 export type EdgeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -370,9 +325,6 @@ export type EdgeUpdateInput = {
 export type EdgeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -383,9 +335,6 @@ export type EdgeUncheckedUpdateInput = {
 export type EdgeCreateManyInput = {
   id?: string
   distance: number
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -396,9 +345,6 @@ export type EdgeCreateManyInput = {
 export type EdgeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -407,9 +353,6 @@ export type EdgeUpdateManyMutationInput = {
 export type EdgeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -435,9 +378,6 @@ export type EdgeFromNodeIdToNodeIdCompoundUniqueInput = {
 export type EdgeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   distance?: Prisma.SortOrder
-  doors?: Prisma.SortOrder
-  stairs?: Prisma.SortOrder
-  elevators?: Prisma.SortOrder
   isActivated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -452,9 +392,6 @@ export type EdgeAvgOrderByAggregateInput = {
 export type EdgeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   distance?: Prisma.SortOrder
-  doors?: Prisma.SortOrder
-  stairs?: Prisma.SortOrder
-  elevators?: Prisma.SortOrder
   isActivated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -465,9 +402,6 @@ export type EdgeMaxOrderByAggregateInput = {
 export type EdgeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   distance?: Prisma.SortOrder
-  doors?: Prisma.SortOrder
-  stairs?: Prisma.SortOrder
-  elevators?: Prisma.SortOrder
   isActivated?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -566,9 +500,6 @@ export type EdgeUncheckedUpdateManyWithoutToNodeNestedInput = {
 export type EdgeCreateWithoutFromNodeInput = {
   id?: string
   distance: number
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -578,9 +509,6 @@ export type EdgeCreateWithoutFromNodeInput = {
 export type EdgeUncheckedCreateWithoutFromNodeInput = {
   id?: string
   distance: number
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -600,9 +528,6 @@ export type EdgeCreateManyFromNodeInputEnvelope = {
 export type EdgeCreateWithoutToNodeInput = {
   id?: string
   distance: number
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -612,9 +537,6 @@ export type EdgeCreateWithoutToNodeInput = {
 export type EdgeUncheckedCreateWithoutToNodeInput = {
   id?: string
   distance: number
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -653,9 +575,6 @@ export type EdgeScalarWhereInput = {
   NOT?: Prisma.EdgeScalarWhereInput | Prisma.EdgeScalarWhereInput[]
   id?: Prisma.StringFilter<"Edge"> | string
   distance?: Prisma.FloatFilter<"Edge"> | number
-  doors?: Prisma.BoolFilter<"Edge"> | boolean
-  stairs?: Prisma.BoolFilter<"Edge"> | boolean
-  elevators?: Prisma.BoolFilter<"Edge"> | boolean
   isActivated?: Prisma.BoolFilter<"Edge"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Edge"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Edge"> | Date | string
@@ -682,9 +601,6 @@ export type EdgeUpdateManyWithWhereWithoutToNodeInput = {
 export type EdgeCreateManyFromNodeInput = {
   id?: string
   distance: number
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -694,9 +610,6 @@ export type EdgeCreateManyFromNodeInput = {
 export type EdgeCreateManyToNodeInput = {
   id?: string
   distance: number
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -706,9 +619,6 @@ export type EdgeCreateManyToNodeInput = {
 export type EdgeUpdateWithoutFromNodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -718,9 +628,6 @@ export type EdgeUpdateWithoutFromNodeInput = {
 export type EdgeUncheckedUpdateWithoutFromNodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -730,9 +637,6 @@ export type EdgeUncheckedUpdateWithoutFromNodeInput = {
 export type EdgeUncheckedUpdateManyWithoutFromNodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -742,9 +646,6 @@ export type EdgeUncheckedUpdateManyWithoutFromNodeInput = {
 export type EdgeUpdateWithoutToNodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -754,9 +655,6 @@ export type EdgeUpdateWithoutToNodeInput = {
 export type EdgeUncheckedUpdateWithoutToNodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -766,9 +664,6 @@ export type EdgeUncheckedUpdateWithoutToNodeInput = {
 export type EdgeUncheckedUpdateManyWithoutToNodeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   distance?: Prisma.FloatFieldUpdateOperationsInput | number
-  doors?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  stairs?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  elevators?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActivated?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -780,9 +675,6 @@ export type EdgeUncheckedUpdateManyWithoutToNodeInput = {
 export type EdgeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   distance?: boolean
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -795,9 +687,6 @@ export type EdgeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type EdgeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   distance?: boolean
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -810,9 +699,6 @@ export type EdgeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type EdgeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   distance?: boolean
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -825,9 +711,6 @@ export type EdgeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type EdgeSelectScalar = {
   id?: boolean
   distance?: boolean
-  doors?: boolean
-  stairs?: boolean
-  elevators?: boolean
   isActivated?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -835,7 +718,7 @@ export type EdgeSelectScalar = {
   toNodeId?: boolean
 }
 
-export type EdgeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "distance" | "doors" | "stairs" | "elevators" | "isActivated" | "createdAt" | "updatedAt" | "fromNodeId" | "toNodeId", ExtArgs["result"]["edge"]>
+export type EdgeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "distance" | "isActivated" | "createdAt" | "updatedAt" | "fromNodeId" | "toNodeId", ExtArgs["result"]["edge"]>
 export type EdgeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   fromNode?: boolean | Prisma.NodeDefaultArgs<ExtArgs>
   toNode?: boolean | Prisma.NodeDefaultArgs<ExtArgs>
@@ -858,9 +741,6 @@ export type $EdgePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     distance: number
-    doors: boolean
-    stairs: boolean
-    elevators: boolean
     isActivated: boolean
     createdAt: Date
     updatedAt: Date
@@ -1297,9 +1177,6 @@ export interface Prisma__EdgeClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface EdgeFieldRefs {
   readonly id: Prisma.FieldRef<"Edge", 'String'>
   readonly distance: Prisma.FieldRef<"Edge", 'Float'>
-  readonly doors: Prisma.FieldRef<"Edge", 'Boolean'>
-  readonly stairs: Prisma.FieldRef<"Edge", 'Boolean'>
-  readonly elevators: Prisma.FieldRef<"Edge", 'Boolean'>
   readonly isActivated: Prisma.FieldRef<"Edge", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Edge", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Edge", 'DateTime'>

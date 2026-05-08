@@ -138,9 +138,6 @@ model Node {
 model Edge {
   id          String   @id @default(cuid())
   distance    Float
-  doors       Boolean  @default(false)
-  stairs      Boolean  @default(false)
-  elevators   Boolean  @default(false)
   isActivated Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

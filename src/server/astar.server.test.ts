@@ -5,11 +5,15 @@ import { Graph } from "./graph.server"
 import type { Node, Edge } from "#/generated/prisma/client"
 import type { AstarInput } from "#/types/navigation"
 
-// vi.hoisted runs before vi.mock factories, making graphRef safe to close over
+// vi.hoisted runs before vi.mock factories, making refs safe to close over
 const graphRef = vi.hoisted(() => ({ current: null as unknown as Graph }))
+const queryRawMock = vi.hoisted(() => vi.fn().mockResolvedValue([]))
 
-// Prevent the real db module from running (no database in tests)
-vi.mock("#/db", () => ({ prisma: {} }))
+// Prevent the real db module from running (no database in tests). $queryRaw
+// is stubbed because astar.server uses it to look up which room a start
+// coordinate falls inside; tests that exercise that path override it via
+// `queryRawMock.mockResolvedValueOnce(...)`.
+vi.mock("#/db", () => ({ prisma: { $queryRaw: queryRawMock } }))
 
 vi.mock("./graph.server", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./graph.server")>()
@@ -53,9 +57,6 @@ function makeEdge(
     fromNodeId,
     toNodeId,
     distance,
-    doors: false,
-    stairs: false,
-    elevators: false,
     isActivated: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -86,6 +87,8 @@ beforeEach(() => {
   for (const id of [...graphRef.current.nodes.keys()]) {
     graphRef.current.deleteNodeById(id)
   }
+  queryRawMock.mockReset()
+  queryRawMock.mockResolvedValue([])
 })
 
 // Tests
@@ -259,6 +262,28 @@ describe("astar", () => {
     const result = await astar("FAST", makeDest([b]), { x: 0.5, y: 0.5, floor: 1 })
 
     expect(ids(result)).toEqual(["a", "b"])
+  })
+
+  it("snaps start to the room's own node when XYZ falls inside a room, even if a hallway node is closer", async () => {
+    // Hallway node at (1,1) is geometrically nearest to the start (2,2),
+    // but the start sits inside room R, whose door is further away at (8,8).
+    // Without the room lookup, the route would incorrectly start in the
+    // hallway and "exit through the wall."
+    const door = makeNode("door", 8, 8, { type: "DOOR", floor: 1, roomId: "R" })
+    const hallway = makeNode("hallway", 1, 1, { floor: 1 })
+    const dest = makeNode("dest", 100, 100, { type: "ENDPOINT", floor: 1 })
+    graphRef.current.addNode(door)
+    graphRef.current.addNode(hallway)
+    graphRef.current.addNode(dest)
+    graphRef.current.addEdge(makeEdge("door", "hallway", 10))
+    graphRef.current.addEdge(makeEdge("hallway", "dest", 100))
+
+    // ST_Contains returns room "R" for this start point
+    queryRawMock.mockResolvedValueOnce([{ id: "R" }])
+
+    const result = await astar("FAST", makeDest([dest]), { x: 2, y: 2, floor: 1 })
+
+    expect(ids(result)).toEqual(["door", "hallway", "dest"])
   })
 
   it("routes through a 2643-node grid within 1 second", async () => {
