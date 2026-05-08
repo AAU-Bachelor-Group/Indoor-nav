@@ -42,8 +42,16 @@ export const FocusRig = () => {
     // Cap dt so a tab-resume doesn't snap the camera in one frame.
     const dt = Math.min(rawDt, 0.1)
 
+    // Pan target and camera together so the orbit pivot moves but the
+    // camera's view direction relative to the target stays the same.
+    // Damping target alone would just rotate the camera to keep looking at
+    // the new pivot, which manifests as an unwanted "snap" in tilt/azimuth.
+    const prevTargetX = controls.target.x
+    const prevTargetZ = controls.target.z
     controls.target.x = THREE.MathUtils.damp(controls.target.x, req.worldX, DAMP_LAMBDA, dt)
     controls.target.z = THREE.MathUtils.damp(controls.target.z, req.worldZ, DAMP_LAMBDA, dt)
+    controls.object.position.x += controls.target.x - prevTargetX
+    controls.object.position.z += controls.target.z - prevTargetZ
 
     const ortho = controls.object as THREE.OrthographicCamera
     const isOrtho = ortho.isOrthographicCamera
@@ -86,8 +94,8 @@ export const FocusRig = () => {
       }
     }
 
-    // Don't gate on `controls.target.y` — that's lerping toward the active
-    // floor at LERP_SPEED via CameraRig and may take longer than the focus.
+    // Don't gate on `controls.target.y` — that's damped toward the active
+    // floor by CameraRig and may take longer than the XZ focus.
     const xzDone =
       Math.hypot(controls.target.x - req.worldX, controls.target.z - req.worldZ) < SETTLE_XZ
 

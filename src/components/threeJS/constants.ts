@@ -1,9 +1,6 @@
 /** Vertical distance between floors in world units */
 export const FLOOR_HEIGHT = 8
 
-/** Interpolation speed for camera and target animations (0–1, higher = faster) */
-export const LERP_SPEED = 0.08
-
 /** Camera tilt angle (radians) below which neighbour floors are fully transparent */
 export const TILT_FADE_START = Math.PI / 12 // 15°
 
