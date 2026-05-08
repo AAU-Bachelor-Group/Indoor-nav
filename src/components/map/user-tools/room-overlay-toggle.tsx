@@ -9,8 +9,9 @@ interface RoomOverlayToggleProps {
 }
 
 export const RoomOverlayToggle = ({ className }: RoomOverlayToggleProps) => {
-  const { roomOverlayMode, setRoomOverlayMode, isSelectingFloor } = useMap()
+  const { roomOverlayMode, setRoomOverlayMode, isSelectingFloor, renderMode } = useMap()
   const isHidden = roomOverlayMode === "none"
+  const is3d = renderMode === "3d"
 
   if (isSelectingFloor) return null
 
@@ -27,6 +28,7 @@ export const RoomOverlayToggle = ({ className }: RoomOverlayToggleProps) => {
             aria-pressed={!isHidden}
             aria-label={tooltipLabel}
             className={className}
+            disabled={is3d}
             onClick={() => {
               setRoomOverlayMode(isHidden ? "icon" : "none")
             }}
