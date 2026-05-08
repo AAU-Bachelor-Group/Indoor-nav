@@ -142,6 +142,11 @@ const Layout = () => {
               ? "md:right-96 md:bottom-6"
               : "md:right-6 md:bottom-6"
           }`}
+          style={
+            isMobile && (navigationPanelOpen || viewingRoomId != null) && !pickingStart
+              ? { bottom: "calc(var(--mobile-panel-height, 0px) + 12px)" }
+              : undefined
+          }
         >
           {(!isMobile || mobileExpanded) && (
             <>
