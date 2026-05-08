@@ -51,7 +51,7 @@ const navigationValueToPlacement = (value: NavigationStart | Room): MarkerPlacem
  * marker doesn't project onto an unrelated floor's plan.
  */
 export const NavigationMarkers = () => {
-  const { start, destination } = useNavigation()
+  const { start, destination, navigationPath } = useNavigation()
   const { renderMode, currentFloor, editingRoomId, viewingRoomId } = useMap()
 
   const { data: rooms = [] } = useQuery({
