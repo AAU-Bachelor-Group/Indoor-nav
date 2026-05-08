@@ -105,7 +105,8 @@ const RoomPolygon = ({
   onSelect,
   neighbourOpacityRef,
 }: RoomPolygonProps) => {
-  const { roomOverlayMode } = useMap()
+  const { roomOverlayMode, renderMode } = useMap()
+  const { destination } = useNavigation()
   const { camera } = useThree()
   const meshRef = useRef<THREE.Mesh>(null)
   const materialRef = useRef<THREE.MeshBasicMaterial>(null)
@@ -163,7 +164,13 @@ const RoomPolygon = ({
     let shouldShowIcon = roomOverlayMode === "icon" && active
     let shouldShowLabel = false
 
-    if (shouldShowIcon) {
+    if (renderMode === "3d") {
+      const isDestination = destination?.id === room.id
+      shouldShowIcon = isDestination
+      shouldShowLabel = isDestination
+    }
+
+    if (shouldShowIcon && renderMode !== "3d") {
       if ((camera as THREE.OrthographicCamera).isOrthographicCamera) {
         const zoom = (camera as THREE.OrthographicCamera).zoom
         shouldShowIcon = zoom >= ICON_HIDE_ZOOM_THRESHOLD_2D
