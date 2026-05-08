@@ -169,6 +169,8 @@ export const RoomInfoPanel = () => {
     if (setNavigationPath) {
       setNavigationPath(undefined)
       setStart(null)
+      setViewingRoomId(null)
+      setNavigationPanelOpen(true)
     }
   }
 
