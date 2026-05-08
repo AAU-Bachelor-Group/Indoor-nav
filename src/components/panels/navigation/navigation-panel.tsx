@@ -20,6 +20,7 @@ import { Separator } from "#/components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "#/components/ui/toggle-group"
 import { useMap } from "#/lib/map-context"
 import { useNavigation } from "#/lib/navigation-context"
+import { pointStrictlyInsidePolygon } from "#/lib/polygon-validation"
 import {
   formatNavigationValue,
   roomToSearchResultItem,
@@ -28,11 +29,12 @@ import {
 import { astarFunction } from "#/server/astar.functions"
 import { getRoomWithNodesData } from "#/server/room.functions"
 
-import type { RoutePreference } from "#/types/navigation"
+import type { NavigationStart, RoutePreference } from "#/types/navigation"
 import type { Node } from "#/types/node"
+import type { Room } from "#/types/room"
 
 /** UI-friendly classification for navigation failures. Drives copy + icon. */
-type RouteErrorKind = "no-route" | "destination" | "network" | "unknown"
+type RouteErrorKind = "no-route" | "same-point" | "destination" | "network" | "unknown"
 
 interface RouteError {
   kind: RouteErrorKind
@@ -41,6 +43,7 @@ interface RouteError {
 
 const ROUTE_ERROR_COPY: Record<RouteErrorKind, string> = {
   "no-route": "No route found between these points.",
+  "same-point": "Start and destination are the same - pick a different destination.",
   destination: "Couldn't load destination details. Try again.",
   network: "Connection lost. Check your internet and try again.",
   unknown: "Something went wrong while finding a route. Please try again.",
@@ -48,9 +51,23 @@ const ROUTE_ERROR_COPY: Record<RouteErrorKind, string> = {
 
 const ROUTE_ERROR_ICON: Record<RouteErrorKind, typeof AlertCircle> = {
   "no-route": RouteOff,
+  "same-point": AlertCircle,
   destination: AlertCircle,
   network: WifiOff,
   unknown: AlertCircle,
+}
+
+/**
+ * True when the start point sits inside the destination room's polygon on
+ * the same floor. Routing in this case would just walk from a point inside
+ * the room to that room's own door, which is rarely what the user wants.
+ *
+ * Map y → world -z (the rest of the app uses the same flip; see
+ * `mapPointToThree`), so we negate y when constructing the (x, z) probe.
+ */
+const isStartInsideDestinationRoom = (start: NavigationStart, destination: Room): boolean => {
+  if (start.floor !== destination.floor) return false
+  return pointStrictlyInsidePolygon({ x: start.x, z: -start.y }, destination.vertices)
 }
 
 /** Classify a thrown error into the smallest set of UX-relevant buckets. */
@@ -162,6 +179,11 @@ export const NavigationPanel = () => {
   const handleStart = async () => {
     if (!start || !destination || !setNavigationPath) return
 
+    if (isStartInsideDestinationRoom(start, destination)) {
+      setRouteError({ kind: "same-point", message: ROUTE_ERROR_COPY["same-point"] })
+      return
+    }
+
     setIsComputing(true)
     setRouteError(null)
     // Keep the loading state up for at least this long so a fast response
@@ -186,8 +208,18 @@ export const NavigationPanel = () => {
         },
       })
 
+      // A* returns:
+      // - `null` when the graph can't connect start to destination at all
+      //   (disconnected graph, destination room has no DOOR/ENDPOINT, etc.)
+      // - `[singleNode]` when start == destination, which is truthy but not
+      //   a meaningful route. Treat both as user-visible failures rather
+      //   than silently closing the panel.
       if (!path) {
         setRouteError({ kind: "no-route", message: ROUTE_ERROR_COPY["no-route"] })
+        return
+      }
+      if (path.length < 2) {
+        setRouteError({ kind: "same-point", message: ROUTE_ERROR_COPY["same-point"] })
         return
       }
 
