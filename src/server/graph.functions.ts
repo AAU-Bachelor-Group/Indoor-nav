@@ -72,9 +72,6 @@ export const addEdgeData = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     return await addEdgeInDb({
       distance: data.distance,
-      doors: data.doors,
-      stairs: data.stairs,
-      elevators: data.elevators,
       isActivated: data.isActivated,
       fromNode: { connect: { id: data.fromNodeId } },
       toNode: { connect: { id: data.toNodeId } },

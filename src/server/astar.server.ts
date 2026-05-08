@@ -1,5 +1,7 @@
 import { MinPriorityQueue } from "@datastructures-js/priority-queue"
 
+import { prisma } from "#/db"
+
 import { getGraph } from "./graph.server"
 
 import type { Edge, Node } from "#/generated/prisma/client"
@@ -10,14 +12,37 @@ const TURN_ANGLE_THRESHOLD = 30 // degrees
 
 const graph = await getGraph()
 
-const findClosestNode = async (x: number, y: number, z: number): Promise<Node | null> => {
+/**
+ * Resolve a start coordinate to a graph node. Prefers a node inside the
+ * room the point falls in, so routes don't "exit through the wall" via a
+ * hallway node that happens to be geometrically nearer than the door.
+ */
+const findStartNode = async (x: number, y: number, z: number): Promise<Node | null> => {
   const graph = await getGraph()
-  const candidates = graph.getNodesByFloor(z)
+  const floorNodes = graph.getNodesByFloor(z)
+  if (floorNodes.length === 0) return null
 
+  // 1. Find which room (if any) contains the point. ST_MakePoint takes
+  //    (x, -y) to match the y-flip convention used elsewhere in the app
+  //    (see graph.server.ts).
+  const roomMatch = await prisma.$queryRaw<{ id: string }[]>`
+    SELECT r.id FROM "Room" r
+    WHERE r.floor = ${z}
+      AND r.polygon IS NOT NULL
+      AND ST_Contains(r.polygon, ST_MakePoint(${x}, ${-y}))
+    LIMIT 1
+  `
+  const roomId = roomMatch[0]?.id ?? null
+
+  // 2. Narrow the candidate pool to that room's nodes; fall back to the
+  //    whole floor when the point isn't in a room or the room has no nodes.
+  const inRoom = roomId ? floorNodes.filter((n) => n.roomId === roomId) : []
+  const pool = inRoom.length > 0 ? inRoom : floorNodes
+
+  // 3. Pick the geometrically nearest node from the chosen pool.
   let closest: Node | null = null
   let minDist = Infinity
-
-  for (const node of candidates) {
+  for (const node of pool) {
     const dist = Math.hypot(node.x - x, node.y - y)
     if (dist < minDist) {
       minDist = dist
@@ -100,8 +125,9 @@ export const astar = async (
   if ("id" in start) {
     firstNode = start
   } else {
-    // If start position is not a node, find the closest node to the start position
-    const closest = await findClosestNode(start.x, start.y, start.floor)
+    // If start position is not a node, resolve it to a graph node — preferring
+    // nodes inside the room the start point falls in (typically the door).
+    const closest = await findStartNode(start.x, start.y, start.floor)
     if (!closest) return null
     firstNode = closest
   }
