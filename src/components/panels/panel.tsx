@@ -1,5 +1,5 @@
 import { X } from "lucide-react"
-import { useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 
 import { useIsMobile } from "#/components/hooks/use-is-mobile"
 import { Button } from "#/components/ui/button"
@@ -124,6 +124,16 @@ export const Panel = ({
   // Always clamp to expandedPx so a stale heightPx (set before the keyboard
   // opened and shrank the viewport) never pushes the panel header off-screen.
   const currentHeight = Math.min(heightPx ?? (fullHeight ? expandedPx : collapsedPx), expandedPx)
+
+  // Track panel height as a CSS variable so the map controls can shift above
+  // it on mobile. Capped at 55dvh so buttons stay on-screen even when the
+  // panel is nearly full-screen.
+  useEffect(() => {
+    if (!isMobile) return
+    const height = open ? Math.min(currentHeight, viewportPx * 0.55) : 0
+    document.documentElement.style.setProperty("--mobile-panel-height", `${height}px`)
+    return () => document.documentElement.style.setProperty("--mobile-panel-height", "0px")
+  }, [isMobile, open, currentHeight, viewportPx])
 
   const handlePointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     dragRef.current = { startY: e.clientY, startHeight: currentHeight }
