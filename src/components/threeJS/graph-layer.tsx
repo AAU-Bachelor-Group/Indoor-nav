@@ -25,6 +25,7 @@ interface GraphLayerProps {
 
 const NODE_COLOR = "#3b82f6"
 const NODE_DOOR_COLOR = "#a855f7"
+const NODE_ENDPOINT_COLOR = "#22c55e"
 const NODE_INACTIVE_COLOR = "#ef4444"
 const NODE_HIGHLIGHT_COLOR = "#f97316"
 const CURSOR_COLOR = "#fbbf24"
@@ -79,7 +80,9 @@ const ClickableNode = ({ node, highlighted }: { node: NodeRecord; highlighted: b
               ? NODE_INACTIVE_COLOR
               : node.type === "DOOR"
                 ? NODE_DOOR_COLOR
-                : NODE_COLOR
+                : node.type === "ENDPOINT"
+                  ? NODE_ENDPOINT_COLOR
+                  : NODE_COLOR
         }
       />
     </mesh>
