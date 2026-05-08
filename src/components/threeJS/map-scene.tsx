@@ -1,6 +1,6 @@
 import { OrbitControls } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
-import { Suspense, useMemo, useRef } from "react"
+import { Suspense, useCallback, useMemo, useRef } from "react"
 import * as THREE from "three"
 
 import { useMap } from "#/lib/map-context"
@@ -32,7 +32,17 @@ import { RoomPolygonsLayer } from "./room-polygons-layer"
 const GRID_TOOLS = new Set(["draw-room", "draw-node", "connect-edge"])
 
 export const MapScene = () => {
-  const { floors, currentFloor, renderMode, activeTool, controlsRef, debugMode } = useMap()
+  const {
+    floors,
+    currentFloor,
+    renderMode,
+    activeTool,
+    pickingStart,
+    controlsRef,
+    debugMode,
+    setEditingRoomId,
+    setViewingRoomId,
+  } = useMap()
   const showGrid = debugMode || (activeTool !== "default" && GRID_TOOLS.has(activeTool))
   const activeFloorPlan = floors.find((f) => f.floor === currentFloor) ?? null
   const neighbourOpacityRef = useRef(0)
@@ -43,6 +53,13 @@ export const MapScene = () => {
   // pivot. CameraRig owns the per-frame y-lerp toward the active floor.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const initialTarget = useMemo(() => new THREE.Vector3(0, activeFloor * FLOOR_HEIGHT, 0), [])
+
+  const handleBackgroundMiss = useCallback(() => {
+    if (!pickingStart && (activeTool === "default" || activeTool === "edit-room")) {
+      setEditingRoomId(null)
+      setViewingRoomId(null)
+    }
+  }, [activeTool, pickingStart, setEditingRoomId, setViewingRoomId])
 
   // OrbitControls has built-in modifier-key inversion: with LEFT=PAN, holding
   // Shift/Ctrl/Cmd while left-click-dragging swaps to ROTATE automatically
@@ -69,6 +86,7 @@ export const MapScene = () => {
         cursor: activeTool === "default" ? "default" : "crosshair",
       }}
       orthographic={renderMode === "2d"}
+      onPointerMissed={handleBackgroundMiss}
     >
       <CameraRig
         activeFloor={activeFloor}

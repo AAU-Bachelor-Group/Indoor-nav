@@ -214,9 +214,15 @@ const RoomPolygon = ({
           position={[iconAnchor.x, yOutline, iconAnchor.z]}
           center
           zIndexRange={[0, 0]}
-          pointerEvents="none"
+          pointerEvents="auto"
         >
-          <div className="pointer-events-none flex items-center gap-1 rounded-lg bg-black/60 px-2 py-1 text-xs font-semibold text-white whitespace-nowrap">
+          <div
+            className="flex cursor-pointer items-center gap-1 rounded-lg bg-black/60 px-2 py-1 text-xs font-semibold text-white whitespace-nowrap"
+            onClick={(e) => {
+              e.stopPropagation()
+              onSelect()
+            }}
+          >
             <TypeIcon className="size-3" />
             {labelVisible && (
               <span>{room.displayName === "" ? room.roomNumber : room.displayName}</span>
