@@ -71,6 +71,7 @@ interface PanelProps {
    * Optional ref to the body element (for callers that need to read or
    * control the body's scroll position).
    */
+  snappedToCollapse?: boolean
   bodyRef?: RefObject<HTMLDivElement>
 }
 
@@ -94,6 +95,7 @@ export const Panel = ({
   children,
   onClose,
   size = "auto",
+  snappedToCollapse = false,
   bodyRef: externalBodyRef,
 }: PanelProps) => {
   const isMobile = useIsMobile()
@@ -135,7 +137,7 @@ export const Panel = ({
   /** `min`: chrome only (no body). */
   const minPx = chromePx
   /** `half`: midpoint between `min` and `full`. */
-  const halfPx = (minPx + fullPx) / 2
+  const halfPx = (chrome.handle + fullPx) / 2
   /** `auto`: fits body content, clamped to [min, full]. */
   const autoPx = Math.min(Math.max(chromePx + chrome.content, minPx), fullPx)
   const heightOf = (s: PanelSize) =>
@@ -265,6 +267,14 @@ export const Panel = ({
       Math.abs(px - visibleHeight) < Math.abs(best - visibleHeight) ? px : best,
     )
     setHeightPx(nearest)
+  }
+
+  const [prevSnappedToCollapse, setPrevSnappedToCollapse] = useState(snappedToCollapse)
+  if (snappedToCollapse !== prevSnappedToCollapse) {
+    setPrevSnappedToCollapse(snappedToCollapse)
+    if (isMobile && snappedToCollapse) {
+      setHeightPx(halfPx)
+    }
   }
 
   return (
