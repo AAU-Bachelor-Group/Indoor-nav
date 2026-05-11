@@ -240,6 +240,7 @@ export const NavigationPanel = () => {
   }
 
   const canStart = start !== null && destination !== null
+  const isMinimized = canStart && activeField === null
 
   const headerText = (() => {
     if (activeField !== null) return `Selecting ${FIELD_LABEL[activeField]} - pick a result below`
@@ -329,6 +330,7 @@ export const NavigationPanel = () => {
       onClose={handleClose}
       header={header}
       footer={footer}
+      snappedToCollapse={isMinimized}
     >
       {/*
         Direct children of the Panel body, which is itself a flex column.
