@@ -2,7 +2,7 @@
 FROM node:24-alpine AS base                                                                                                                                                                                                
 WORKDIR /build                                                                                                                                                                                                             
 
-RUN npm install -g pnpm                                   
+RUN npm install -g pnpm@10.33.0                                   
 
 # ─── Stage 2: Install & Build ─────────────────────────────────────────────                                                                                                                                               
 FROM base AS builder

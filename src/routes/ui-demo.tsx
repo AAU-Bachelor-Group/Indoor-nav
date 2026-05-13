@@ -65,7 +65,6 @@ const DemoPage = () => {
   return (
     <main className="min-h-screen bg-background font-sans">
       {/* Simulated map background */}
-      <p>hi</p>
       <div
         className="fixed inset-0 -z-10"
         style={{
