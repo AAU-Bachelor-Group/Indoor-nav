@@ -3,9 +3,17 @@ import { createContext, useCallback, useContext, useMemo, useState } from "react
 import { useMap } from "#/lib/map-context"
 import { polygonCentroid } from "#/lib/three-utils"
 
-import type { NavigationStart, RoutePreference } from "#/types/navigation"
+import type { AstarMetrics, NavigationStart, RoutePreference } from "#/types/navigation"
 import type { Node } from "#/types/node"
 import type { Room } from "#/types/room"
+
+/**
+ * Debug-only metrics collected from the most recent route computation.
+ */
+export interface NavigationDebug {
+  algorithm: AstarMetrics
+  roundTripMs: number
+}
 
 /** Which navigation panel field the user is currently editing. */
 export type FieldKey = "start" | "destination"
@@ -33,6 +41,8 @@ interface NavigationContextValue {
    */
   activeField: FieldKey | null
   navigationPath?: Node[]
+  /** Debug metrics from the most recent route. Always present when a path is. */
+  navigationDebug?: NavigationDebug
   setStart: (start: NavigationRequest["start"] | null) => void
   setDestination: (destination: NavigationRequest["destination"] | null) => void
   setPreference: (preference: NavigationRequest["preference"]) => void
@@ -46,6 +56,7 @@ interface NavigationContextValue {
    */
   pickRoomForActiveField: (room: Room) => void
   setNavigationPath?: (path: Node[] | undefined) => void
+  setNavigationDebug?: (debug: NavigationDebug | undefined) => void
 }
 
 const NavigationContext = createContext<NavigationContextValue | undefined>(undefined)
@@ -68,6 +79,7 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
   const [navigationPanelOpen, setNavigationPanelOpen] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<FieldKey | null>(null)
   const [navigationPath, setNavigationPath] = useState<Node[] | undefined>(undefined)
+  const [navigationDebug, setNavigationDebug] = useState<NavigationDebug | undefined>(undefined)
 
   // Wrap setStart / setDestination so every assignment also pans the map to
   // the chosen target. Covers all entry points: search bar, map click,
@@ -106,6 +118,7 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
       navigationPanelOpen,
       activeField,
       navigationPath,
+      navigationDebug,
       setStart: handleSetStart,
       setDestination: handleSetDestination,
       setPreference,
@@ -113,6 +126,7 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
       setActiveField,
       pickRoomForActiveField,
       setNavigationPath,
+      setNavigationDebug,
     }),
     [
       start,
@@ -121,6 +135,7 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
       navigationPanelOpen,
       activeField,
       navigationPath,
+      navigationDebug,
       handleSetStart,
       handleSetDestination,
       pickRoomForActiveField,

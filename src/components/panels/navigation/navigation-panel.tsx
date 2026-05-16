@@ -95,6 +95,7 @@ export const NavigationPanel = () => {
     setActiveField,
     pickRoomForActiveField,
     setNavigationPath,
+    setNavigationDebug,
   } = useNavigation()
   const { pickingStart, setPickingStart, setViewingRoomId, focusTarget, renderMode, currentFloor } =
     useMap()
@@ -201,7 +202,7 @@ export const NavigationPanel = () => {
       }
 
       const requestStart = performance.now()
-      const path = await astarFunction({
+      const { path, metrics } = await astarFunction({
         data: {
           profile: preference,
           start,
@@ -214,10 +215,10 @@ export const NavigationPanel = () => {
       )
 
       // A* returns:
-      // - `null` when the graph can't connect start to destination at all
+      // - `path: null` when the graph can't connect start to destination at all
       //   (disconnected graph, destination room has no DOOR/ENDPOINT, etc.)
-      // - `[singleNode]` when start == destination, which is truthy but not
-      //   a meaningful route. Treat both as user-visible failures rather
+      // - `path: [singleNode]` when start == destination, which is truthy but
+      //   not a meaningful route. Treat both as user-visible failures rather
       //   than silently closing the panel.
       if (!path) {
         setRouteError({ kind: "no-route", message: ROUTE_ERROR_COPY["no-route"] })
@@ -230,6 +231,7 @@ export const NavigationPanel = () => {
 
       focusRouteToBounds(path)
       setNavigationPath(path)
+      setNavigationDebug?.({ algorithm: metrics, roundTripMs })
       setNavigationPanelOpen(false)
       setViewingRoomId(destination.id)
     } catch (error) {
@@ -331,7 +333,7 @@ export const NavigationPanel = () => {
       // `auto` otherwise so the panel hugs its content (just the two
       // fields and toggle when you're picking, even tighter when you're
       // ready to start).
-      size={activeField !== null ? "full" : "auto"}
+      size={activeField === null ? "auto" : "full"}
       onClose={handleClose}
       header={header}
       footer={footer}

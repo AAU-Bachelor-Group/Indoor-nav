@@ -3,6 +3,8 @@ import { z } from "zod"
 import { RoomTypeSchema } from "./enums"
 import { NodeSchema } from "./node"
 
+import type { Node } from "./node"
+
 /**
  * Routing preferences offered to the user. Single source of truth — the UI,
  * the navigation context, and the A* server function all reference these
@@ -58,3 +60,32 @@ export const AstarInputSchema = z.object({
   start: NavigationStartSchema,
 })
 export type AstarInput = z.infer<typeof AstarInputSchema>
+
+/**
+ * Externally observable metrics for an A* run. Everything here is derived
+ * either from wall-clock timing or from walking the returned path — so
+ * none of it requires instrumenting the algorithm itself.
+ *
+ * Path-quality fields are `null` when no path was found.
+ */
+export interface AstarMetrics {
+  /** Server-side wall-clock spent inside the A* call (incl. start/dest resolution). */
+  durationMs: number
+  /** Sum of Euclidean distances between consecutive nodes on the returned path. */
+  pathDistance: number | null
+  /** Number of times the path crosses to a different floor. */
+  floorTransitions: number | null
+  /** Direction changes above the same threshold A* uses for the turn penalty. */
+  turns: number | null
+  /**
+   * Straight-line distance from start to goal divided by `pathDistance`.
+   * 1.0 means the path was a straight line; lower values mean it had to
+   * detour around walls, floors, or one-way edges.
+   */
+  detourRatio: number | null
+}
+
+export interface AstarResult {
+  path: Node[] | null
+  metrics: AstarMetrics
+}
