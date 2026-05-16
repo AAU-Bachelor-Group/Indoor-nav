@@ -9,6 +9,7 @@ import type { AstarInput } from "#/types/navigation"
 
 const TURN_PENALTY = 1
 const TURN_ANGLE_THRESHOLD = 30 // degrees
+const FLOOR_CHANGE_PENALTY = 5
 
 const graph = await getGraph()
 
@@ -80,6 +81,7 @@ const heuristic = (
   }
 
   let turnPenalty = 0
+  let floorPenalty = 0
 
   if (profile === "SIMPLE" && previousEdge) {
     const fromNode = graph.nodes.get(previousEdge.fromNodeId)
@@ -93,7 +95,14 @@ const heuristic = (
     }
   }
 
-  return Math.hypot(node.x - target.x, node.y - target.y, node.z - target.z) + turnPenalty
+  if (previousEdge) {
+    const fromNode = graph.nodes.get(previousEdge.fromNodeId)
+    if (fromNode && fromNode.floor !== node.floor && node.floor === target.floor) {
+      floorPenalty = FLOOR_CHANGE_PENALTY
+    }
+  }
+
+  return Math.hypot(node.x - target.x, node.y - target.y, node.z - target.z) + turnPenalty + floorPenalty
 }
 
 const findDestinationNode = (destRoom: AstarInput["dest"], startNode: Node): Node | null => {
