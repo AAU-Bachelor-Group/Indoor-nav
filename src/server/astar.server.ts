@@ -102,7 +102,9 @@ const heuristic = (
     }
   }
 
-  return Math.hypot(node.x - target.x, node.y - target.y, node.z - target.z) + turnPenalty + floorPenalty
+  return (
+    Math.hypot(node.x - target.x, node.y - target.y, node.z - target.z) + turnPenalty + floorPenalty
+  )
 }
 
 const findDestinationNode = (destRoom: AstarInput["dest"], startNode: Node): Node | null => {
