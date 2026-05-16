@@ -200,6 +200,7 @@ export const NavigationPanel = () => {
         return
       }
 
+      const requestStart = performance.now()
       const path = await astarFunction({
         data: {
           profile: preference,
@@ -207,6 +208,10 @@ export const NavigationPanel = () => {
           dest: destinationWithNodes,
         },
       })
+      const roundTripMs = performance.now() - requestStart
+      console.warn(
+        `[astar] round-trip ${roundTripMs.toFixed(2)}ms profile=${preference} pathLen=${path?.length ?? "null"}`,
+      )
 
       // A* returns:
       // - `null` when the graph can't connect start to destination at all

@@ -131,6 +131,20 @@ export const astar = async (
   dest: AstarInput["dest"],
   start: AstarInput["start"],
 ) => {
+  const startedAt = performance.now()
+  const result = await runAstar(profile, dest, start)
+  const elapsedMs = performance.now() - startedAt
+  console.warn(
+    `[astar] ${elapsedMs.toFixed(2)}ms profile=${profile} pathLen=${result?.length ?? "null"}`,
+  )
+  return result
+}
+
+const runAstar = async (
+  profile: AstarInput["profile"],
+  dest: AstarInput["dest"],
+  start: AstarInput["start"],
+) => {
   // If start position is a node
   let firstNode: Node
   if ("id" in start) {
