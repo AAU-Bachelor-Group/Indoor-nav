@@ -137,7 +137,7 @@ export const Panel = ({
   /** `min`: chrome only (no body). */
   const minPx = chromePx
   /** `half`: midpoint between `min` and `full`. */
-  const halfPx = (chrome.handle + fullPx) / 2
+  const halfPx = (chromePx + fullPx) / 2
   /** `auto`: fits body content, clamped to [min, full]. */
   const autoPx = Math.min(Math.max(chromePx + chrome.content, minPx), fullPx)
   const heightOf = (s: PanelSize) =>
