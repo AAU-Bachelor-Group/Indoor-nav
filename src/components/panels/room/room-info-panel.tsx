@@ -8,7 +8,7 @@ import { useMap } from "#/lib/map-context"
 import { useNavigation } from "#/lib/navigation-context"
 import { getAllRoomsData } from "#/server/room.functions"
 
-import { PREFERENCE_OPTIONS } from "../navigation/navigation-panel-shared"
+import { NavigationDebugBody, PREFERENCE_OPTIONS } from "../navigation/navigation-panel-shared"
 
 import type { Room } from "#/types/room"
 
@@ -111,12 +111,13 @@ const RoomInfoFooter = ({
  *   handle up to reveal the body details.
  */
 export const RoomInfoPanel = () => {
-  const { viewingRoomId, setViewingRoomId } = useMap()
+  const { viewingRoomId, setViewingRoomId, debugMode } = useMap()
   const {
     setDestination,
     setNavigationPanelOpen,
     navigationPath,
     setNavigationPath,
+    navigationDebug,
     setStart,
     preference,
   } = useNavigation()
@@ -203,6 +204,7 @@ export const RoomInfoPanel = () => {
           routingProfile={preference}
         />
       )}
+      {debugMode && navigationDebug && <NavigationDebugBody debug={navigationDebug} />}
     </Panel>
   )
 }
