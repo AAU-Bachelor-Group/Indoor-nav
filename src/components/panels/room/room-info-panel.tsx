@@ -166,10 +166,10 @@ export const RoomInfoPanel = () => {
   }
 
   const handleStopNavigation = () => {
-    // Clear the navigation path
+    // Clear the active path but keep `start` (and destination) so the user
+    // can tweak one field and re-route without re-entering everything.
     if (setNavigationPath) {
       setNavigationPath(undefined)
-      setStart(null)
       setViewingRoomId(null)
       setNavigationPanelOpen(true)
     }
