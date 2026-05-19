@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UiDemoRouteImport } from './routes/ui-demo'
 import { Route as ManageFloorRouteImport } from './routes/manage-floor'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as BenchRouteImport } from './routes/bench'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -30,6 +31,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BenchRoute = BenchRouteImport.update({
+  id: '/bench',
+  path: '/bench',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bench': typeof BenchRoute
   '/login': typeof LoginRoute
   '/manage-floor': typeof ManageFloorRoute
   '/ui-demo': typeof UiDemoRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bench': typeof BenchRoute
   '/login': typeof LoginRoute
   '/manage-floor': typeof ManageFloorRoute
   '/ui-demo': typeof UiDemoRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bench': typeof BenchRoute
   '/login': typeof LoginRoute
   '/manage-floor': typeof ManageFloorRoute
   '/ui-demo': typeof UiDemoRoute
@@ -65,14 +74,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/bench'
+    | '/login'
+    | '/manage-floor'
+    | '/ui-demo'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
-  id: '__root__' | '/' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
+  to: '/' | '/bench' | '/login' | '/manage-floor' | '/ui-demo' | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/bench'
+    | '/login'
+    | '/manage-floor'
+    | '/ui-demo'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BenchRoute: typeof BenchRoute
   LoginRoute: typeof LoginRoute
   ManageFloorRoute: typeof ManageFloorRoute
   UiDemoRoute: typeof UiDemoRoute
@@ -102,6 +125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bench': {
+      id: '/bench'
+      path: '/bench'
+      fullPath: '/bench'
+      preLoaderRoute: typeof BenchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -121,6 +151,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BenchRoute: BenchRoute,
   LoginRoute: LoginRoute,
   ManageFloorRoute: ManageFloorRoute,
   UiDemoRoute: UiDemoRoute,

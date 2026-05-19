@@ -1,5 +1,5 @@
 /* eslint-disable */
-const CACHE_NAME = "indoor-nav-v2"
+const CACHE_NAME = "indoor-nav-v3"
 const APP_SHELL_URL = "/"
 const PRECACHE_URLS = [
   "/",
@@ -35,6 +35,16 @@ self.addEventListener("fetch", (event) => {
   const { request } = event
 
   if (request.method !== "GET") {
+    return
+  }
+
+  // Never cache server-function RPC responses. They depend on database state
+  // (rooms, nodes, graph edits made by admins) and the cache-first strategy
+  // below has no invalidation, so a cached A*/room response would shadow
+  // every subsequent edit until CACHE_NAME is bumped. Let these go straight
+  // to the network; TanStack Query handles their in-tab caching with proper
+  // invalidation on mutation.
+  if (new URL(request.url).pathname.startsWith("/_serverFn/")) {
     return
   }
 
