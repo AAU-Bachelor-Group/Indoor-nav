@@ -25,9 +25,12 @@ export const MAX_POLAR_ANGLE = Math.PI / 2.2
  */
 export const MIN_3D_POLAR_ANGLE = 0.05
 
-/** Hard limits on how close/far the user can dolly in 3D (perspective). */
-export const MIN_CAMERA_DISTANCE = 5
-export const MAX_CAMERA_DISTANCE = 100
+/** Hard floor/ceiling on dolly distance. `CameraRig` raises the effective
+ * minimum with tilt to keep the floor in front of the camera's depth=0
+ * plane — this constant is the floor at near-top-down where the dynamic
+ * constraint is trivially small. */
+export const MIN_CAMERA_DISTANCE = 1
+export const MAX_CAMERA_DISTANCE = 500
 
 /** Hard limits on orthographic zoom (2D top-down). */
 export const MIN_CAMERA_ZOOM = 1

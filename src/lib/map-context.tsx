@@ -105,6 +105,14 @@ interface MapContextValue {
    */
   gridSpacingRef: RefObject<number | null>
   /**
+   * Per-floor world-space half-extents written by `<FloorPlane>` after the
+   * texture loads. `CameraRig` reads the active floor's value to dynamically
+   * raise OrbitControls' minDistance with tilt — at any non-zero polar, the
+   * portion of the floor "behind" the camera's xz position has depth ≤ 0 in
+   * clip space and WebGL slices it at the near plane.
+   */
+  floorExtentsRef: RefObject<Map<number, { halfWidth: number; halfHeight: number }>>
+  /**
    * Ref to the underlying OrbitControls instance. Populated by MapScene after
    * mount; consumers should null-check before using. Exposed so UI outside the
    * Canvas (e.g. the compass) can read rotation and reset it.
@@ -185,6 +193,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
   const previousRenderModeForPickRef = useRef<RenderMode | null>(null)
   const controlsRef = useRef<OrbitControlsHandle | null>(null)
   const gridSpacingRef = useRef<number | null>(null)
+  const floorExtentsRef = useRef(new Map<number, { halfWidth: number; halfHeight: number }>())
   const focusRequestRef = useRef<FocusRequest | null>(null)
 
   const drawing = useRoomDrawingState(activeTool === "draw-room", currentFloor)
@@ -317,6 +326,7 @@ export const MapProvider = ({ children }: { children: ReactNode }) => {
       roomOverlayMode,
       setRoomOverlayMode,
       gridSpacingRef,
+      floorExtentsRef,
       controlsRef,
       editingNodeId,
       setEditingNodeId: handleSetEditingNodeId,
