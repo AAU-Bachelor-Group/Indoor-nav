@@ -86,4 +86,5 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   shellComponent: RootDocument,
+  notFoundComponent: () => <h1>The page was not found</h1>,
 })
