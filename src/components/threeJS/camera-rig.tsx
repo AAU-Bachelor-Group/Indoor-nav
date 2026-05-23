@@ -30,11 +30,11 @@ interface OrbitControlsLike {
 }
 
 /**
- * Safety margin past the floor's farthest corner. Camera depth=0 plane must
- * not intersect any floor geometry — keep a small buffer so we don't sit
- * exactly on the boundary.
+ * Damping lambda for the soft push-out toward the dynamic minimum distance.
+ * High enough to feel responsive at high tilts; low enough that an orbit
+ * doesn't "ratchet" the camera outward in visible jumps.
  */
-const CAMERA_CLEARANCE_FACTOR = 1.05
+const MIN_DIST_DAMP_LAMBDA = 8
 
 interface CameraRigProps {
   activeFloor: number
@@ -77,13 +77,15 @@ export const CameraRig = ({ activeFloor, controlsRef, neighbourOpacityRef }: Cam
     const t = THREE.MathUtils.smoothstep(polarAngle, TILT_FADE_START, TILT_FADE_END)
     neighbourOpacityRef.current = t * NEIGHBOUR_MAX_OPACITY
 
-    // Raise minDistance with tilt so the whole floor stays in front of the
-    // camera. A floor point at projected radial distance `p` from the target
-    // along the camera's xz forward direction has depth `dist − sin(θ)·p`;
-    // to keep the farthest floor corner at depth > 0 we need
-    // `dist > sin(θ) · cornerRadius`. Without this, anything past the
-    // camera's xz position sits at depth ≤ 0 and WebGL slices it along a
-    // clean horizontal line at the bottom of the screen.
+    // Raise minDistance with tilt so the floor stays in front of the camera.
+    // A floor point at projected radial distance `p` from the target along
+    // the camera's xz forward direction has depth `dist − sin(θ)·p`; to keep
+    // the floor in view at depth > 0 we need `dist > sin(θ) · safeRadius`.
+    //
+    // Using `max(halfWidth, halfHeight)` instead of the diagonal corner
+    // distance trades some clipping at diagonal azimuths for much closer
+    // zoom in axis-aligned views (the common case). The push-out is damped
+    // so an orbit feels like a soft barrier instead of a hard ratchet.
     const extents = floorExtentsRef.current.get(activeFloor)
     if (extents) {
       const dx = Math.max(
@@ -94,17 +96,15 @@ export const CameraRig = ({ activeFloor, controlsRef, neighbourOpacityRef }: Cam
         Math.abs(controls.target.z - extents.halfHeight),
         Math.abs(controls.target.z + extents.halfHeight),
       )
-      const cornerRadius = Math.hypot(dx, dz) * CAMERA_CLEARANCE_FACTOR
-      const dynamicMin = Math.max(MIN_CAMERA_DISTANCE, Math.sin(polarAngle) * cornerRadius)
+      const safeRadius = Math.max(dx, dz)
+      const dynamicMin = Math.max(MIN_CAMERA_DISTANCE, Math.sin(polarAngle) * safeRadius)
       controls.minDistance = dynamicMin
 
-      // OrbitControls re-clamps radius to minDistance on zoom input, but tilt
-      // input doesn't — so a fresh tilt that just shrank the safe envelope
-      // would leave the camera inside it for a frame. Push it out now.
       const offset = controls.object.position.clone().sub(controls.target)
       const currentDist = offset.length()
       if (currentDist > 0 && currentDist < dynamicMin) {
-        offset.multiplyScalar(dynamicMin / currentDist)
+        const dampedDist = THREE.MathUtils.damp(currentDist, dynamicMin, MIN_DIST_DAMP_LAMBDA, dt)
+        offset.multiplyScalar(dampedDist / currentDist)
         controls.object.position.copy(controls.target).add(offset)
       }
     }
