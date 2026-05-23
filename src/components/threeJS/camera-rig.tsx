@@ -1,10 +1,13 @@
 import { useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 
+import { useMap } from "#/lib/map-context"
+
 import {
   BASE_PAN_SPEED,
   BASE_ROTATE_SPEED,
   FLOOR_HEIGHT,
+  MIN_CAMERA_DISTANCE,
   NEIGHBOUR_MAX_OPACITY,
   REF_2D_ZOOM,
   REF_3D_DISTANCE,
@@ -22,8 +25,16 @@ interface OrbitControlsLike {
   object: THREE.Camera
   panSpeed: number
   rotateSpeed: number
+  minDistance: number
   getPolarAngle: () => number
 }
+
+/**
+ * Safety margin past the floor's farthest corner. Camera depth=0 plane must
+ * not intersect any floor geometry — keep a small buffer so we don't sit
+ * exactly on the boundary.
+ */
+const CAMERA_CLEARANCE_FACTOR = 1.05
 
 interface CameraRigProps {
   activeFloor: number
@@ -35,10 +46,14 @@ interface CameraRigProps {
  * Per-frame camera-related work:
  * 1. Smoothly re-centre the orbit target on the active floor.
  * 2. Compute neighbour-floor opacity from the camera tilt angle.
- * 3. Modulate `rotateSpeed` so 3D rotation stays usable when zoomed out
+ * 3. Raise `minDistance` with tilt so the floor never crosses the camera's
+ *    depth=0 plane (otherwise WebGL slices it at the near plane).
+ * 4. Modulate `rotateSpeed` so 3D rotation stays usable when zoomed out
  *    (uniform-angular rotation around a distant target swings wildly).
  */
 export const CameraRig = ({ activeFloor, controlsRef, neighbourOpacityRef }: CameraRigProps) => {
+  const { floorExtentsRef } = useMap()
+
   useFrame((_, rawDt) => {
     const controls = controlsRef.current
     if (!controls) return
@@ -61,6 +76,38 @@ export const CameraRig = ({ activeFloor, controlsRef, neighbourOpacityRef }: Cam
     const polarAngle = controls.getPolarAngle()
     const t = THREE.MathUtils.smoothstep(polarAngle, TILT_FADE_START, TILT_FADE_END)
     neighbourOpacityRef.current = t * NEIGHBOUR_MAX_OPACITY
+
+    // Raise minDistance with tilt so the whole floor stays in front of the
+    // camera. A floor point at projected radial distance `p` from the target
+    // along the camera's xz forward direction has depth `dist − sin(θ)·p`;
+    // to keep the farthest floor corner at depth > 0 we need
+    // `dist > sin(θ) · cornerRadius`. Without this, anything past the
+    // camera's xz position sits at depth ≤ 0 and WebGL slices it along a
+    // clean horizontal line at the bottom of the screen.
+    const extents = floorExtentsRef.current.get(activeFloor)
+    if (extents) {
+      const dx = Math.max(
+        Math.abs(controls.target.x - extents.halfWidth),
+        Math.abs(controls.target.x + extents.halfWidth),
+      )
+      const dz = Math.max(
+        Math.abs(controls.target.z - extents.halfHeight),
+        Math.abs(controls.target.z + extents.halfHeight),
+      )
+      const cornerRadius = Math.hypot(dx, dz) * CAMERA_CLEARANCE_FACTOR
+      const dynamicMin = Math.max(MIN_CAMERA_DISTANCE, Math.sin(polarAngle) * cornerRadius)
+      controls.minDistance = dynamicMin
+
+      // OrbitControls re-clamps radius to minDistance on zoom input, but tilt
+      // input doesn't — so a fresh tilt that just shrank the safe envelope
+      // would leave the camera inside it for a frame. Push it out now.
+      const offset = controls.object.position.clone().sub(controls.target)
+      const currentDist = offset.length()
+      if (currentDist > 0 && currentDist < dynamicMin) {
+        offset.multiplyScalar(dynamicMin / currentDist)
+        controls.object.position.copy(controls.target).add(offset)
+      }
+    }
 
     // Adaptive rotateSpeed only. OrbitControls' built-in pan formula already
     // scales world-units-per-pixel with distance / zoom (via

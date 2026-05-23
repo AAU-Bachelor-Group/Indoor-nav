@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 import { useTexture } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import * as THREE from "three"
 
 import { worldFromPixel } from "#/lib/coordinates"
@@ -25,7 +25,7 @@ const DEBUG_SLAB_HEIGHT = 0.5
  * camera-tilt-based opacity from neighbourOpacityRef.
  */
 export const FloorPlane = ({ floor, active, neighbourOpacityRef }: FloorPlaneProps) => {
-  const { debugMode } = useMap()
+  const { debugMode, floorExtentsRef } = useMap()
   const texture = useTexture(floor.path)
   const materialRef = useRef<THREE.MeshBasicMaterial>(null)
   const meshRef = useRef<THREE.Mesh>(null)
@@ -34,6 +34,17 @@ export const FloorPlane = ({ floor, active, neighbourOpacityRef }: FloorPlanePro
   const { x: width, y: height } = worldFromPixel(image.width, image.height, floor)
   const y = floorToY(floor.floor)
   const debugColor = `hsl(${(floor.floor * 67) % 360}, 90%, 60%)`
+
+  // Publish world-space half-extents so CameraRig can keep camera xz outside
+  // the floor footprint at any tilt — otherwise WebGL slices the floor along
+  // the camera's depth=0 plane at every non-zero polar.
+  useEffect(() => {
+    const extents = floorExtentsRef.current
+    extents.set(floor.floor, { halfWidth: width / 2, halfHeight: height / 2 })
+    return () => {
+      extents.delete(floor.floor)
+    }
+  }, [floor.floor, width, height, floorExtentsRef])
 
   useFrame(() => {
     const material = materialRef.current
