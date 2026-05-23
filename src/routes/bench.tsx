@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router"
 import { useMemo, useRef, useState } from "react"
 
-
 import { Button } from "#/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "#/components/ui/card"
 import { Input } from "#/components/ui/input"
@@ -109,16 +108,11 @@ const BenchPage = () => {
 
       setStatus(`warming up (${warmups} iterations)…`)
       for (let i = 0; i < warmups; i++) {
-        if (cancelRef.current) return
         await astarFunction({ data: { profile, start, dest } })
       }
 
       const collected: Sample[] = []
       for (let i = 0; i < runs; i++) {
-        if (cancelRef.current) {
-          setStatus("cancelled")
-          return
-        }
         setStatus(`run ${i + 1} / ${runs}`)
 
         const before = performance.getEntriesByType("resource").length
@@ -263,13 +257,24 @@ const BenchPage = () => {
           <Separator />
 
           <div className="flex flex-wrap items-center gap-2">
-            <Button onClick={run} disabled={running}>
+            <Button
+              onClick={() => {
+                void run()
+              }}
+              disabled={running}
+            >
               {running ? "Running…" : "Run benchmark"}
             </Button>
             <Button variant="outline" onClick={cancel} disabled={!running}>
               Cancel
             </Button>
-            <Button variant="outline" onClick={copyCsv} disabled={samples.length === 0}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                void copyCsv()
+              }}
+              disabled={samples.length === 0}
+            >
               Copy CSV
             </Button>
             <Button variant="outline" onClick={downloadCsv} disabled={samples.length === 0}>
