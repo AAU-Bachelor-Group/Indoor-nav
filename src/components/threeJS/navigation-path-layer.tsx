@@ -15,6 +15,11 @@ import type { Node } from "#/types/node"
 
 const SHOW_ZOOM_THRESHOLD = 8
 const BASE_ZOOM = 20
+/** Distance at which the marker reaches full size in perspective mode. Picked
+ * to feel roughly equivalent to ortho's `BASE_ZOOM` ramp via the same
+ * REF_2D_ZOOM / REF_3D_DISTANCE proportion used elsewhere. */
+const BASE_DISTANCE_3D = 75
+const HIDE_DISTANCE_3D = 200
 
 interface FloorTransition {
   position: [number, number, number]
@@ -37,6 +42,18 @@ const FloorTransitionMarker = ({ transition: t }: { transition: FloorTransition 
       } else {
         el.style.display = "flex"
         const scale = Math.min(1, ortho.zoom / BASE_ZOOM)
+        el.style.transform = `scale(${scale})`
+      }
+    } else {
+      // Perspective: scale on inverse-distance so the marker stays roughly
+      // screen-stable. Hide when far enough away that the icon would shrink
+      // into illegibility.
+      const dist = camera.position.distanceTo(new THREE.Vector3(...t.position))
+      if (dist > HIDE_DISTANCE_3D) {
+        el.style.display = "none"
+      } else {
+        el.style.display = "flex"
+        const scale = Math.min(1, BASE_DISTANCE_3D / Math.max(1, dist))
         el.style.transform = `scale(${scale})`
       }
     }
