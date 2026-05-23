@@ -69,6 +69,22 @@ const reconstructPath = (parent: Map<Node, Node>, t: Node): Node[] => {
   return path
 }
 
+const turnCost = (
+  current: Node,
+  neighbor: Node,
+  profile: AstarInput["profile"],
+  incomingEdge?: Edge,
+): number => {
+  if (profile !== "SIMPLE" || !incomingEdge) return 0
+  const grandparent = graph.nodes.get(incomingEdge.fromNodeId)
+  if (!grandparent) return 0
+  const arrDir = Math.atan2(current.y - grandparent.y, current.x - grandparent.x)
+  const depDir = Math.atan2(neighbor.y - current.y, neighbor.x - current.x)
+  const raw = depDir - arrDir
+  const deg = Math.abs((Math.atan2(Math.sin(raw), Math.cos(raw)) * 180) / Math.PI)
+  return deg > TURN_ANGLE_THRESHOLD ? TURN_PENALTY : 0
+}
+
 const heuristic = (
   node: Node,
   target: Node,
@@ -80,20 +96,7 @@ const heuristic = (
     if (fromNode && fromNode.floor !== node.floor) return Infinity
   }
 
-  let turnPenalty = 0
   let floorPenalty = 0
-
-  if (profile === "SIMPLE" && previousEdge) {
-    const fromNode = graph.nodes.get(previousEdge.fromNodeId)
-    const toNode = graph.nodes.get(previousEdge.toNodeId)
-    if (fromNode && toNode) {
-      const angle =
-        Math.atan2(node.y - fromNode.y, node.x - fromNode.x) -
-        Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x)
-      const angleDeg = Math.abs((angle * 180) / Math.PI)
-      turnPenalty = angleDeg > TURN_ANGLE_THRESHOLD ? TURN_PENALTY : 0
-    }
-  }
 
   if (previousEdge) {
     const fromNode = graph.nodes.get(previousEdge.fromNodeId)
@@ -102,9 +105,7 @@ const heuristic = (
     }
   }
 
-  return (
-    Math.hypot(node.x - target.x, node.y - target.y, node.z - target.z) + turnPenalty + floorPenalty
-  )
+  return Math.hypot(node.x - target.x, node.y - target.y, node.z - target.z) + floorPenalty
 }
 
 const findDestinationNode = (destRoom: AstarInput["dest"], startNode: Node): Node | null => {
@@ -173,6 +174,7 @@ const runAstar = async (
   // g: best known cost from start to v, default is infinity
   const g = new Map<Node, number>()
   const parent = new Map<Node, Node>()
+  const arrivingEdge = new Map<Node, Edge>()
 
   g.set(firstNode, 0)
 
@@ -194,13 +196,17 @@ const runAstar = async (
       const neighbor = graph.nodes.get(edge.toNodeId)
       if (!neighbor?.isActivated) return
 
-      // g′ ← g[n] + w(n, n′)
-      const candidateCost = (g.get(current) ?? Infinity) + edge.distance
+      // g′ ← g[n] + w(n, n′) + turn penalty at n
+      const candidateCost =
+        (g.get(current) ?? Infinity) +
+        edge.distance +
+        turnCost(current, neighbor, profile, arrivingEdge.get(current))
 
       // case 1: If n′ is new if n′ ∉ closed and n′ ∉ open
       if (!closed.has(neighbor) && !open.contains(({ node: n }) => n.id === neighbor.id)) {
         g.set(neighbor, candidateCost) // g[n′] ← g′
         parent.set(neighbor, current) // parent[n′] ← n
+        arrivingEdge.set(neighbor, edge)
 
         // update n′ priority in open to g′ + h(n′)
         open.enqueue({
@@ -218,6 +224,7 @@ const runAstar = async (
 
         // parent[n′] ← n
         parent.set(neighbor, current)
+        arrivingEdge.set(neighbor, edge)
 
         // update n′ priority in open to g′ + h(n′)
         open.remove(({ node: n }) => n.id === neighbor.id)
