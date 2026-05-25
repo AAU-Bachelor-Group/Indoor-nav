@@ -25,7 +25,7 @@ interface TouchGestureLockProps {
 /** Vertical drag of one full canvas height tilts the camera by this much. */
 const TILT_PER_HEIGHT = Math.PI * 0.7
 /** Accumulated rotation (twist) or tilt that commits the gesture to that mode (6°). */
-const COMMIT_THRESHOLD = Math.PI / 30
+const COMMIT_THRESHOLD = Math.PI / 15
 
 /**
  * Google-Maps-style two-finger gestures:
