@@ -23,7 +23,6 @@ const RootDocument = ({ children }: Readonly<{ children: React.ReactNode }>) => 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: "light" }} />
         <HeadContent />
       </head>
       <body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]">
@@ -86,4 +85,5 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   shellComponent: RootDocument,
+  notFoundComponent: () => <h1>The page was not found</h1>,
 })

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
-import { ChevronUp } from "lucide-react"
+import { ChevronUp, Loader2 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { z } from "zod"
 
@@ -124,7 +124,10 @@ const Layout = () => {
   const actionBarVisible = pickingStart || activeTool !== "default"
 
   return (
-    <main className="relative h-dvh w-full overflow-hidden bg-background">
+    <main className="relative h-dvh w-full overflow-hidden bg-[#333]">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <Loader2 className="animate-spin" size={48} color="#888" />
+      </div>
       <MapScene />
 
       <div className="pointer-events-none absolute inset-0 z-10">

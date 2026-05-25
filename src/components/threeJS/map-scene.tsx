@@ -26,8 +26,8 @@ import { FocusRig } from "./focus-rig"
 import { GraphLayer } from "./graph-layer"
 import { NavigationMarkers } from "./navigation-markers"
 import { NavigationPathLayer } from "./navigation-path-layer"
-import { OrbitTargetMarker } from "./orbit-target-marker"
 import { RoomPolygonsLayer } from "./room-polygons-layer"
+import { TouchGestureLock } from "./touch-gesture-lock"
 
 /** Tools whose workflow benefits from seeing the grid. */
 const GRID_TOOLS = new Set(["draw-room", "draw-node", "connect-edge"])
@@ -118,6 +118,7 @@ export const MapScene = () => {
         minZoom={MIN_CAMERA_ZOOM}
         maxZoom={MAX_CAMERA_ZOOM}
       />
+      <TouchGestureLock controlsRef={controlsRef} />
 
       <Suspense fallback={null}>
         {floors.map((floor) => (
@@ -133,7 +134,6 @@ export const MapScene = () => {
         <CursorCoordinates />
         <RoomPolygonsLayer neighbourOpacityRef={neighbourOpacityRef} />
         <NavigationMarkers />
-        <OrbitTargetMarker />
         <NavigationPathLayer />
         {activeTool === "draw-room" && activeFloorPlan && <DrawingLayer floor={activeFloorPlan} />}
         {activeTool === "draw-node" && activeFloorPlan && <GraphLayer floor={activeFloorPlan} />}
