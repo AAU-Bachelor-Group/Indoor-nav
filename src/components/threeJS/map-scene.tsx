@@ -26,7 +26,6 @@ import { FocusRig } from "./focus-rig"
 import { GraphLayer } from "./graph-layer"
 import { NavigationMarkers } from "./navigation-markers"
 import { NavigationPathLayer } from "./navigation-path-layer"
-import { OrbitTargetMarker } from "./orbit-target-marker"
 import { RoomPolygonsLayer } from "./room-polygons-layer"
 import { TouchGestureLock } from "./touch-gesture-lock"
 
@@ -135,7 +134,6 @@ export const MapScene = () => {
         <CursorCoordinates />
         <RoomPolygonsLayer neighbourOpacityRef={neighbourOpacityRef} />
         <NavigationMarkers />
-        <OrbitTargetMarker />
         <NavigationPathLayer />
         {activeTool === "draw-room" && activeFloorPlan && <DrawingLayer floor={activeFloorPlan} />}
         {activeTool === "draw-node" && activeFloorPlan && <GraphLayer floor={activeFloorPlan} />}
