@@ -19,17 +19,15 @@ export const LoginForm = ({ className, ...props }: React.ComponentProps<"div">) 
     setError(null)
     setLoading(true)
 
-    const result = await authClient.signIn.username({
-      username: "admin",
-      password,
-    })
+    const result = await authClient.signIn.username(
+      { username: "admin", password },
+      { onSuccess: () => router.navigate({ to: "/" }) },
+    )
 
     setLoading(false)
 
     if (result.error) {
       setError(result.error.message ?? "Login failed")
-    } else {
-      await router.navigate({ to: "/" })
     }
   }
 

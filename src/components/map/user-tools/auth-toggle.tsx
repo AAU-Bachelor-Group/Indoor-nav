@@ -40,7 +40,9 @@ export const AuthToggle = ({ className }: AuthToggleProps) => {
       className={className}
       onClick={() => {
         if (isLoggedIn) {
-          void authClient.signOut()
+          void authClient.signOut().then(() => {
+            globalThis.location.reload()
+          })
         } else {
           void navigate({ to: "/login" })
         }
